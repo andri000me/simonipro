@@ -81,6 +81,14 @@
                                 <span class="hide-menu">Kelola Mahasiswa</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'publish_jadwal') ? 'active' : '' ?>" href="<?= base_url('staff/publish_jadwal'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-calendar"></i>
+                                </span>
+                                <span class="hide-menu">Publikasi Jadwal</span>
+                            </a>
+                        </li>
                     <?php elseif ($this->session->userdata('nama_role') == 'koordinator') : ?>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>

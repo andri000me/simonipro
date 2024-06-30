@@ -7,6 +7,7 @@ class Staff extends CI_Controller {
         parent::__construct();
         $this->load->model('staff_model');
         $this->load->model('user_model');
+        $this->load->model('jadwal_model');
 
          // Pengecekan apakah user sudah login
          if (!$this->session->userdata('is_logged_in')) {
@@ -809,4 +810,54 @@ class Staff extends CI_Controller {
         }
     }
     // akhir kelola dosen
+
+    // publish jadwal
+    public function publish_jadwal() 
+    {
+        $data['title'] = 'publish Jadwal | Staff';
+        $data['jadwal'] = $this->jadwal_model->get_all_jadwal();
+        $data['active'] = 'publish_jadwal';
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/v_publish_jadwal', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function do_publish_jadwal($id) {
+        $data = array(
+            'status' => 'published',
+            'updated_at' => time()
+        );
+
+        $result = $this->jadwal_model->update_jadwal($id, $data);
+
+        if ($result) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Jadwal berhasil dipublikasikan!</div>');
+        } else {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal mempublikasikan jadwal!</div>');
+        }
+
+        redirect('staff/publish_jadwal');
+    }
+
+    public function detail_jadwal($id) {
+        $data['title'] = 'Detail Jadwal | Staff';
+        $data['jadwal'] = $this->jadwal_model->get_jadwal_by_id($id);
+        $data['kegiatan'] = $this->jadwal_model->get_kegiatan_by_jadwal_id($id);  // Menambahkan data kegiatan
+        $data['active'] = 'publish_jadwal';
+    
+        if (empty($data['jadwal'])) {
+            show_404();
+        }
+    
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/v_detail_jadwal', $data);
+        $this->load->view('templates/footer');
+    }
+    
+    // Akhir publish jadwal
 }

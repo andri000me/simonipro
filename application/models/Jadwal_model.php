@@ -32,4 +32,37 @@ class Jadwal_model extends CI_Model {
         $this->db->where('id', $id);
         return $this->db->update('jadwal', $data);
     }
+
+    // Kelola Kegiatan
+    // query view all data kegiatan join with jadwal
+    public function get_all_kegiatan() {
+        $this->db->select('kegiatan.*, jadwal.nama_jadwal');
+        $this->db->from('kegiatan');
+        $this->db->join('jadwal', 'jadwal.id = kegiatan.jadwal_id');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_kegiatan_by_id($id) {
+        $this->db->select('kegiatan.*, jadwal.nama_jadwal');
+        $this->db->from('kegiatan');
+        $this->db->join('jadwal', 'kegiatan.jadwal_id = jadwal.id', 'left');
+        $this->db->where('kegiatan.id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    // query update data kegiatan
+    public function update_kegiatan($id, $data) {
+        $this->db->where('id', $id);
+        return $this->db->update('kegiatan', $data);
+    }
+
+    // Hapus data kegiatan
+    public function delete_kegiatan($id)
+    {
+        $this->db->where('id', $id);
+        return $this->db->delete('kegiatan');
+    }
+    // Akhir kelola kegiatan
 }
