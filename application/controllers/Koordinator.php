@@ -79,4 +79,49 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function ubah_jadwal($id)
+    {
+        $data['title'] = 'Detail Jadwal | Koordinator';
+        $data['jadwal'] = $this->jadwal_model->get_jadwal_by_id($id);
+        $data['active'] = 'kelola_jadwal';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_ubah_jadwal', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_jadwal()
+    {
+        $id = $this->input->post('id');
+
+        // set_rules
+        $this->form_validation->set_rules('nama_jadwal', 'Nama_Jadwal', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_jadwal($id); // Kembali ke halaman ubah jadwal jika validasi gagal
+        } else {
+            $data = [
+                'nama_jadwal' => htmlspecialchars($this->input->post('nama_jadwal')),
+                'created_at' => $this->input->post('created_at'),
+                'updated_at' => time(),
+                'status' => 'draft'
+            ];
+
+            $update = $this->jadwal_model->update_jadwal($id, $data);
+
+            if ($update) {
+                // If update is successful
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data jadwal berhasil di ubah!</div>');
+                redirect('koordinator/kelola_jadwal'); // Adjust the redirect path as needed
+            } else {
+                // If update fails
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update jadwal!</div>');
+                redirect('koordinator/ubah_jadwal/' . $id);
+            }
+        }
+    }
+
 }
