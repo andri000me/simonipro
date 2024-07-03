@@ -6,6 +6,7 @@ class Koordinator extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('jadwal_model');
+        $this->load->model('koordinator_model');
 
         // Pengecekan apakah user sudah login
         if (!$this->session->userdata('is_logged_in')) {
@@ -243,4 +244,18 @@ class Koordinator extends CI_Controller {
         redirect('koordinator/kelola_kegiatan');
     }
     // Akhir kelola kegiatan
+
+    // Kelola Plotting
+    public function kelola_plotting() {
+        $data['title'] = 'Kelola Plotting | Koordinator';
+        $data['plotting'] = $this->koordinator_model->get_all_plotting_pembimbing();
+        $data['active'] = 'kelola_plotting';
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_kelola_plotting', $data);
+        $this->load->view('templates/footer');
+    }
+    // Akhir kelola plotting
 }

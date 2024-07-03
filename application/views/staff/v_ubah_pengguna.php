@@ -10,11 +10,11 @@
                     <input type="hidden" name="id" value="<?= $pengguna['id']; ?>">
                     <input type="hidden" name="old_password" value="<?= $pengguna['password']; ?>">
                     <input type="hidden" name="created_at" value="<?= $pengguna['created_at']; ?>">
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                       <label for="nama" class="form-label">Nama Pengguna</label>
                       <input type="text" class="form-control" id="nama" name="nama" value="<?= set_value('nama', $pengguna['nama']); ?>">
                       <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                       <label for="username" class="form-label">Username</label>
                       <input type="text" class="form-control" id="username" name="username" value="<?= set_value('username', $pengguna['username']); ?>">

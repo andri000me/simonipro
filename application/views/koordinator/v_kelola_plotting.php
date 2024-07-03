@@ -5,41 +5,48 @@
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">Daftar Dosen</h5>
+                    <h5 class="card-title fw-semibold">Daftar Plotting</h5>
+                  </div>
                 </div>
-              </div>
               <div class="card">
                 <div class="card-body">
-                <?= $this->session->flashdata('pesan'); ?>
+                  <?= $this->session->flashdata('pesan'); ?>
                   <div class="d-flex align-items-center justify-content-between">
                     <div class="mb-3">
-                      <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#modalAddDosen">
+                      <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#modalAddPlotting">
                         <span>
                           <i class="ti ti-plus"></i>
                         </span> 
                         Tambah Data
-                      </a>
+                      </button>
                     </div>
                   </div>
                   <table id="myTable" class="table table-hover table-responsive">
                     <thead>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">NIDN</th>
-                        <th class="text-start">Nama</th>
+                        <th class="text-start">Koordinator</th>
+                        <th class="text-start">Dosen pembimbing</th>
+                        <th class="text-start">Nama Mahasiswa</th>
                         <th class="text-start">Aksi</th>
                       </tr>
                     </thead>
                     <tbody>
                       <?php $i = 1; ?>
-                      <?php foreach ($dosen as $dsn) : ?>
+                      <?php foreach ($plotting as $plot) : ?>
                       <tr>
                         <th scope="row"><?= $i; ?></th>
-                        <td><?= $dsn['nidn']; ?></td>
-                        <td><?= $dsn['nama']; ?></td>
+                        <td><?= $plot['nama_plotting']; ?></td>
+                        <td><?= date('d-M-Y', $plot['created_at']); ?></td>
+                        <td>
+                          <?php ( $plot['status'] == 'draft' ) ? $color = 'warning' : $color = 'success' ?>
+                            <span class="badge text-bg-<?= $color; ?>">
+                                <?= $plot['status']; ?>
+                            </span>
+                        </td>
                         <td>
                           <small>
-                            <a href="detail_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-primary mb-2">
+                          <a href="detail_plotting/<?= $plot['id']; ?>" class="btn btn-outline-primary mb-2">
                               <span>
                                 <i class="ti ti-info-circle"></i>
                               </span>
@@ -47,7 +54,7 @@
                             </a>
                           </small>
                           <small>
-                            <a href="ubah_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-warning mb-2">
+                          <a href="ubah_plotting/<?= $plot['id']; ?>" class="btn btn-outline-warning mb-2">
                               <span>
                                 <i class="ti ti-edit"></i>
                               </span>
@@ -62,8 +69,9 @@
                     <tfoot>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">NIDN</th>
-                        <th class="text-start">Nama</th>
+                        <th class="text-start">Nama plotting</th>
+                        <th class="text-start">Dibuat pada</th>
+                        <th class="text-start">Status</th>
                         <th class="text-start">Aksi</th>
                       </tr>
                     </tfoot>
@@ -76,40 +84,21 @@
       </div>
     </div>
   </div>
-  <!-- Modal -->
-<div class="modal fade" id="modalAddDosen" tabindex="-1" aria-labelledby="modalAddDosenLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
+
+<!-- Modal -->
+<div class="modal fade" id="modalAddPlotting" tabindex="-1" aria-labelledby="modalAddPlottingLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="modalAddDosenLabel">Form Tambah Data Dosen</h1>
+        <h1 class="modal-title fs-5" id="modalAddPlottingLabel">Form Tambah Data plotting</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('staff/tambah_dosen'); ?>" method="post" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="user_id" class="form-label">User ID</label>
-              <select class="form-select" id="user_id" name="user_id">
-                  <option selected>-- Pilih User --</option>
-                  <?php foreach ($users as $user) : ?>
-                      <option value="<?= $user['id']; ?>"><?= $user['username']; ?></option>
-                  <?php endforeach; ?>
-              </select>
-              <?= form_error('user_id', '<small class="text-danger fst-italic">', '</small>'); ?>
-          </div>
+        <form action="<?= base_url('koordinator/tambah_plotting'); ?>" method="post">
             <div class="mb-3">
-                <label for="nidn" class="form-label">NIDN</label>
-                <input type="text" name="nidn" id="nidn" class="form-control" maxlength="10" autofocus autocomplete="off" value="<?= set_value('nidn'); ?>">
-                <?= form_error('nidn', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
-            <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" name="nama" id="nama" class="form-control" autocomplete="off" value="<?= set_value('nama'); ?>">
-                <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
-            <div class="mb-3">
-                <label for="gambar" class="form-label">Gambar</label>
-                <input type="file" name="gambar" id="gambar" class="form-control" value="<?= set_value('gambar'); ?>">
-                <?= form_error('gambar', '<small class="text-danger fst-italic">', '</small>'); ?>
+                <label for="nama_plotting" class="form-label">Nama plotting</label>
+                <input type="text" name="nama_plotting" id="nama_plotting" class="form-control" autofocus autocomplete="off" value="<?= set_value('nama_plotting'); ?>">
+                <?= form_error('nama_plotting', '<small class="text-danger fst-italic">', '</small>'); ?>
             </div>
         </div>
         <div class="modal-footer">

@@ -5,7 +5,7 @@
                 Detail data mahasiswa
             </div>
         <div class="card-body">
-            <h5 class="card-title"><?= $mahasiswa['nama_user']; ?></h5>
+            <h5 class="card-title"><?= $mahasiswa['nama']; ?></h5>
             <div class="row">
                 <div class="col-6">
                     <ul>

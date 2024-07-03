@@ -41,7 +41,7 @@
                             <tr>
                                 <th scope="row"><?= $i; ?></th>
                                 <td><?= $mhs['npm']; ?></td>
-                                <td><?= $mhs['nama_user']; ?></td>
+                                <td><?= $mhs['nama']; ?></td>
                                 <td><?= $mhs['nama_prodi']; ?></td>
                                 <td><?= $mhs['semester']; ?></td>
                                 <td>
@@ -98,9 +98,9 @@
           <div class="mb-3">
             <label for="user_id" class="form-label">User ID</label>
               <select class="form-select" id="user_id" name="user_id">
-                  <option selected>-- Pilih User --</option>
+                  <option value="" selected>-- Pilih User --</option>
                   <?php foreach ($users as $user) : ?>
-                      <option value="<?= $user['id']; ?>"><?= $user['nama']; ?></option>
+                      <option value="<?= $user['id']; ?>"><?= $user['username']; ?></option>
                   <?php endforeach; ?>
               </select>
               <?= form_error('user_id', '<small class="text-danger fst-italic">', '</small>'); ?>
@@ -111,9 +111,14 @@
                 <?= form_error('npm', '<small class="text-danger fst-italic">', '</small>'); ?>
             </div>
             <div class="mb-3">
+                <label for="nama" class="form-label">Nama mahasiswa</label>
+                <input type="text" class="form-control" name="nama" value="<?= set_value('nama'); ?>">
+                <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
+            </div>
+            <div class="mb-3">
               <label for="prodi_id" class="form-label">Nama Prodi</label>
                 <select class="form-select" id="prodi_id" name="prodi_id">
-                    <option selected>-- Pilih Prodi --</option>
+                    <option value="" selected>-- Pilih Prodi --</option>
                     <?php foreach ($prodi as $p) : ?>
                         <option value="<?= $p['id']; ?>"><?= $p['nama_prodi']; ?></option>
                     <?php endforeach; ?>

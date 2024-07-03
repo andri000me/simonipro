@@ -131,9 +131,9 @@ class Staff extends CI_Controller {
     public function tambah_pengguna() 
     {
         // set_rules
-        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
+        // $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+        //     'required' => 'Field {field} harus diisi.',
+        // ]);
         $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[user.username]', [
             'required' => 'Field {field} harus diisi.',
             'is_unique' => 'Username sudah terdaftar.'
@@ -157,7 +157,7 @@ class Staff extends CI_Controller {
             $this->kelola_pengguna();
         } else {
             $data = [
-                'nama' => htmlspecialchars($this->input->post('nama')),
+                // 'nama' => htmlspecialchars($this->input->post('nama')),
                 'username' => htmlspecialchars($this->input->post('username')),
                 'password' => htmlspecialchars(password_hash($this->input->post('password'), PASSWORD_DEFAULT)),
                 'role_id' => htmlspecialchars($this->input->post('role_id')),
@@ -213,9 +213,9 @@ class Staff extends CI_Controller {
         $current_user = $this->user_model->get_user_by_id($id);
 
         // set_rules
-        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
+        // $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+        //     'required' => 'Field {field} harus diisi.',
+        // ]);
 
         // Only apply the is_unique rule if the new username is different from the current username
         $new_username = $this->input->post('username');
@@ -256,7 +256,7 @@ class Staff extends CI_Controller {
             }
 
             $newUserData = [
-                'nama' => htmlspecialchars($this->input->post('nama')),
+                // 'nama' => htmlspecialchars($this->input->post('nama')),
                 'username' => htmlspecialchars($this->input->post('username')),
                 'password' => $password,
                 'role_id' => htmlspecialchars($this->input->post('role_id')),
@@ -505,6 +505,160 @@ class Staff extends CI_Controller {
     }
     // Akhir kelola project
 
+    // Kelola koordinator
+    public function kelola_koordinator()
+    {
+        $data['title'] = 'Kelola Koordinator | Staff';
+        $data['koordinator'] = $this->staff_model->get_all_koordinator();
+        // Ambil user id yang sudah dipilih
+        $selectedUserIds = $this->staff_model->get_selected_user_koor_ids();
+        
+        // Kirim user id yang sudah dipilih ke fungsi get_all_user_match_by_role_as_koordinator
+        $data['users'] = $this->staff_model->get_all_user_match_by_role_as_koordinator($selectedUserIds);
+        $data['active'] = 'kelola_koordinator';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/v_kelola_koordinator', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function tambah_koordinator() 
+    {
+        // set_rules
+        $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|min_length[10]|is_unique[dosen.nidn]', [
+            'required' => 'Field {field} harus diisi.',
+            'min_length' => 'NPM harus terdiri dari 9 digit karakter.',
+            'is_unique' => 'NPM sudah terdaftar.'
+        ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">Data koordinator gagal ditambahkan!</div>');
+            $this->kelola_koordinator();
+        } else {
+            $config['upload_path'] = './assets/images/upload';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
+            $config['file_name'] = uniqid(); // generate nama file menjadi unik
+    
+            $this->load->library('upload', $config);
+    
+            if (!$this->upload->do_upload('gambar')) {
+                // Cek kesalahan upload
+                $error = $this->upload->display_errors('', '');
+                if ($error == 'You did not select a file to upload.') {
+                    $err_message = 'Silahkan upload file gambar terlebih dahulu.';
+                } elseif (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
+                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
+                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
+                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
+                } else {
+                    $err_message = $error;
+                }
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                $this->kelola_koordinator();
+            } else {
+                $uploadData = $this->upload->data();
+                $data = [
+                    'nidn' => htmlspecialchars($this->input->post('nidn')),
+                    'nama' => htmlspecialchars($this->input->post('nama')),
+                    'user_id' => $this->input->post('user_id'),
+                    'gambar' => $uploadData['file_name']
+                ];
+    
+                $this->staff_model->insert_koordinator($data);
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data koordinator berhasil ditambahkan!</div>');
+                redirect('staff/kelola_koordinator');
+            }
+        }
+    }
+
+    public function detail_koordinator($id)
+    {
+        $data['title'] = 'Detail Koordinator | Staff';
+        $data['koordinator'] = $this->staff_model->get_koordinator_by_id($id);
+        $data['active'] = 'kelola_koordinator';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/v_detail_koordinator', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function ubah_koordinator($id)
+    {
+        $data['title'] = 'Ubah Koordinator | Staff';
+        $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['koordinator'] = $this->staff_model->get_koordinator_by_id($id);
+        $data['active'] = 'kelola_koordinator';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/v_ubah_koordinator', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_koordinator()
+    {
+        $id = $this->input->post('id');
+        $koordinator = $this->staff_model->get_koordinator_by_id($id);
+
+        $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|exact_length[10]', [
+            'required' => 'Field {field} harus diisi.',
+            'exact_length' => 'Field {field} harus berisi 9 digit.'
+        ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_koordinator($id);
+        } else {
+            $config['upload_path'] = './assets/images/upload';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size'] = 1024; // ukuran file yang diupload max 1MB
+            $config['file_name'] = uniqid(); // generate nama file menjadi unik
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload('gambar')) {
+                $error = $this->upload->display_errors('', '');
+                if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
+                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
+                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
+                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                    redirect('staff/ubah_koordinator/' . $id); // arahkan kembali ke halaman ubah_koordinator dengan pesan kesalahan
+                } else {
+                    $err_message = $error;
+                }
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                // Ambil nilai gambar dari input hidden gambarLama
+                $gambar = $this->input->post('gambarLama');
+            } else {
+                $uploadData = $this->upload->data();
+                $gambar = $uploadData['file_name'];
+            }
+
+            $data = [
+                'nidn' => htmlspecialchars($this->input->post('nidn')),
+                'nama' => htmlspecialchars($this->input->post('nama')),
+                'gambar' => $gambar
+            ];
+
+            $this->staff_model->update_koordinator($id, $data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data koordinator berhasil diubah!</div>');
+            redirect('staff/kelola_koordinator');
+        }
+    }
+    // Akhir kelola koordinator
+
     // kelola mahasiswa
     public function kelola_mahasiswa()
     {
@@ -530,6 +684,9 @@ class Staff extends CI_Controller {
             'required' => 'Field {field} harus diisi.',
             'min_length' => 'NPM harus terdiri dari 9 digit karakter.',
             'is_unique' => 'NPM sudah terdaftar.'
+        ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
         ]);
         $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
@@ -571,6 +728,7 @@ class Staff extends CI_Controller {
                 $data = [
                     'user_id' => $this->input->post('user_id'),
                     'npm' => htmlspecialchars($this->input->post('npm')),
+                    'nama' => htmlspecialchars($this->input->post('nama')),
                     'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
                     'semester' => htmlspecialchars($this->input->post('semester')),
                     'gambar' => $uploadData['file_name']
@@ -617,7 +775,12 @@ class Staff extends CI_Controller {
             'required' => 'Field {field} harus diisi.',
             'exact_length' => 'Field {field} harus berisi 9 digit.'
         ]);
-        $this->form_validation->set_rules('prodi_id', 'Prodi_Id', 'required|trim');
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('prodi_id', 'Prodi_Id', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
         $this->form_validation->set_rules('semester', 'Semester', 'required|trim|is_numeric', [
             'required' => 'Field {field} harus diisi.',
             'is_numeric' => 'Field {field} hanya memperbolehkan input berupa angka.'
@@ -654,6 +817,7 @@ class Staff extends CI_Controller {
 
             $data = [
                 'npm' => htmlspecialchars($this->input->post('npm')),
+                'nama' => htmlspecialchars($this->input->post('nama')),
                 'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
                 'semester' => htmlspecialchars($this->input->post('semester')),
                 'gambar' => $gambar
@@ -692,6 +856,9 @@ class Staff extends CI_Controller {
             'min_length' => 'NPM harus terdiri dari 9 digit karakter.',
             'is_unique' => 'NPM sudah terdaftar.'
         ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
         $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
@@ -725,6 +892,7 @@ class Staff extends CI_Controller {
                 $uploadData = $this->upload->data();
                 $data = [
                     'nidn' => htmlspecialchars($this->input->post('nidn')),
+                    'nama' => htmlspecialchars($this->input->post('nama')),
                     'user_id' => $this->input->post('user_id'),
                     'gambar' => $uploadData['file_name']
                 ];
@@ -769,6 +937,9 @@ class Staff extends CI_Controller {
             'required' => 'Field {field} harus diisi.',
             'exact_length' => 'Field {field} harus berisi 9 digit.'
         ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
 
         if ($this->form_validation->run() == FALSE) {
             $this->ubah_dosen($id);
@@ -801,6 +972,7 @@ class Staff extends CI_Controller {
 
             $data = [
                 'nidn' => htmlspecialchars($this->input->post('nidn')),
+                'nama' => htmlspecialchars($this->input->post('nama')),
                 'gambar' => $gambar
             ];
 

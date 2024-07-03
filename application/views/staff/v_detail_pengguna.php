@@ -5,7 +5,7 @@
                 Detail data pengguna
             </div>
         <div class="card-body">
-            <h5 class="card-title"><?= $pengguna['nama']; ?></h5>
+            <!-- <h5 class="card-title"><?= $pengguna['nama']; ?></h5> -->
             <div class="row">
                 <div class="col-6">
                     <ul>

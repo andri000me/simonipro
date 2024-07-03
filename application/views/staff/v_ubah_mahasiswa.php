@@ -16,7 +16,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="nama" class="form-label">Nama mahasiswa</label>
-                                <input type="text" class="form-control" value="<?= $mahasiswa['nama_user']; ?>" disabled>
+                                <input type="text" class="form-control" id="nama" name="nama" value="<?= set_value('nama', $mahasiswa['nama']); ?>">
+                                <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
                             <div class="mb-3">
                                 <label for="program_studi" class="form-label">Program studi</label>

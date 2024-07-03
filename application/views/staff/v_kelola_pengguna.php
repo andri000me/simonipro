@@ -28,9 +28,9 @@
                     <thead>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">Nama</th>
                         <th class="text-start">Username</th>
                         <th class="text-start">Role</th>
+                        <th class="text-start">Status</th>
                         <th class="text-start">Aksi</th>
                       </tr>
                     </thead>
@@ -39,9 +39,13 @@
                       <?php foreach ($pengguna as $user) : ?>
                       <tr>
                         <th scope="row"><?= $i; ?></th>
-                        <td><?= $user['nama']; ?></td>
                         <td><?= $user['username']; ?></td>
                         <td><?= $user['nama_role']; ?></td>
+                        <td>
+                        <span class="badge <?= $user['is_active'] == 1 ? 'text-bg-success' : 'badge-muted' ?>">
+                          <?= $user['is_active'] == 1 ? 'aktif' : 'tidak aktif' ?>
+                        </span>
+                        </td>
                         <td>
                           <small>
                           <a href="detail_pengguna/<?= $user['id']; ?>" class="btn btn-outline-primary mb-2">
@@ -75,9 +79,9 @@
                     <tfoot>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">Nama</th>
                         <th class="text-start">Username</th>
                         <th class="text-start">Role</th>
+                        <th class="text-start">Status</th>
                         <th class="text-start">Aksi</th>
                       </tr>
                     </tfoot>
@@ -104,11 +108,11 @@
       </div>
       <div class="modal-body">
         <form action="<?= base_url('staff/tambah_pengguna'); ?>" method="post">
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="nama" class="form-label">Nama Pengguna</label>
                 <input type="text" name="nama" id="nama" class="form-control" autofocus autocomplete="off" value="<?= set_value('nama'); ?>">
                 <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
+            </div> -->
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" name="username" id="username" class="form-control" value="<?= set_value('username'); ?>">

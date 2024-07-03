@@ -14,11 +14,11 @@
                 </a>
                 <p class="text-center text-capitalize">Silahkan daftarkan akun Anda</p>
                 <form action="<?= base_url('auth/register'); ?>" method="POST">
-                  <div class="mb-3">
+                  <!-- <div class="mb-3">
                     <label for="nama" class="form-label">Nama Lengkap</label>
                     <input type="text" class="form-control" id="nama" name="nama" value="<?= set_value('nama'); ?>" autofocus>
                     <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-                  </div>
+                  </div> -->
                   <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" value="<?= set_value('username'); ?>" autofocus>

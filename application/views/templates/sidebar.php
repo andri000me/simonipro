@@ -50,19 +50,11 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_prodi') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_prodi'); ?>" aria-expanded="false">
+                            <a class="sidebar-link <?= ($active == 'kelola_koordinator') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_koordinator'); ?>" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-building"></i>
+                                    <i class="ti ti-medal"></i>
                                 </span>
-                                <span class="hide-menu">Kelola Prodi</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_project') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_project'); ?>" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-stack"></i>
-                                </span>
-                                <span class="hide-menu">Kelola Project</span>
+                                <span class="hide-menu">Kelola Koordinator</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -79,6 +71,26 @@
                                     <i class="ti ti-users"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Mahasiswa</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">PENGELOLAAN PROJECT</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_prodi') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_prodi'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-building"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Prodi</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_project') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_project'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-stack"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Project</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -108,6 +120,18 @@
                                     <i class="ti ti-report"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Kegiatan</span>
+                            </a>
+                        </li>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">PENGELOLAAN PROJECT</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_plotting') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_plotting'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-sitemap"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Plotting</span>
                             </a>
                         </li>
                     <?php endif; ?>

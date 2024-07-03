@@ -19,7 +19,7 @@
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
               <div class="d-block">
-                  <span class="text-muted d-block"><?= $this->session->userdata['nama']; ?></span>
+                  <span class="text-muted d-block"><?= $this->session->userdata['username']; ?></span>
                   <small class="text-primary d-block"><?= $this->session->userdata['nama_role']; ?></small>
               </div>
               <li class="nav-item dropdown">

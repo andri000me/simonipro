@@ -102,7 +102,7 @@ class Staff_model extends CI_Model {
     // Mahasiswa
     public function get_all_mahasiswa()
     {
-        $this->db->select('mahasiswa.*, user.nama as nama_user, role.nama_role, prodi.nama_prodi');
+        $this->db->select('mahasiswa.*, role.nama_role, prodi.nama_prodi');
         $this->db->from('mahasiswa');
         $this->db->join('user', 'mahasiswa.user_id = user.id');
         $this->db->join('role', 'user.role_id = role.id');
@@ -114,7 +114,7 @@ class Staff_model extends CI_Model {
 
     public function get_all_user_match_by_role_as_mahasiswa($selectedUserIds = array())
     {
-        $this->db->select('user.id, user.nama');
+        $this->db->select('user.id, user.username');
         $this->db->from('user');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->where('role.nama_role', 'mahasiswa');
@@ -147,7 +147,7 @@ class Staff_model extends CI_Model {
 
     public function get_mahasiswa_by_id($id)
     {
-        $this->db->select('mahasiswa.*, user.nama as nama_user, user.username, role.nama_role, prodi.nama_prodi');
+        $this->db->select('mahasiswa.*, user.username, role.nama_role, prodi.nama_prodi');
         $this->db->from('mahasiswa');
         $this->db->join('user', 'mahasiswa.user_id = user.id');
         $this->db->join('role', 'user.role_id = role.id');
@@ -161,7 +161,7 @@ class Staff_model extends CI_Model {
     // Dosen
     public function get_all_dosen()
     {
-        $this->db->select('dosen.*, user.nama, user.username, role.nama_role');
+        $this->db->select('dosen.*, user.username, role.nama_role');
         $this->db->from('dosen');
         $this->db->join('user', 'dosen.user_id = user.id');
         $this->db->join('role', 'user.role_id = role.id');
@@ -178,7 +178,7 @@ class Staff_model extends CI_Model {
     }
     public function get_all_user_match_by_role_as_dosen($selectedUserIds = array())
     {
-        $this->db->select('user.id, user.nama');
+        $this->db->select('user.id, user.username');
         $this->db->from('user');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->where('role.nama_role', 'dosen');
@@ -195,10 +195,16 @@ class Staff_model extends CI_Model {
     {
         return $this->db->insert('dosen', $data);
     }
+
+    public function update_dosen($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('dosen', $data);
+    }
     
     public function get_dosen_by_id($id)
     {
-        $this->db->select('dosen.*, user.nama, user.username, role.nama_role');
+        $this->db->select('dosen.*, user.username, role.nama_role');
         $this->db->from('dosen');
         $this->db->join('user', 'dosen.user_id = user.id');
         $this->db->join('role', 'user.role_id = role.id');
@@ -207,4 +213,62 @@ class Staff_model extends CI_Model {
         return $query->row_array();
     }
     // akhir kelola dosen
+
+    // Kelola koordinator
+    public function get_all_koordinator()
+    {
+        $this->db->select('koordinator.*, user.username, role.nama_role');
+        $this->db->from('koordinator');
+        $this->db->join('user', 'koordinator.user_id = user.id');
+        $this->db->join('role', 'user.role_id = role.id');
+        $this->db->where('role.nama_role', 'koordinator');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_selected_user_koor_ids()
+    {
+        $this->db->select('user_id');
+        $this->db->from('koordinator');
+        $query = $this->db->get();
+        return array_column($query->result_array(), 'user_id');
+    }
+
+    public function get_all_user_match_by_role_as_koordinator($selectedUserIds = array())
+    {
+        $this->db->select('user.id, user.username');
+        $this->db->from('user');
+        $this->db->join('role', 'user.role_id = role.id');
+        $this->db->where('role.nama_role', 'koordinator');
+
+        if (!empty($selectedUserIds)) {
+            $this->db->where_not_in('user.id', $selectedUserIds);
+        }
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_koordinator_by_id($id)
+    {
+        $this->db->select('koordinator.*, user.username, role.nama_role');
+        $this->db->from('koordinator');
+        $this->db->join('user', 'koordinator.user_id = user.id');
+        $this->db->join('role', 'user.role_id = role.id');
+        $this->db->where('koordinator.id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function insert_koordinator($data)
+    {
+        return $this->db->insert('koordinator', $data);
+    }
+
+    public function update_koordinator($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('koordinator', $data);
+    }
+    // Akhir kelola koordinator
 }

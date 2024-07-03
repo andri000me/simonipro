@@ -5,7 +5,7 @@
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">Daftar Dosen</h5>
+                    <h5 class="card-title fw-semibold">Daftar Koordinator</h5>
                 </div>
               </div>
               <div class="card">
@@ -13,7 +13,7 @@
                 <?= $this->session->flashdata('pesan'); ?>
                   <div class="d-flex align-items-center justify-content-between">
                     <div class="mb-3">
-                      <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#modalAddDosen">
+                      <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#modalAddKoordinator">
                         <span>
                           <i class="ti ti-plus"></i>
                         </span> 
@@ -32,14 +32,14 @@
                     </thead>
                     <tbody>
                       <?php $i = 1; ?>
-                      <?php foreach ($dosen as $dsn) : ?>
+                      <?php foreach ($koordinator as $koor) : ?>
                       <tr>
                         <th scope="row"><?= $i; ?></th>
-                        <td><?= $dsn['nidn']; ?></td>
-                        <td><?= $dsn['nama']; ?></td>
+                        <td><?= $koor['nidn']; ?></td>
+                        <td><?= $koor['nama']; ?></td>
                         <td>
                           <small>
-                            <a href="detail_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-primary mb-2">
+                            <a href="detail_koordinator/<?= $koor['id']; ?>" class="btn btn-outline-primary mb-2">
                               <span>
                                 <i class="ti ti-info-circle"></i>
                               </span>
@@ -47,7 +47,7 @@
                             </a>
                           </small>
                           <small>
-                            <a href="ubah_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-warning mb-2">
+                            <a href="ubah_koordinator/<?= $koor['id']; ?>" class="btn btn-outline-warning mb-2">
                               <span>
                                 <i class="ti ti-edit"></i>
                               </span>
@@ -77,15 +77,15 @@
     </div>
   </div>
   <!-- Modal -->
-<div class="modal fade" id="modalAddDosen" tabindex="-1" aria-labelledby="modalAddDosenLabel" aria-hidden="true">
+<div class="modal fade" id="modalAddKoordinator" tabindex="-1" aria-labelledby="modalAddKoordinatorLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="modalAddDosenLabel">Form Tambah Data Dosen</h1>
+        <h1 class="modal-title fs-5" id="modalAddKoordinatorLabel">Form Tambah Data koordinator</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('staff/tambah_dosen'); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?= base_url('staff/tambah_koordinator'); ?>" method="post" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="user_id" class="form-label">User ID</label>
               <select class="form-select" id="user_id" name="user_id">

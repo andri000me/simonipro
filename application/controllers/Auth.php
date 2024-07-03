@@ -36,9 +36,9 @@ class Auth extends CI_Controller {
             if ($user['is_active'] == 1) {
                 if (password_verify($password, $user['password'])) {
                     $data = [
-                        'nama' => $user['nama'],
+                        // 'nama' => $user['nama'],
                         'username' => $user['username'],
-                        'role_id' => $user['role_id'],
+                        // 'role_id' => $user['role_id'],
                         'nama_role' => $user['nama_role'],
                         'is_logged_in' => true
                     ];
@@ -116,13 +116,13 @@ class Auth extends CI_Controller {
             $this->load->view('auth/v_register');
             $this->load->view('templates/footer');
         } else {
-            $nama = htmlspecialchars($this->input->post('nama'));
+            // $nama = htmlspecialchars($this->input->post('nama'));
             $username = htmlspecialchars($this->input->post('username'));
             $password = htmlspecialchars(password_hash($this->input->post('password1'), PASSWORD_DEFAULT));
             $role_id = htmlspecialchars($this->input->post('role_id'));
 
             $data = [
-                'nama' => $nama,
+                // 'nama' => $nama,
                 'username' => $username,
                 'password' => $password,
                 'role_id' => $role_id,
