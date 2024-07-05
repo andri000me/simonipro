@@ -26,8 +26,10 @@
                       <tr>
                         <th class="text-start">#</th>
                         <th class="text-start">Koordinator</th>
-                        <th class="text-start">Dosen pembimbing</th>
-                        <th class="text-start">Nama Mahasiswa</th>
+                        <th class="text-start">NIDN</th>
+                        <th class="text-start">Pembimbing</th>
+                        <th class="text-start">NPM</th>
+                        <th class="text-start">Mahasiswa</th>
                         <th class="text-start">Aksi</th>
                       </tr>
                     </thead>
@@ -36,17 +38,14 @@
                       <?php foreach ($plotting as $plot) : ?>
                       <tr>
                         <th scope="row"><?= $i; ?></th>
-                        <td><?= $plot['nama_plotting']; ?></td>
-                        <td><?= date('d-M-Y', $plot['created_at']); ?></td>
-                        <td>
-                          <?php ( $plot['status'] == 'draft' ) ? $color = 'warning' : $color = 'success' ?>
-                            <span class="badge text-bg-<?= $color; ?>">
-                                <?= $plot['status']; ?>
-                            </span>
-                        </td>
+                          <td><?= $plot['koordinator_nama']; ?></td>
+                          <td><?= $plot['dosen_pembimbing_nidn']; ?></td>
+                          <td><?= $plot['dosen_pembimbing_nama']; ?></td>
+                          <td><?= $plot['mahasiswa_npm']; ?></td>
+                          <td><?= $plot['mahasiswa_nama']; ?></td>
                         <td>
                           <small>
-                          <a href="detail_plotting/<?= $plot['id']; ?>" class="btn btn-outline-primary mb-2">
+                          <a href="detail_plotting_pembimbing/<?= $plot['id']; ?>" class="btn btn-outline-primary mb-2">
                               <span>
                                 <i class="ti ti-info-circle"></i>
                               </span>
@@ -54,7 +53,7 @@
                             </a>
                           </small>
                           <small>
-                          <a href="ubah_plotting/<?= $plot['id']; ?>" class="btn btn-outline-warning mb-2">
+                          <a href="ubah_plotting_pembimbing/<?= $plot['id']; ?>" class="btn btn-outline-warning mb-2">
                               <span>
                                 <i class="ti ti-edit"></i>
                               </span>
@@ -69,9 +68,11 @@
                     <tfoot>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">Nama plotting</th>
-                        <th class="text-start">Dibuat pada</th>
-                        <th class="text-start">Status</th>
+                        <th class="text-start">Koordinator</th>
+                        <th class="text-start">NIDN</th>
+                        <th class="text-start">Pembimbing</th>
+                        <th class="text-start">NPM</th>
+                        <th class="text-start">Nama Mahasiswa</th>
                         <th class="text-start">Aksi</th>
                       </tr>
                     </tfoot>
@@ -94,12 +95,37 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('koordinator/tambah_plotting'); ?>" method="post">
-            <div class="mb-3">
-                <label for="nama_plotting" class="form-label">Nama plotting</label>
-                <input type="text" name="nama_plotting" id="nama_plotting" class="form-control" autofocus autocomplete="off" value="<?= set_value('nama_plotting'); ?>">
-                <?= form_error('nama_plotting', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
+        <form action="<?= base_url('koordinator/tambah_plotting_pembimbing'); ?>" method="post">
+          <div class="mb-3">
+            <label for="koordinator_id" class="form-label">Koordinator</label>
+              <select class="form-select" id="koordinator_id" name="koordinator_id">
+                <option selected>-- Pilih Koordinator --</option>
+                  <?php foreach ($koordinator as $koor) : ?>
+                    <option value="<?= $koor['id']; ?>"><?= $koor['nama']; ?></option>
+                  <?php endforeach; ?>
+              </select>
+            <?= form_error('koordinator_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
+          <div class="mb-3">
+            <label for="dosen_pembimbing_id" class="form-label">Dosen Pembimbing</label>
+              <select class="form-select" id="dosen_pembimbing_id" name="dosen_pembimbing_id">
+                <option selected>-- Pilih Dosen pembimbing --</option>
+                  <?php foreach ($dosen as $dsn) : ?>
+                    <option value="<?= $dsn['id']; ?>"><?= $dsn['nama']; ?></option>
+                  <?php endforeach; ?>
+              </select>
+            <?= form_error('dosen_pembimbing_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
+          <div class="mb-3">
+            <label for="mahasiswa_id" class="form-label">Mahasiswa</label>
+              <select class="form-select" id="mahasiswa_id" name="mahasiswa_id">
+                <option selected>-- Pilih Mahasiswa --</option>
+                  <?php foreach ($mahasiswa as $mhs) : ?>
+                    <option value="<?= $mhs['id']; ?>"><?= $mhs['nama']; ?></option>
+                  <?php endforeach; ?>
+              </select>
+            <?= form_error('mahasiswa_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

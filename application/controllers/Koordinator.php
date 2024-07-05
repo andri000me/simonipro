@@ -5,6 +5,7 @@ class Koordinator extends CI_Controller {
     // construct method
     public function __construct() {
         parent::__construct();
+        $this->load->model('staff_model');
         $this->load->model('jadwal_model');
         $this->load->model('koordinator_model');
 
@@ -246,16 +247,102 @@ class Koordinator extends CI_Controller {
     // Akhir kelola kegiatan
 
     // Kelola Plotting
-    public function kelola_plotting() {
+    public function kelola_plotting_pembimbing() {
         $data['title'] = 'Kelola Plotting | Koordinator';
         $data['plotting'] = $this->koordinator_model->get_all_plotting_pembimbing();
+        $data['active'] = 'kelola_plottingkelola_plotting';
+        // data from other tables
+        $data['koordinator'] = $this->staff_model->get_all_koordinator();
+        $data['dosen'] = $this->staff_model->get_all_dosen();
+        // Ambil user id mahasiswa yang sudah dipilih
+        $selectedUserIds = $this->koordinator_model->get_selected_user_mhs_ids();
+        // Kirim user id yang sudah dipilih ke fungsi get_all_user_match_by_role_as_mahasiswa
+        $data['mahasiswa'] = $this->koordinator_model->get_all_user_match_by_role_as_mahasiswa($selectedUserIds);
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_kelola_plotting_pembimbing', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function tambah_plotting_pembimbing() 
+    {
+        // set_rules
+        $this->form_validation->set_rules('koordinator_id', 'Koordinator_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen_Pembimbing_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('mahasiswa_id', 'Mahasiswa_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        // jalankan form validation, dan jika bernilai false, maka
+        if ($this->form_validation->run() == FALSE) {
+            // beri pesan kesalahan
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting baru gagal ditambahkan!</div>');
+            // kembalikan ke halaman kelola plotting_pembimbing
+            $this->kelola_plotting_pembimbing();
+        } else {
+            $data = [
+                'koordinator_id' => htmlspecialchars($this->input->post('koordinator_id')),
+                'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
+                'mahasiswa_id' => htmlspecialchars($this->input->post('mahasiswa_id')),
+                'created_at' => time(),
+                'updated_at' => time()
+            ];
+
+            $this->koordinator_model->insert_plotting_pembimbing($data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data plotting baru berhasil ditambahkan!</div>');
+            redirect('koordinator/kelola_plotting_pembimbing');
+        }
+    }
+
+    public function detail_plotting_pembimbing($id)
+    {
+        $data['title'] = 'Detail Plotting | Koordinator';
+        $data['plotting'] = $this->koordinator_model->get_plotting_pembimbing_by_id($id);
+        $data['active'] = 'kelola_plotting_pembimbing';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_detail_plotting_pembimbing', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function ubah_plotting_pembimbing($id) {
+        $data['title'] = 'Ubah Plotting | Koordinator';
+        $data['plotting'] = $this->koordinator_model->get_plotting_pembimbing_by_id($id);
+        $data['dosen'] = $this->staff_model->get_all_dosen();
         $data['active'] = 'kelola_plotting';
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_kelola_plotting', $data);
+        $this->load->view('koordinator/v_ubah_plotting_pembimbing', $data);
         $this->load->view('templates/footer');
+    }
+
+    public function update_plotting_pembimbing() {
+        $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen Pembimbing', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting gagal diubah!</div>');
+            redirect('koordinator/ubah_plotting_pembimbing/' . $this->input->post('id'));
+        } else {
+            $data = [
+                'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
+                'updated_at' => time()
+            ];
+
+            $this->koordinator_model->update_plotting_pembimbing($this->input->post('id'), $data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data plotting berhasil diubah!</div>');
+            redirect('koordinator/kelola_plotting_pembimbing');
+        }
     }
     // Akhir kelola plotting
 }

@@ -124,14 +124,14 @@
                         </li>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">PENGELOLAAN PROJECT</span>
+                            <span class="hide-menu">PENGELOLAAN PLOTTING</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_plotting') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_plotting'); ?>" aria-expanded="false">
+                            <a class="sidebar-link <?= ($active == 'kelola_plotting_pembimbing') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_plotting_pembimbing'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-sitemap"></i>
                                 </span>
-                                <span class="hide-menu">Kelola Plotting</span>
+                                <span class="hide-menu">Pembimbing</span>
                             </a>
                         </li>
                     <?php endif; ?>
