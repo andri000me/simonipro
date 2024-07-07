@@ -28,7 +28,7 @@
                     </ul>
                 </div>
             </div>
-            <a href="<?= base_url('staff/kelola_project'); ?>" class="btn btn-primary">Kembali</a>
+            <a href="<?= base_url('koordinator/kelola_project'); ?>" class="btn btn-primary">Kembali</a>
         </div>
     </div>
 </div>

@@ -53,14 +53,6 @@
                               Detail
                             </a>
                           </small>
-                          <small>
-                          <a href="ubah_jadwal/<?= $j['id']; ?>" class="btn btn-outline-warning mb-2">
-                              <span>
-                                <i class="ti ti-edit"></i>
-                              </span>
-                              Ubah
-                            </a>
-                          </small>
                         </td>
                       </tr>
                       <?php $i++; ?>

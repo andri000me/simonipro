@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-body">
                         <?= $this->session->flashdata('pesan'); ?>
-                        <form action="<?= base_url('staff/update_project'); ?>" method="post" enctype="multipart/form-data">
+                        <form action="<?= base_url('koordinator/update_project'); ?>" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="id" value="<?= $projects['id']; ?>">
                             <div class="mb-3">
                                 <label for="nama_project" class="form-label">Nama Project</label>

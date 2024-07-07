@@ -44,10 +44,10 @@
                             <?php endif; ?>
                         </li>
                         <li class="mb-2 text-capitalize">
-                            <span class="fw-bold d-block">Dibuat pada :</span> <?= date('d-M-Y H:i', strtotime($plotting['created_at'])); ?>
+                            <span class="fw-bold d-block">Dibuat pada :</span> <?= date('d-M-Y H:i', $plotting['created_at']); ?>
                         </li>
                         <li class="mb-2 text-capitalize">
-                            <span class="fw-bold d-block">Diubah pada :</span> <?= date('d-M-Y H:i', strtotime($plotting['updated_at'])); ?>
+                            <span class="fw-bold d-block">Diubah pada :</span> <?= date('d-M-Y H:i', $plotting['updated_at']); ?>
                         </li>
                         <li class="mb-2 text-capitalize">
                             <span class="fw-bold d-block">Jenis Plotting :</span> <?= $plotting['jenis_plotting_nama']; ?>

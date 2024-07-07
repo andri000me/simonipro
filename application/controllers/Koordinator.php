@@ -9,6 +9,9 @@ class Koordinator extends CI_Controller {
         $this->load->model('jadwal_model');
         $this->load->model('koordinator_model');
 
+        // set local timezone
+        date_default_timezone_set('Asia/jakarta');
+
         // Pengecekan apakah user sudah login
         if (!$this->session->userdata('is_logged_in')) {
             // Set pesan flashdata untuk ditampilkan di halaman login
@@ -35,6 +38,134 @@ class Koordinator extends CI_Controller {
         $this->load->view('koordinator/v_dashboard');
         $this->load->view('templates/footer');
 	}
+
+    // Kelola Project
+    public function kelola_project() {
+        $data['title'] = 'Kelola Project';
+        // Ambil data project
+        $data['projects'] = $this->koordinator_model->get_all_projects();
+        $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['active'] = 'kelola_project';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_kelola_project', $data);
+        $this->load->view('templates/footer');
+    }
+
+    // Tambah Project
+    public function tambah_project() 
+    {
+        // Set form validation rules
+        $this->form_validation->set_rules('nama_project', 'Nama Project', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim|max_length[255]', [
+            'required' => 'Field {field} harus diisi.',
+            'max_length' => 'Melebihi batas karakter yang diperbolehkan.'
+        ]);
+        $this->form_validation->set_rules('tgl_mulai', 'Tanggal_Mulai', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('tgl_selesai', 'Tanggal_Selesai', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('prodi_id', 'Prodi_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        // Jalankan form validation, dan jika bernilai false, maka
+        if ($this->form_validation->run() == FALSE) {
+            // Beri pesan kesalahan
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Project baru gagal ditambahkan!</div>');
+            // Kembalikan ke halaman kelola project
+            $this->kelola_project();
+        } else {
+            $data = [
+                'nama_project' => htmlspecialchars($this->input->post('nama_project')),
+                'deskripsi' => htmlspecialchars($this->input->post('deskripsi')),
+                'tgl_mulai' => htmlspecialchars($this->input->post('tgl_mulai')),
+                'tgl_selesai' => htmlspecialchars($this->input->post('tgl_selesai')),
+                'prodi_id' => htmlspecialchars($this->input->post('prodi_id'))
+            ];
+
+            $this->koordinator_model->insert_project($data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Project baru berhasil ditambahkan!</div>');
+            redirect('koordinator/kelola_project');
+        }
+    }
+
+    public function detail_project($id)
+    {
+        $data['title'] = 'Detail Prodi | Staff';
+        $data['projects'] = $this->koordinator_model->get_project_by_id($id);
+        $data['active'] = 'kelola_project';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_detail_project', $data);
+        $this->load->view('templates/footer');
+    }
+    public function ubah_project($id)
+    {
+        $data['title'] = 'Ubah Mahasiswa | Staff';
+        $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['projects'] = $this->koordinator_model->get_project_by_id($id);
+        $data['active'] = 'kelola_project';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/v_ubah_project', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_project()
+    {
+        $id = $this->input->post('id');
+        $current_project = $this->koordinator_model->get_project_by_id($id);
+
+        // Set validation rules
+        $this->form_validation->set_rules('nama_project', 'Nama_Project', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('tgl_mulai', 'Tanggal_Mulai', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('tgl_selesai', 'Tanggal_Selesai', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('prodi_id', 'Prodi_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_project($id); // Kembali ke halaman ubah project jika validasi gagal
+        } else {
+            $data = [
+                'nama_project' => htmlspecialchars($this->input->post('nama_project')),
+                'deskripsi' => htmlspecialchars($this->input->post('deskripsi')),
+                'tgl_mulai' => htmlspecialchars($this->input->post('tgl_mulai')),
+                'tgl_selesai' => htmlspecialchars($this->input->post('tgl_selesai')),
+                'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
+            ];
+
+            $update = $this->koordinator_model->update_project($id, $data);
+
+            if ($update) {
+                // If update is successful
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data project berhasil diubah!</div>');
+                redirect('koordinator/kelola_project'); // Adjust the redirect path as needed
+            } else {
+                // If update fails
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update project!</div>');
+                redirect('koordinator/ubah_project/' . $id);
+            }
+        }
+    }
+    // Akhir kelola project
 
     // Kelola jadwal
     public function kelola_jadwal() {
@@ -74,6 +205,8 @@ class Koordinator extends CI_Controller {
     {
         $data['title'] = 'Detail Jadwal | Koordinator';
         $data['jadwal'] = $this->jadwal_model->get_jadwal_by_id($id);
+        $data['kegiatan'] = $this->jadwal_model->get_kegiatan_by_jadwal_id($id);  // Menambahkan data kegiatan
+
         $data['active'] = 'kelola_jadwal';
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -82,49 +215,21 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function ubah_jadwal($id)
-    {
-        $data['title'] = 'Detail Jadwal | Koordinator';
-        $data['jadwal'] = $this->jadwal_model->get_jadwal_by_id($id);
-        $data['active'] = 'kelola_jadwal';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_ubah_jadwal', $data);
-        $this->load->view('templates/footer');
-    }
+    public function do_publish_jadwal($id) {
+        $data = array(
+            'status' => 'published',
+            'updated_at' => time()
+        );
 
-    public function update_jadwal()
-    {
-        $id = $this->input->post('id');
+        $result = $this->jadwal_model->update_jadwal($id, $data);
 
-        // set_rules
-        $this->form_validation->set_rules('nama_jadwal', 'Nama_Jadwal', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->ubah_jadwal($id); // Kembali ke halaman ubah jadwal jika validasi gagal
+        if ($result) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Jadwal berhasil dipublikasikan!</div>');
         } else {
-            $data = [
-                'nama_jadwal' => htmlspecialchars($this->input->post('nama_jadwal')),
-                'created_at' => $this->input->post('created_at'),
-                'updated_at' => time(),
-                'status' => 'draft'
-            ];
-
-            $update = $this->jadwal_model->update_jadwal($id, $data);
-
-            if ($update) {
-                // If update is successful
-                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data jadwal berhasil di ubah!</div>');
-                redirect('koordinator/kelola_jadwal'); // Adjust the redirect path as needed
-            } else {
-                // If update fails
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update jadwal!</div>');
-                redirect('koordinator/ubah_jadwal/' . $id);
-            }
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal mempublikasikan jadwal!</div>');
         }
+
+        redirect('koordinator/kelola_jadwal');
     }
     // akhir kelola jadwal
 
@@ -252,7 +357,7 @@ class Koordinator extends CI_Controller {
         // data from other tables
         $data['koordinator'] = $this->staff_model->get_all_koordinator();
         $data['dosen'] = $this->staff_model->get_all_dosen();
-        $data['projects'] = $this->staff_model->get_all_projects();
+        $data['projects'] = $this->koordinator_model->get_all_projects();
         $data['jenis_plotting'] = $this->koordinator_model->get_all_jenis_plotting();
         // Ambil user id mahasiswa yang sudah dipilih
         $selectedUserIds = $this->koordinator_model->get_selected_user_mhs_ids();

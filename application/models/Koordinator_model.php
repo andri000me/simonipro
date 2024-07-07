@@ -1,6 +1,41 @@
 <?php
 class Koordinator_model extends CI_Model {
 
+    // Kelola Project
+    public function get_all_projects()
+    {
+        $this->db->select('project.*, prodi.nama_prodi');
+        $this->db->from('project');
+        $this->db->join('prodi', 'project.prodi_id = prodi.id');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    // get a project by ID
+    public function get_project_by_id($id)
+    {
+        $this->db->select('project.*, prodi.nama_prodi');
+        $this->db->from('project');
+        $this->db->join('prodi', 'project.prodi_id = prodi.id');
+        $this->db->where('project.id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    // Function to insert a new project
+    public function insert_project($data)
+    {
+        return $this->db->insert('project', $data);
+    }
+
+    // function to update project data
+    public function update_project($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('project', $data);
+    }
+    // Akhir kelola project
+
     // Kelola plotting    
     // query get data plotting_pembimbing by id
     public function getAllPlotting() {

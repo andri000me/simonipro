@@ -7,6 +7,9 @@ class Kaprodi extends CI_Controller {
     public function __construct() {
         parent::__construct();
 
+        // set local timezone
+        date_default_timezone_set('Asia/jakarta');
+
         // Pengecekan apakah user sudah login
         if (!$this->session->userdata('is_logged_in')) {
             // Set pesan flashdata untuk ditampilkan di halaman login

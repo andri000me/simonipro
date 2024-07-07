@@ -91,7 +91,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="<?= base_url('staff/tambah_project'); ?>" method="post" enctype="multipart/form-data">
+        <form action="<?= base_url('koordinator/tambah_project'); ?>" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="nama_project" class="form-label">Nama Project</label>
                 <input type="text" name="nama_project" id="nama_project" class="form-control" autofocus autocomplete="off" value="<?= set_value('nama_project'); ?>">

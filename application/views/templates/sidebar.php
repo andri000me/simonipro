@@ -31,7 +31,7 @@
                     <?php if ($this->session->userdata('nama_role') == 'staff') : ?>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">PENGELOLAAN USER</span>
+                            <span class="hide-menu">DATA MASTER</span>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_role') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_role'); ?>" aria-expanded="false">
@@ -47,6 +47,14 @@
                                     <i class="ti ti-user"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Pengguna</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_prodi') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_prodi'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-building"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Program Studi</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -73,39 +81,31 @@
                                 <span class="hide-menu">Kelola Mahasiswa</span>
                             </a>
                         </li>
+                    <?php elseif ($this->session->userdata('nama_role') == 'koordinator') : ?>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">PENGELOLAAN PROJECT</span>
+                            <span class="hide-menu">DATA PROJECT</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_prodi') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_prodi'); ?>" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-building"></i>
-                                </span>
-                                <span class="hide-menu">Kelola Prodi</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_project') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_project'); ?>" aria-expanded="false">
+                            <a class="sidebar-link <?= ($active == 'kelola_project') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_project'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-stack"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Project</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
+                        <!-- <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'publish_jadwal') ? 'active' : '' ?>" href="<?= base_url('staff/publish_jadwal'); ?>" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-calendar"></i>
+                                    <i class="ti ti-calendar-user"></i>
                                 </span>
                                 <span class="hide-menu">Publikasi Jadwal</span>
                             </a>
-                        </li>
-                    <?php elseif ($this->session->userdata('nama_role') == 'koordinator') : ?>
-                        <li class="nav-small-cap">
+                        </li> -->
+                        <!-- <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
                             <span class="hide-menu">PENGELOLAAN JADWAL</span>
-                        </li>
+                        </li> -->
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_jadwal') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_jadwal'); ?>" aria-expanded="false">
                                 <span>

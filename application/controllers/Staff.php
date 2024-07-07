@@ -9,6 +9,9 @@ class Staff extends CI_Controller {
         $this->load->model('user_model');
         $this->load->model('jadwal_model');
 
+        // set local timezone
+        date_default_timezone_set('Asia/jakarta');
+
          // Pengecekan apakah user sudah login
          if (!$this->session->userdata('is_logged_in')) {
             // Set pesan flashdata untuk ditampilkan di halaman login
@@ -386,134 +389,6 @@ class Staff extends CI_Controller {
         }
     }
     // akhir kelola prodi
-
-    // Kelola Project
-    public function kelola_project() {
-        $data['title'] = 'Kelola Project';
-        // Ambil data project
-        $data['projects'] = $this->staff_model->get_all_projects();
-        $data['prodi'] = $this->staff_model->get_all_prodi();
-        $data['active'] = 'kelola_project';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_project', $data);
-        $this->load->view('templates/footer');
-    }
-
-    // Tambah Project
-    public function tambah_project() 
-    {
-        // Set form validation rules
-        $this->form_validation->set_rules('nama_project', 'Nama Project', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim|max_length[255]', [
-            'required' => 'Field {field} harus diisi.',
-            'max_length' => 'Melebihi batas karakter yang diperbolehkan.'
-        ]);
-        $this->form_validation->set_rules('tgl_mulai', 'Tanggal_Mulai', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('tgl_selesai', 'Tanggal_Selesai', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('prodi_id', 'Prodi_ID', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-
-        // Jalankan form validation, dan jika bernilai false, maka
-        if ($this->form_validation->run() == FALSE) {
-            // Beri pesan kesalahan
-            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Project baru gagal ditambahkan!</div>');
-            // Kembalikan ke halaman kelola project
-            $this->kelola_project();
-        } else {
-            $data = [
-                'nama_project' => htmlspecialchars($this->input->post('nama_project')),
-                'deskripsi' => htmlspecialchars($this->input->post('deskripsi')),
-                'tgl_mulai' => htmlspecialchars($this->input->post('tgl_mulai')),
-                'tgl_selesai' => htmlspecialchars($this->input->post('tgl_selesai')),
-                'prodi_id' => htmlspecialchars($this->input->post('prodi_id'))
-            ];
-
-            $this->staff_model->insert_project($data);
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Project baru berhasil ditambahkan!</div>');
-            redirect('staff/kelola_project');
-        }
-    }
-
-    public function detail_project($id)
-    {
-        $data['title'] = 'Detail Prodi | Staff';
-        $data['projects'] = $this->staff_model->get_project_by_id($id);
-        $data['active'] = 'kelola_project';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_project', $data);
-        $this->load->view('templates/footer');
-    }
-    public function ubah_project($id)
-    {
-        $data['title'] = 'Ubah Mahasiswa | Staff';
-        $data['prodi'] = $this->staff_model->get_all_prodi();
-        $data['projects'] = $this->staff_model->get_project_by_id($id);
-        $data['active'] = 'kelola_project';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_project', $data);
-        $this->load->view('templates/footer');
-    }
-
-    public function update_project()
-    {
-        $id = $this->input->post('id');
-        $current_project = $this->staff_model->get_project_by_id($id);
-
-        // Set validation rules
-        $this->form_validation->set_rules('nama_project', 'Nama_Project', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('tgl_mulai', 'Tanggal_Mulai', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('tgl_selesai', 'Tanggal_Selesai', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('prodi_id', 'Prodi_ID', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->ubah_project($id); // Kembali ke halaman ubah project jika validasi gagal
-        } else {
-            $data = [
-                'nama_project' => htmlspecialchars($this->input->post('nama_project')),
-                'deskripsi' => htmlspecialchars($this->input->post('deskripsi')),
-                'tgl_mulai' => htmlspecialchars($this->input->post('tgl_mulai')),
-                'tgl_selesai' => htmlspecialchars($this->input->post('tgl_selesai')),
-                'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
-            ];
-
-            $update = $this->staff_model->update_project($id, $data);
-
-            if ($update) {
-                // If update is successful
-                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data project berhasil diubah!</div>');
-                redirect('staff/kelola_project'); // Adjust the redirect path as needed
-            } else {
-                // If update fails
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update project!</div>');
-                redirect('staff/ubah_project/' . $id);
-            }
-        }
-    }
-    // Akhir kelola project
 
     // Kelola koordinator
     public function kelola_koordinator()
@@ -1030,54 +905,4 @@ class Staff extends CI_Controller {
         }
     }
     // akhir kelola dosen
-
-    // publish jadwal
-    public function publish_jadwal() 
-    {
-        $data['title'] = 'publish Jadwal | Staff';
-        $data['jadwal'] = $this->jadwal_model->get_all_jadwal();
-        $data['active'] = 'publish_jadwal';
-
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_publish_jadwal', $data);
-        $this->load->view('templates/footer');
-    }
-
-    public function do_publish_jadwal($id) {
-        $data = array(
-            'status' => 'published',
-            'updated_at' => time()
-        );
-
-        $result = $this->jadwal_model->update_jadwal($id, $data);
-
-        if ($result) {
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Jadwal berhasil dipublikasikan!</div>');
-        } else {
-            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal mempublikasikan jadwal!</div>');
-        }
-
-        redirect('staff/publish_jadwal');
-    }
-
-    public function detail_jadwal($id) {
-        $data['title'] = 'Detail Jadwal | Staff';
-        $data['jadwal'] = $this->jadwal_model->get_jadwal_by_id($id);
-        $data['kegiatan'] = $this->jadwal_model->get_kegiatan_by_jadwal_id($id);  // Menambahkan data kegiatan
-        $data['active'] = 'publish_jadwal';
-    
-        if (empty($data['jadwal'])) {
-            show_404();
-        }
-    
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_jadwal', $data);
-        $this->load->view('templates/footer');
-    }
-    
-    // Akhir publish jadwal
 }
