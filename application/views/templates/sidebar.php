@@ -5,7 +5,7 @@
         <!-- Sidebar scroll-->
         <div>
             <div class="brand-logo d-flex align-items-center justify-content-between">
-                <a href="<?= base_url('staff'); ?>" class="text-nowrap logo-img">
+                <a href="<?= base_url() . $this->session->userdata['nama_role']; ?>" class="text-nowrap logo-img">
                     <img src="<?= base_url('assets'); ?>/images/logos/logo-simonipro.svg" width="180" alt="" />
                 </a>
                 <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -122,16 +122,12 @@
                                 <span class="hide-menu">Kelola Kegiatan</span>
                             </a>
                         </li>
-                        <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">PENGELOLAAN PLOTTING</span>
-                        </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_plotting_pembimbing') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_plotting_pembimbing'); ?>" aria-expanded="false">
+                            <a class="sidebar-link <?= ($active == 'kelola_plotting') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_plotting'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-sitemap"></i>
                                 </span>
-                                <span class="hide-menu">Pembimbing</span>
+                                <span class="hide-menu">Kelola Plotting</span>
                             </a>
                         </li>
                     <?php endif; ?>

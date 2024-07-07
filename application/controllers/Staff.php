@@ -131,9 +131,12 @@ class Staff extends CI_Controller {
     public function tambah_pengguna() 
     {
         // set_rules
-        // $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-        //     'required' => 'Field {field} harus diisi.',
-        // ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('no_telp', 'No_Telp', 'is_numeric|trim', [
+            'is_numeric' => 'Format nomor telepon harus berupa angka/numeric.',
+        ]);
         $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[user.username]', [
             'required' => 'Field {field} harus diisi.',
             'is_unique' => 'Username sudah terdaftar.'
@@ -161,6 +164,8 @@ class Staff extends CI_Controller {
                 'username' => htmlspecialchars($this->input->post('username')),
                 'password' => htmlspecialchars(password_hash($this->input->post('password'), PASSWORD_DEFAULT)),
                 'role_id' => htmlspecialchars($this->input->post('role_id')),
+                'nama' => htmlspecialchars($this->input->post('nama')),
+                'no_telp' => htmlspecialchars($this->input->post('no_telp')),
                 'is_active' => htmlspecialchars($this->input->post('is_active')),
                 'created_at' => time(),
                 'updated_at' => time()
@@ -213,9 +218,12 @@ class Staff extends CI_Controller {
         $current_user = $this->user_model->get_user_by_id($id);
 
         // set_rules
-        // $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-        //     'required' => 'Field {field} harus diisi.',
-        // ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('no_telp', 'No_Telp', 'is_numeric|trim', [
+            'is_numeric' => 'Format nomor telepon harus berupa angka/numeric.',
+        ]);
 
         // Only apply the is_unique rule if the new username is different from the current username
         $new_username = $this->input->post('username');
@@ -260,6 +268,8 @@ class Staff extends CI_Controller {
                 'username' => htmlspecialchars($this->input->post('username')),
                 'password' => $password,
                 'role_id' => htmlspecialchars($this->input->post('role_id')),
+                'nama' => htmlspecialchars($this->input->post('nama')),
+                'no_telp' => htmlspecialchars($this->input->post('no_telp')),
                 'is_active' => htmlspecialchars($this->input->post('is_active')),
                 'created_at' => $this->input->post('created_at'),
                 'updated_at' => time()
@@ -528,8 +538,8 @@ class Staff extends CI_Controller {
         // set_rules
         $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|min_length[10]|is_unique[dosen.nidn]', [
             'required' => 'Field {field} harus diisi.',
-            'min_length' => 'NPM harus terdiri dari 9 digit karakter.',
-            'is_unique' => 'NPM sudah terdaftar.'
+            'min_length' => 'NIDN harus terdiri dari 10 digit karakter.',
+            'is_unique' => 'NIDN sudah terdaftar.'
         ]);
         $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
@@ -537,47 +547,52 @@ class Staff extends CI_Controller {
         $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
-        
+
         if ($this->form_validation->run() == FALSE) {
+            // Jika validasi form gagal
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">Data koordinator gagal ditambahkan!</div>');
             $this->kelola_koordinator();
-        } else {
-            $config['upload_path'] = './assets/images/upload';
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
-            $config['file_name'] = uniqid(); // generate nama file menjadi unik
-    
-            $this->load->library('upload', $config);
-    
+            return; // Hentikan eksekusi lebih lanjut
+        }
+
+        // Konfigurasi upload gambar
+        $config['upload_path'] = './assets/images/upload';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
+        $config['file_name'] = uniqid(); // generate nama file menjadi unik
+
+        $this->load->library('upload', $config);
+
+        // Set gambar default
+        $gambar = 'default.jpeg';
+
+        // Cek apakah ada file yang diupload
+        if (!empty($_FILES['gambar']['name'])) {
             if (!$this->upload->do_upload('gambar')) {
-                // Cek kesalahan upload
+                // Jika ada kesalahan upload gambar
                 $error = $this->upload->display_errors('', '');
-                if ($error == 'You did not select a file to upload.') {
-                    $err_message = 'Silahkan upload file gambar terlebih dahulu.';
-                } elseif (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
-                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
-                } else {
-                    $err_message = $error;
-                }
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$error.'</div>');
                 $this->kelola_koordinator();
+                return; // Hentikan eksekusi lebih lanjut
             } else {
+                // Berhasil upload gambar
                 $uploadData = $this->upload->data();
-                $data = [
-                    'nidn' => htmlspecialchars($this->input->post('nidn')),
-                    'nama' => htmlspecialchars($this->input->post('nama')),
-                    'user_id' => $this->input->post('user_id'),
-                    'gambar' => $uploadData['file_name']
-                ];
-    
-                $this->staff_model->insert_koordinator($data);
-                $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data koordinator berhasil ditambahkan!</div>');
-                redirect('staff/kelola_koordinator');
+                $gambar = $uploadData['file_name'];
             }
         }
+
+        $data = [
+            'nidn' => htmlspecialchars($this->input->post('nidn')),
+            'nama' => htmlspecialchars($this->input->post('nama')),
+            'user_id' => $this->input->post('user_id'),
+            'gambar' => $gambar
+        ];
+
+        $this->staff_model->insert_koordinator($data);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data koordinator berhasil ditambahkan!</div>');
+        redirect('staff/kelola_koordinator');
     }
+
 
     public function detail_koordinator($id)
     {
@@ -609,41 +624,47 @@ class Staff extends CI_Controller {
         $id = $this->input->post('id');
         $koordinator = $this->staff_model->get_koordinator_by_id($id);
 
+        // Set rules untuk form validation
         $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|exact_length[10]', [
             'required' => 'Field {field} harus diisi.',
-            'exact_length' => 'Field {field} harus berisi 9 digit.'
+            'exact_length' => 'Field {field} harus berisi 10 digit.'
         ]);
         $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
 
         if ($this->form_validation->run() == FALSE) {
-            $this->ubah_koordinator($id);
+            $this->ubah_koordinator($id); // Kembali ke form jika validasi gagal
         } else {
             $config['upload_path'] = './assets/images/upload';
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // ukuran file yang diupload max 1MB
-            $config['file_name'] = uniqid(); // generate nama file menjadi unik
+            $config['max_size'] = 1024; // Ukuran file yang diupload max 1MB
+            $config['file_name'] = uniqid(); // Generate nama file menjadi unik
 
             $this->load->library('upload', $config);
 
-            if (!$this->upload->do_upload('gambar')) {
-                $error = $this->upload->display_errors('', '');
-                if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
-                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
+            // Ambil nilai gambar dari input hidden gambarLama
+            $gambar = $this->input->post('gambarLama');
+
+            if (!empty($_FILES['gambar']['name'])) {
+                if (!$this->upload->do_upload('gambar')) {
+                    // Jika terjadi kesalahan upload gambar
+                    $error = $this->upload->display_errors('', '');
+                    if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
+                        $err_message = 'File yang diupload harus berupa .png, .jpg, atau .jpeg.';
+                    } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
+                        $err_message = 'File yang diupload tidak boleh lebih dari 1MB.';
+                    } else {
+                        $err_message = $error;
+                    }
                     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                    redirect('staff/ubah_koordinator/' . $id); // arahkan kembali ke halaman ubah_koordinator dengan pesan kesalahan
+                    redirect('staff/ubah_koordinator/' . $id); // Arahkan kembali ke halaman ubah_koordinator dengan pesan kesalahan
+                    return; // Hentikan eksekusi lebih lanjut
                 } else {
-                    $err_message = $error;
+                    // Berhasil upload gambar
+                    $uploadData = $this->upload->data();
+                    $gambar = $uploadData['file_name'];
                 }
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                // Ambil nilai gambar dari input hidden gambarLama
-                $gambar = $this->input->post('gambarLama');
-            } else {
-                $uploadData = $this->upload->data();
-                $gambar = $uploadData['file_name'];
             }
 
             $data = [
@@ -697,48 +718,56 @@ class Staff extends CI_Controller {
         $this->form_validation->set_rules('semester', 'Semester', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
+        $this->form_validation->set_rules('tahun_angkatan', 'Tahun_Angkatan', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
         
         if ($this->form_validation->run() == FALSE) {
+            // Jika validasi form gagal
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">Data mahasiswa gagal ditambahkan!</div>');
             $this->kelola_mahasiswa();
-        } else {
-            $config['upload_path'] = './assets/images/upload';
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
-            $config['file_name'] = uniqid(); // generate nama file menjadi unik
-    
-            $this->load->library('upload', $config);
-    
+            return; // Hentikan eksekusi lebih lanjut
+        }
+
+        // Konfigurasi upload gambar
+        $config['upload_path'] = './assets/images/upload';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
+        $config['file_name'] = uniqid(); // generate nama file menjadi unik
+
+        $this->load->library('upload', $config);
+
+        // Set gambar default
+        $gambar = 'default.jpeg';
+
+        // Cek apakah ada file yang diupload
+        if (!empty($_FILES['gambar']['name'])) {
             if (!$this->upload->do_upload('gambar')) {
-                // Cek kesalahan upload
+                // Jika ada kesalahan upload gambar
                 $error = $this->upload->display_errors('', '');
-                if ($error == 'You did not select a file to upload.') {
-                    $err_message = 'Silahkan upload file gambar terlebih dahulu.';
-                } elseif (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
-                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
-                } else {
-                    $err_message = $error;
-                }
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$error.'</div>');
                 $this->kelola_mahasiswa();
+                return; // Hentikan eksekusi lebih lanjut
             } else {
+                // Berhasil upload gambar
                 $uploadData = $this->upload->data();
-                $data = [
-                    'user_id' => $this->input->post('user_id'),
-                    'npm' => htmlspecialchars($this->input->post('npm')),
-                    'nama' => htmlspecialchars($this->input->post('nama')),
-                    'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
-                    'semester' => htmlspecialchars($this->input->post('semester')),
-                    'gambar' => $uploadData['file_name']
-                ];
-    
-                $this->staff_model->insert_mahasiswa($data);
-                $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data mahasiswa berhasil ditambahkan!</div>');
-                redirect('staff/kelola_mahasiswa');
+                $gambar = $uploadData['file_name'];
             }
         }
+
+        $data = [
+            'user_id' => $this->input->post('user_id'),
+            'npm' => htmlspecialchars($this->input->post('npm')),
+            'nama' => htmlspecialchars($this->input->post('nama')),
+            'prodi_id' => $this->input->post('prodi_id'),
+            'semester' => $this->input->post('semester'),
+            'tahun_angkatan' => $this->input->post('tahun_angkatan'),
+            'gambar' => $gambar
+        ];
+
+        $this->staff_model->insert_mahasiswa($data);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data mahasiswa berhasil ditambahkan!</div>');
+        redirect('staff/kelola_mahasiswa');
     }
 
     public function detail_mahasiswa($id)
@@ -785,41 +814,50 @@ class Staff extends CI_Controller {
             'required' => 'Field {field} harus diisi.',
             'is_numeric' => 'Field {field} hanya memperbolehkan input berupa angka.'
         ]);
+        $this->form_validation->set_rules('tahun_angkatan', 'Tahun_Angkatan', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
 
         if ($this->form_validation->run() == FALSE) {
-            $this->ubah_mahasiswa($id);
+            $this->ubah_mahasiswa($id); // Kembali ke form jika validasi gagal
         } else {
             $config['upload_path'] = './assets/images/upload';
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // ukuran file yang diupload max 1MB
-            $config['file_name'] = uniqid(); // generate nama file menjadi unik
+            $config['max_size'] = 1024; // Ukuran file yang diupload max 1MB
+            $config['file_name'] = uniqid(); // Generate nama file menjadi unik
 
             $this->load->library('upload', $config);
 
-            if (!$this->upload->do_upload('gambar')) {
-                $error = $this->upload->display_errors('', '');
-                if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
-                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
+            // Ambil nilai gambar dari input hidden gambarLama
+            $gambar = $this->input->post('gambarLama');
+
+            if (!empty($_FILES['gambar']['name'])) {
+                if (!$this->upload->do_upload('gambar')) {
+                    // Jika terjadi kesalahan upload gambar
+                    $error = $this->upload->display_errors('', '');
+                    if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
+                        $err_message = 'File yang diupload harus berupa .png, .jpg, atau .jpeg.';
+                    } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
+                        $err_message = 'File yang diupload tidak boleh lebih dari 1MB.';
+                    } else {
+                        $err_message = $error;
+                    }
                     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                    redirect('staff/ubah_mahasiswa/' . $id); // arahkan kembali ke halaman ubah_mahasiswa dengan pesan kesalahan
+                    redirect('staff/ubah_mahasiswa/' . $id); // Arahkan kembali ke halaman ubah_mahasiswa dengan pesan kesalahan
+                    return; // Hentikan eksekusi lebih lanjut
                 } else {
-                    $err_message = $error;
+                    // Berhasil upload gambar
+                    $uploadData = $this->upload->data();
+                    $gambar = $uploadData['file_name'];
                 }
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                // Ambil nilai gambar dari input hidden gambarLama
-                $gambar = $this->input->post('gambarLama');
-            } else {
-                $uploadData = $this->upload->data();
-                $gambar = $uploadData['file_name'];
             }
 
             $data = [
                 'npm' => htmlspecialchars($this->input->post('npm')),
                 'nama' => htmlspecialchars($this->input->post('nama')),
-                'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
-                'semester' => htmlspecialchars($this->input->post('semester')),
+                'prodi_id' => $this->input->post('prodi_id'),
+                'semester' => $this->input->post('semester'),
+                'tahun_angkatan' => $this->input->post('tahun_angkatan'),
                 'gambar' => $gambar
             ];
 
@@ -853,8 +891,8 @@ class Staff extends CI_Controller {
         // set_rules
         $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|min_length[10]|is_unique[dosen.nidn]', [
             'required' => 'Field {field} harus diisi.',
-            'min_length' => 'NPM harus terdiri dari 9 digit karakter.',
-            'is_unique' => 'NPM sudah terdaftar.'
+            'min_length' => 'NIDN harus terdiri dari 10 digit karakter.',
+            'is_unique' => 'NIDN sudah terdaftar.'
         ]);
         $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
@@ -862,46 +900,50 @@ class Staff extends CI_Controller {
         $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
-        
+
         if ($this->form_validation->run() == FALSE) {
+            // Jika validasi form gagal
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">Data dosen gagal ditambahkan!</div>');
             $this->kelola_dosen();
-        } else {
-            $config['upload_path'] = './assets/images/upload';
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
-            $config['file_name'] = uniqid(); // generate nama file menjadi unik
-    
-            $this->load->library('upload', $config);
-    
+            return; // Hentikan eksekusi lebih lanjut
+        }
+
+        // Konfigurasi upload gambar
+        $config['upload_path'] = './assets/images/upload';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
+        $config['file_name'] = uniqid(); // generate nama file menjadi unik
+
+        $this->load->library('upload', $config);
+
+        // Set gambar default
+        $gambar = 'default.jpeg';
+
+        // Cek apakah ada file yang diupload
+        if (!empty($_FILES['gambar']['name'])) {
             if (!$this->upload->do_upload('gambar')) {
-                // Cek kesalahan upload
+                // Jika ada kesalahan upload gambar
                 $error = $this->upload->display_errors('', '');
-                if ($error == 'You did not select a file to upload.') {
-                    $err_message = 'Silahkan upload file gambar terlebih dahulu.';
-                } elseif (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
-                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
-                } else {
-                    $err_message = $error;
-                }
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$error.'</div>');
                 $this->kelola_dosen();
+                return; // Hentikan eksekusi lebih lanjut
             } else {
+                // Berhasil upload gambar
                 $uploadData = $this->upload->data();
-                $data = [
-                    'nidn' => htmlspecialchars($this->input->post('nidn')),
-                    'nama' => htmlspecialchars($this->input->post('nama')),
-                    'user_id' => $this->input->post('user_id'),
-                    'gambar' => $uploadData['file_name']
-                ];
-    
-                $this->staff_model->insert_dosen($data);
-                $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data dosen berhasil ditambahkan!</div>');
-                redirect('staff/kelola_dosen');
+                $gambar = $uploadData['file_name'];
             }
         }
+
+        $data = [
+            'nidn' => htmlspecialchars($this->input->post('nidn')),
+            'nama' => htmlspecialchars($this->input->post('nama')),
+            'user_id' => $this->input->post('user_id'),
+            'gambar' => $gambar
+        ];
+
+        $this->staff_model->insert_dosen($data);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data dosen berhasil ditambahkan!</div>');
+        redirect('staff/kelola_dosen');
     }
 
     public function detail_dosen($id)
@@ -933,41 +975,47 @@ class Staff extends CI_Controller {
         $id = $this->input->post('id');
         $dosen = $this->staff_model->get_dosen_by_id($id);
 
+        // Set rules untuk form validation
         $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|exact_length[10]', [
             'required' => 'Field {field} harus diisi.',
-            'exact_length' => 'Field {field} harus berisi 9 digit.'
+            'exact_length' => 'Field {field} harus berisi 10 digit.'
         ]);
         $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
 
         if ($this->form_validation->run() == FALSE) {
-            $this->ubah_dosen($id);
+            $this->ubah_dosen($id); // Kembali ke form jika validasi gagal
         } else {
             $config['upload_path'] = './assets/images/upload';
             $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // ukuran file yang diupload max 1MB
-            $config['file_name'] = uniqid(); // generate nama file menjadi unik
+            $config['max_size'] = 1024; // Ukuran file yang diupload max 1MB
+            $config['file_name'] = uniqid(); // Generate nama file menjadi unik
 
             $this->load->library('upload', $config);
 
-            if (!$this->upload->do_upload('gambar')) {
-                $error = $this->upload->display_errors('', '');
-                if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                    $err_message = 'File yang di upload harus berupa .png, .jpg, atau .jpeg.';
-                } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                    $err_message = 'File yang di upload tidak boleh lebih dari 1MB.';
+            // Ambil nilai gambar dari input hidden gambarLama
+            $gambar = $this->input->post('gambarLama');
+
+            if (!empty($_FILES['gambar']['name'])) {
+                if (!$this->upload->do_upload('gambar')) {
+                    // Jika terjadi kesalahan upload gambar
+                    $error = $this->upload->display_errors('', '');
+                    if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
+                        $err_message = 'File yang diupload harus berupa .png, .jpg, atau .jpeg.';
+                    } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
+                        $err_message = 'File yang diupload tidak boleh lebih dari 1MB.';
+                    } else {
+                        $err_message = $error;
+                    }
                     $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                    redirect('staff/ubah_dosen/' . $id); // arahkan kembali ke halaman ubah_dosen dengan pesan kesalahan
+                    redirect('staff/ubah_dosen/' . $id); // Arahkan kembali ke halaman ubah_dosen dengan pesan kesalahan
+                    return; // Hentikan eksekusi lebih lanjut
                 } else {
-                    $err_message = $error;
+                    // Berhasil upload gambar
+                    $uploadData = $this->upload->data();
+                    $gambar = $uploadData['file_name'];
                 }
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                // Ambil nilai gambar dari input hidden gambarLama
-                $gambar = $this->input->post('gambarLama');
-            } else {
-                $uploadData = $this->upload->data();
-                $gambar = $uploadData['file_name'];
             }
 
             $data = [

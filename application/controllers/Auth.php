@@ -36,7 +36,7 @@ class Auth extends CI_Controller {
             if ($user['is_active'] == 1) {
                 if (password_verify($password, $user['password'])) {
                     $data = [
-                        // 'nama' => $user['nama'],
+                        'nama' => $user['nama'],
                         'username' => $user['username'],
                         // 'role_id' => $user['role_id'],
                         'nama_role' => $user['nama_role'],
@@ -99,6 +99,10 @@ class Auth extends CI_Controller {
         $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
+        $this->form_validation->set_rules('no_telp', 'No_Telp', 'required|trim|is_numeric', [
+            'required' => 'Field {field} harus diisi.',
+            'is_numeric' => 'Format nomor telepon harus berupa angka/numeric.',
+        ]);
         $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[user.username]', [
             'required' => 'Field {field} harus diisi.',
             'is_unique' => 'Username sudah terdaftar.'
@@ -120,12 +124,16 @@ class Auth extends CI_Controller {
             $username = htmlspecialchars($this->input->post('username'));
             $password = htmlspecialchars(password_hash($this->input->post('password1'), PASSWORD_DEFAULT));
             $role_id = htmlspecialchars($this->input->post('role_id'));
+            $nama = htmlspecialchars($this->input->post('nama'));
+            $no_telp = htmlspecialchars($this->input->post('no_telp'));
 
             $data = [
                 // 'nama' => $nama,
                 'username' => $username,
                 'password' => $password,
                 'role_id' => $role_id,
+                'nama' => $nama,
+                'no_telp' => $no_telp,
                 'is_active' => 1,
                 'created_at' => time(),
                 'updated_at' => time()

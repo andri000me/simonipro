@@ -28,7 +28,7 @@
                     <thead>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">Username</th>
+                        <th class="text-start">Nama</th>
                         <th class="text-start">Role</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Aksi</th>
@@ -39,7 +39,11 @@
                       <?php foreach ($pengguna as $user) : ?>
                       <tr>
                         <th scope="row"><?= $i; ?></th>
-                        <td><?= $user['username']; ?></td>
+                        <td>
+                          <?= $user['nama']; ?> <br>
+                          <span><i class="ti ti-user"></i></span>
+                          <small class="fw-bold"><?= $user['username']; ?></small>
+                        </td>
                         <td><?= $user['nama_role']; ?></td>
                         <td>
                         <span class="badge <?= $user['is_active'] == 1 ? 'text-bg-success' : 'badge-muted' ?>">
@@ -79,7 +83,7 @@
                     <tfoot>
                       <tr>
                         <th class="text-start">#</th>
-                        <th class="text-start">Username</th>
+                        <th class="text-start">Nama</th>
                         <th class="text-start">Role</th>
                         <th class="text-start">Status</th>
                         <th class="text-start">Aksi</th>
@@ -108,11 +112,11 @@
       </div>
       <div class="modal-body">
         <form action="<?= base_url('staff/tambah_pengguna'); ?>" method="post">
-            <!-- <div class="mb-3">
-                <label for="nama" class="form-label">Nama Pengguna</label>
-                <input type="text" name="nama" id="nama" class="form-control" autofocus autocomplete="off" value="<?= set_value('nama'); ?>">
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Lengkap</label>
+                <input type="text" name="nama" id="nama" class="form-control" autocomplete="off" value="<?= set_value('nama'); ?>">
                 <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div> -->
+            </div>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" name="username" id="username" class="form-control" value="<?= set_value('username'); ?>">
@@ -132,6 +136,11 @@
                     <?php endforeach; ?>
                 </select>
                 <?= form_error('role_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+            </div>
+            <div class="mb-3">
+                <label for="no_telp" class="form-label">Nomor Telepon</label>
+                <input type="text" name="no_telp" id="no_telp" class="form-control" autocomplete="off" value="<?= set_value('no_telp'); ?>" maxlength="12">
+                <?= form_error('no_telp', '<small class="text-danger fst-italic">', '</small>'); ?>
             </div>
             <div class="mb-3">
                 <label for="is_active" class="form-label">Status Pengguna</label>

@@ -77,7 +77,7 @@
     </div>
   </div>
   <!-- Modal -->
-<div class="modal fade" id="modalAddKoordinator" tabindex="-1" aria-labelledby="modalAddKoordinatorLabel" aria-hidden="true">
+  <div class="modal fade" id="modalAddKoordinator" tabindex="-1" aria-labelledby="modalAddKoordinatorLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
@@ -88,35 +88,35 @@
         <form action="<?= base_url('staff/tambah_koordinator'); ?>" method="post" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="user_id" class="form-label">User ID</label>
-              <select class="form-select" id="user_id" name="user_id">
-                  <option selected>-- Pilih User --</option>
-                  <?php foreach ($users as $user) : ?>
-                      <option value="<?= $user['id']; ?>"><?= $user['username']; ?></option>
-                  <?php endforeach; ?>
-              </select>
-              <?= form_error('user_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+            <select class="form-select" id="user_id" name="user_id">
+              <option selected>-- Pilih User --</option>
+              <?php foreach ($users as $user) : ?>
+                <option value="<?= $user['id']; ?>" data-nama="<?= $user['nama']; ?>"><?= $user['username']; ?></option>
+              <?php endforeach; ?>
+            </select>
+            <?= form_error('user_id', '<small class="text-danger fst-italic">', '</small>'); ?>
           </div>
-            <div class="mb-3">
-                <label for="nidn" class="form-label">NIDN</label>
-                <input type="text" name="nidn" id="nidn" class="form-control" maxlength="10" autofocus autocomplete="off" value="<?= set_value('nidn'); ?>">
-                <?= form_error('nidn', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
-            <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" name="nama" id="nama" class="form-control" autocomplete="off" value="<?= set_value('nama'); ?>">
-                <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
-            <div class="mb-3">
-                <label for="gambar" class="form-label">Gambar</label>
-                <input type="file" name="gambar" id="gambar" class="form-control" value="<?= set_value('gambar'); ?>">
-                <?= form_error('gambar', '<small class="text-danger fst-italic">', '</small>'); ?>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-        </div>
+          <div class="mb-3">
+            <label for="nidn" class="form-label">NIDN</label>
+            <input type="text" name="nidn" id="nidn" class="form-control" maxlength="10" autofocus autocomplete="off" value="<?= set_value('nidn'); ?>">
+            <?= form_error('nidn', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
+          <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" name="nama" id="nama" class="form-control" autocomplete="off" value="<?= set_value('nama'); ?>" readonly>
+            <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
+          <div class="mb-3">
+            <label for="gambar" class="form-label">Gambar</label>
+            <input type="file" name="gambar" id="gambar" class="form-control" value="<?= set_value('gambar'); ?>">
+            <?= form_error('gambar', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+      </div>
     </form>
-</div>
+  </div>
 </div>
 </div>

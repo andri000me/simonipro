@@ -37,6 +37,16 @@
                                 <?= form_error('semester', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
                             <div class="mb-3">
+                                <label for="tahun_angkatan" class="form-label">Tahun Angkatan</label>
+                                <select class="form-control" id="tahun_angkatan" name="tahun_angkatan">
+                                    <option value="" disabled>Pilih Tahun</option>
+                                    <?php for ($year = 2020; $year <= date('Y'); $year++): ?>
+                                        <option value="<?= $year ?>" <?= set_select('tahun_angkatan', $year, $year == $mahasiswa['tahun_angkatan']); ?>><?= $year ?></option>
+                                    <?php endfor; ?>
+                                </select>
+                                <?= form_error('tahun_angkatan', '<small class="text-danger fst-italic">', '</small>'); ?>
+                            </div>
+                            <div class="mb-3">
                                 <label for="gambar" class="form-label">Profil</label>
                                 <?php if (!empty($mahasiswa['gambar'])) : ?>
                                     <img id="gambar-preview" src="<?= base_url('assets/images/upload/' . $mahasiswa['gambar']); ?>" alt="default" class="img-thumbnail d-block" style="width: 150px;">

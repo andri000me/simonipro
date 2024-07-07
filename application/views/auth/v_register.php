@@ -20,8 +20,13 @@
                     <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
                   </div> -->
                   <div class="mb-3">
+                    <label for="nama" class="form-label">Nama Lengkap</label>
+                    <input type="text" class="form-control" id="nama" name="nama" value="<?= set_value('nama'); ?>" autofocus>
+                    <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
+                  </div>
+                  <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" value="<?= set_value('username'); ?>" autofocus>
+                    <input type="text" class="form-control" id="username" name="username" value="<?= set_value('username'); ?>">
                     <?= form_error('username', '<small class="text-danger fst-italic">', '</small>'); ?>
                   </div>
                   <div class="row">
@@ -38,6 +43,14 @@
                           <input type="password" class="form-control" id="password2" name="password2">
                         </div>
                     </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="no_telp" class="form-label">Nomor Telepon</label>
+                    <div class="input-group">
+                      <span class="input-group-text" id="basic-addon1">+62</span>
+                      <input type="text" class="form-control" id="no_telp" name="no_telp" value="<?= set_value('no_telp'); ?>" maxlength="12">
+                    </div>
+                    <?= form_error('no_telp', '<small class="text-danger fst-italic">', '</small>'); ?>
                   </div>
                   <div class="mb-4">
                     <label for="role" class="form-label d-block">Daftar Sebagai</label>

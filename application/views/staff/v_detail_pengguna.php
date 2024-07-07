@@ -5,7 +5,7 @@
                 Detail data pengguna
             </div>
         <div class="card-body">
-            <!-- <h5 class="card-title"><?= $pengguna['nama']; ?></h5> -->
+            <h5 class="card-title"><?= $pengguna['nama']; ?></h5>
             <div class="row">
                 <div class="col-6">
                     <ul>
@@ -13,13 +13,15 @@
                             <span class="fw-bold d-block">username :</span> <?= $pengguna['username']; ?>
                         </li>
                         <li class="mb-2 text-capitalize">
-                            <span class="fw-bold d-block">password :</span> <?= $pengguna['password']; ?>
-                        </li>
-                        <li class="mb-2 text-capitalize">
                             <span class="fw-bold d-block">role :</span> <?= $pengguna['nama_role']; ?>
                         </li>
                         <li class="mb-2 text-capitalize">
-                            <span class="fw-bold d-block">status :</span> <?= ($pengguna['is_active'] == 1) ? 'Aktif' : 'Tidak Aktif'; ?>
+                            <span class="fw-bold d-block">Nomor Telepon :</span> 
+                            <?php if ($pengguna['no_telp'] != NULL) : ?>
+                                <?= $pengguna['no_telp']; ?>
+                                <?php else : ?>
+                                    <span class="fst-italic">belum diisi</span>
+                            <?php endif; ?>
                         </li>
                     </ul>
                 </div>
@@ -30,6 +32,9 @@
                         </li>
                         <li class="mb-2 text-capitalize">
                             <span class="fw-bold d-block">diubah pada :</span> <?= date('d-m-Y H:i:s', $pengguna['updated_at']); ?>
+                        </li>
+                        <li class="mb-2 text-capitalize">
+                            <span class="fw-bold d-block">status :</span> <?= ($pengguna['is_active'] == 1) ? 'Aktif' : 'Tidak Aktif'; ?>
                         </li>
                     </ul>
                 </div>

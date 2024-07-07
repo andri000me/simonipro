@@ -114,7 +114,7 @@ class Staff_model extends CI_Model {
 
     public function get_all_user_match_by_role_as_mahasiswa($selectedUserIds = array())
     {
-        $this->db->select('user.id, user.username');
+        $this->db->select('user.id, user.username, user.nama');
         $this->db->from('user');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->where('role.nama_role', 'mahasiswa');
@@ -178,7 +178,7 @@ class Staff_model extends CI_Model {
     }
     public function get_all_user_match_by_role_as_dosen($selectedUserIds = array())
     {
-        $this->db->select('user.id, user.username');
+        $this->db->select('user.id, user.username, user.nama');
         $this->db->from('user');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->where('role.nama_role', 'dosen');
@@ -236,7 +236,7 @@ class Staff_model extends CI_Model {
 
     public function get_all_user_match_by_role_as_koordinator($selectedUserIds = array())
     {
-        $this->db->select('user.id, user.username');
+        $this->db->select('user.id, user.username, user.nama');
         $this->db->from('user');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->where('role.nama_role', 'koordinator');

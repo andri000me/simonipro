@@ -10,11 +10,11 @@
                     <input type="hidden" name="id" value="<?= $pengguna['id']; ?>">
                     <input type="hidden" name="old_password" value="<?= $pengguna['password']; ?>">
                     <input type="hidden" name="created_at" value="<?= $pengguna['created_at']; ?>">
-                    <!-- <div class="mb-3">
-                      <label for="nama" class="form-label">Nama Pengguna</label>
+                    <div class="mb-3">
+                      <label for="nama" class="form-label">Nama Lengkap</label>
                       <input type="text" class="form-control" id="nama" name="nama" value="<?= set_value('nama', $pengguna['nama']); ?>">
                       <?= form_error('nama', '<small class="text-danger fst-italic">', '</small>'); ?>
-                    </div> -->
+                    </div>
                     <div class="mb-3">
                       <label for="username" class="form-label">Username</label>
                       <input type="text" class="form-control" id="username" name="username" value="<?= set_value('username', $pengguna['username']); ?>">
@@ -36,6 +36,11 @@
                             <?php endforeach; ?>
                         </select>
                         <?= form_error('role_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+                    </div>
+                    <div class="mb-3">
+                      <label for="no_telp" class="form-label">Nomor Telepon</label>
+                      <input type="text" class="form-control" id="no_telp" name="no_telp" value="<?= set_value('no_telp', $pengguna['no_telp']); ?>" maxlength="12">
+                      <?= form_error('no_telp', '<small class="text-danger fst-italic">', '</small>'); ?>
                     </div>
                     <div class="mb-3">
                       <label for="is_active" class="form-label">Status Pengguna</label>
