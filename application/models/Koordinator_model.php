@@ -81,11 +81,11 @@ class Koordinator_model extends CI_Model {
         return $this->db->insert('plotting', $data);
     }
 
-    public function updatePlotting($id, $data)
-    {
+    public function updatePlotting($id, $data) {
         $this->db->where('id', $id);
-        return $this->db->update('plotting', $data);
-    }
+        $this->db->update('plotting', $data);
+        return $this->db->affected_rows(); // Mengembalikan jumlah baris yang dipengaruhi
+    }    
 
     public function deletePlotting($id)
     {

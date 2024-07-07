@@ -40,7 +40,6 @@
     // memunculkan field plotting penguji when user pick jenis plotting as penguji
     function togglePengujiFields() {
     var jenisPlotting = document.getElementById('jenis_plotting_id').value;
-    var dosenPembimbingField = document.getElementById('dosen_pembimbing_id');
     var dosenPenguji1Field = document.getElementById('dosenPenguji1Field');
     var dosenPenguji2Field = document.getElementById('dosenPenguji2Field');
     
@@ -48,11 +47,9 @@
     if (jenisPlotting == '2') {
       dosenPenguji1Field.style.display = 'block';
       dosenPenguji2Field.style.display = 'block';
-      dosenPembimbingField.disabled = true;
     } else {
       dosenPenguji1Field.style.display = 'none';
       dosenPenguji2Field.style.display = 'none';
-      dosenPembimbingField.disabled = false;
     }
   }
 

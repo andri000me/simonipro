@@ -49,7 +49,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_kelola_project', $data);
+        $this->load->view('koordinator/project/v_kelola_project', $data);
         $this->load->view('templates/footer');
     }
 
@@ -103,7 +103,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_detail_project', $data);
+        $this->load->view('koordinator/project/v_detail_project', $data);
         $this->load->view('templates/footer');
     }
     public function ubah_project($id)
@@ -115,7 +115,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_ubah_project', $data);
+        $this->load->view('koordinator/project/v_ubah_project', $data);
         $this->load->view('templates/footer');
     }
 
@@ -176,7 +176,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_kelola_jadwal', $data);
+        $this->load->view('koordinator/jadwal/v_kelola_jadwal', $data);
         $this->load->view('templates/footer');
     }
 
@@ -211,7 +211,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_detail_jadwal', $data);
+        $this->load->view('koordinator/jadwal/v_detail_jadwal', $data);
         $this->load->view('templates/footer');
     }
 
@@ -243,7 +243,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_kelola_kegiatan', $data);
+        $this->load->view('koordinator/kegiatan/v_kelola_kegiatan', $data);
         $this->load->view('templates/footer');
     }
 
@@ -296,7 +296,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_ubah_kegiatan', $data);
+        $this->load->view('koordinator/kegiatan/v_ubah_kegiatan', $data);
         $this->load->view('templates/footer');
     }
 
@@ -370,7 +370,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_kelola_plotting', $data);
+        $this->load->view('koordinator/plotting/v_kelola_plotting', $data);
         $this->load->view('templates/footer');
     }
 
@@ -448,7 +448,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_detail_plotting', $data);
+        $this->load->view('koordinator/plotting/v_detail_plotting', $data);
         $this->load->view('templates/footer');
     }
 
@@ -458,38 +458,79 @@ class Koordinator extends CI_Controller {
         $data['dosen'] = $this->staff_model->get_all_dosen();
         $data['jenis_plotting'] = $this->koordinator_model->get_all_jenis_plotting();
         $data['active'] = 'kelola_plotting';
-
+    
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('koordinator/v_ubah_plotting', $data);
+        $this->load->view('koordinator/plotting/v_ubah_plotting', $data);
         $this->load->view('templates/footer');
     }
 
     public function update_plotting() {
-        $jenis_plotting_id = $this->input->post('jenis_plotting_id');
+        // Set rules for form validation
+        $this->form_validation->set_rules('jenis_plotting_id', 'Jenis Plotting', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
         $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen Pembimbing', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
     
+        // Fetch form data
+        $jenis_plotting_id = $this->input->post('jenis_plotting_id');
+        $dosen_pembimbing_id = $this->input->post('dosen_pembimbing_id');
+        $dosen_penguji_1_id = $this->input->post('dosen_penguji_1_id');
+        $dosen_penguji_2_id = $this->input->post('dosen_penguji_2_id');
+    
+        // Debug form data
+        // var_dump($jenis_plotting_id);
+        // var_dump($dosen_pembimbing_id);
+        // var_dump($dosen_penguji_1_id);
+        // var_dump($dosen_penguji_2_id);
+        // var_dump($this->form_validation->run());
+        // die;
+    
+        // Check if `jenis_plotting_id` is 2 to add rules for penguji
+        if ($jenis_plotting_id == '2') {
+            $this->form_validation->set_rules('dosen_penguji_1_id', 'Dosen Penguji 1', 'required|trim', [
+                'required' => 'Field {field} harus diisi.'
+            ]);
+            $this->form_validation->set_rules('dosen_penguji_2_id', 'Dosen Penguji 2', 'required|trim', [
+                'required' => 'Field {field} harus diisi.'
+            ]);
+        }
+    
+        // Check if the form validation is successful
         if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting gagal diubah!</div>');
+            // Debug form validation
+            var_dump($this->form_validation->error_array());
+            die;
+    
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting gagal diubah.</div>');
             redirect('koordinator/ubah_plotting/' . $this->input->post('id'));
         } else {
+            // Prepare data for update
             $data = [
                 'jenis_plotting_id' => $jenis_plotting_id,
-                'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
+                'dosen_pembimbing_id' => $dosen_pembimbing_id,
                 'updated_at' => time()
             ];
     
-            // Jika jenis plotting adalah penguji, tambahkan dosen penguji ke data
-            if ($jenis_plotting_id == '2') {
-                $data['dosen_penguji_1_id'] = htmlspecialchars($this->input->post('dosen_penguji_1_id'));
-                $data['dosen_penguji_2_id'] = htmlspecialchars($this->input->post('dosen_penguji_2_id'));
+            if ($jenis_plotting_id == 2) {
+                $data['dosen_penguji_1_id'] = $dosen_penguji_1_id;
+                $data['dosen_penguji_2_id'] = $dosen_penguji_2_id;
+            } else {
+                $data['dosen_penguji_1_id'] = null;
+                $data['dosen_penguji_2_id'] = null;
             }
     
-            $this->koordinator_model->updatePlotting($this->input->post('id'), $data);
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data plotting berhasil diubah!</div>');
+            $result = $this->koordinator_model->updatePlotting($this->input->post('id'), $data);
+    
+            if ($result) {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data plotting berhasil diubah.</div>');
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting gagal diubah.</div>');
+            }
+    
             redirect('koordinator/kelola_plotting');
         }
     }

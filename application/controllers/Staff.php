@@ -47,7 +47,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_role');
+        $this->load->view('staff/role/v_kelola_role');
         $this->load->view('templates/footer');
     }
 
@@ -83,7 +83,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_role');
+        $this->load->view('staff/role/v_ubah_role');
         $this->load->view('templates/footer');
     }
 
@@ -127,7 +127,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_pengguna');
+        $this->load->view('staff/pengguna/v_kelola_pengguna');
         $this->load->view('templates/footer');
     }
 
@@ -176,7 +176,7 @@ class Staff extends CI_Controller {
 
             $this->user_model->insert_user($data);
             $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Pengguna baru berhasil ditambahkan!</div>');
-            redirect('staff/kelola_pengguna');
+            redirect('staff/pengguna/kelola_pengguna');
         }
     }
 
@@ -198,7 +198,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_pengguna', $data);
+        $this->load->view('staff/pengguna/v_detail_pengguna', $data);
         $this->load->view('templates/footer');
     }
 
@@ -211,7 +211,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_pengguna');
+        $this->load->view('staff/pengguna/v_ubah_pengguna');
         $this->load->view('templates/footer');
     }
 
@@ -309,7 +309,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_prodi');
+        $this->load->view('staff/prodi/v_kelola_prodi');
         $this->load->view('templates/footer');
     }
 
@@ -352,7 +352,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_prodi', $data);
+        $this->load->view('staff/prodi/v_detail_prodi', $data);
         $this->load->view('templates/footer');
     }
 
@@ -364,7 +364,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_prodi');
+        $this->load->view('staff/prodi/v_ubah_prodi');
         $this->load->view('templates/footer');
     }
 
@@ -404,7 +404,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_koordinator', $data);
+        $this->load->view('staff/koordinator/v_kelola_koordinator', $data);
         $this->load->view('templates/footer');
     }
 
@@ -477,7 +477,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_koordinator', $data);
+        $this->load->view('staff/koordinator/v_detail_koordinator', $data);
         $this->load->view('templates/footer');
     }
 
@@ -490,7 +490,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_koordinator', $data);
+        $this->load->view('staff/koordinator/v_ubah_koordinator', $data);
         $this->load->view('templates/footer');
     }
 
@@ -555,6 +555,169 @@ class Staff extends CI_Controller {
     }
     // Akhir kelola koordinator
 
+    // kelola dosen
+    public function kelola_dosen()
+    {
+        $data['title'] = 'Kelola Dosen | Staff';
+        $data['dosen'] = $this->staff_model->get_all_dosen();
+        // Ambil user id yang sudah dipilih
+        $selectedUserIds = $this->staff_model->get_selected_user_dsn_ids();
+        
+        // Kirim user id yang sudah dipilih ke fungsi get_all_user_match_by_role_as_dosen
+        $data['users'] = $this->staff_model->get_all_user_match_by_role_as_dosen($selectedUserIds);
+        $data['active'] = 'kelola_dosen';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/dosen/v_kelola_dosen', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function tambah_dosen() 
+    {
+        // set_rules
+        $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|min_length[10]|is_unique[dosen.nidn]', [
+            'required' => 'Field {field} harus diisi.',
+            'min_length' => 'NIDN harus terdiri dari 10 digit karakter.',
+            'is_unique' => 'NIDN sudah terdaftar.'
+        ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            // Jika validasi form gagal
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">Data dosen gagal ditambahkan!</div>');
+            $this->kelola_dosen();
+            return; // Hentikan eksekusi lebih lanjut
+        }
+
+        // Konfigurasi upload gambar
+        $config['upload_path'] = './assets/images/upload';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
+        $config['file_name'] = uniqid(); // generate nama file menjadi unik
+
+        $this->load->library('upload', $config);
+
+        // Set gambar default
+        $gambar = 'default.jpeg';
+
+        // Cek apakah ada file yang diupload
+        if (!empty($_FILES['gambar']['name'])) {
+            if (!$this->upload->do_upload('gambar')) {
+                // Jika ada kesalahan upload gambar
+                $error = $this->upload->display_errors('', '');
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$error.'</div>');
+                $this->kelola_dosen();
+                return; // Hentikan eksekusi lebih lanjut
+            } else {
+                // Berhasil upload gambar
+                $uploadData = $this->upload->data();
+                $gambar = $uploadData['file_name'];
+            }
+        }
+
+        $data = [
+            'nidn' => htmlspecialchars($this->input->post('nidn')),
+            'nama' => htmlspecialchars($this->input->post('nama')),
+            'user_id' => $this->input->post('user_id'),
+            'gambar' => $gambar
+        ];
+
+        $this->staff_model->insert_dosen($data);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data dosen berhasil ditambahkan!</div>');
+        redirect('staff/kelola_dosen');
+    }
+
+    public function detail_dosen($id)
+    {
+        $data['title'] = 'Detail Dosen | Staff';
+        $data['dosen'] = $this->staff_model->get_dosen_by_id($id);
+        $data['active'] = 'kelola_dosen';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/dosen/v_detail_dosen', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function ubah_dosen($id)
+    {
+        $data['title'] = 'Ubah Dosen | Staff';
+        $data['dosen'] = $this->staff_model->get_dosen_by_id($id);
+        $data['active'] = 'kelola_dosen';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/dosen/v_ubah_dosen', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_dosen()
+    {
+        $id = $this->input->post('id');
+        $dosen = $this->staff_model->get_dosen_by_id($id);
+
+        // Set rules untuk form validation
+        $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|exact_length[10]', [
+            'required' => 'Field {field} harus diisi.',
+            'exact_length' => 'Field {field} harus berisi 10 digit.'
+        ]);
+        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_dosen($id); // Kembali ke form jika validasi gagal
+        } else {
+            $config['upload_path'] = './assets/images/upload';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['max_size'] = 1024; // Ukuran file yang diupload max 1MB
+            $config['file_name'] = uniqid(); // Generate nama file menjadi unik
+
+            $this->load->library('upload', $config);
+
+            // Ambil nilai gambar dari input hidden gambarLama
+            $gambar = $this->input->post('gambarLama');
+
+            if (!empty($_FILES['gambar']['name'])) {
+                if (!$this->upload->do_upload('gambar')) {
+                    // Jika terjadi kesalahan upload gambar
+                    $error = $this->upload->display_errors('', '');
+                    if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
+                        $err_message = 'File yang diupload harus berupa .png, .jpg, atau .jpeg.';
+                    } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
+                        $err_message = 'File yang diupload tidak boleh lebih dari 1MB.';
+                    } else {
+                        $err_message = $error;
+                    }
+                    $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
+                    redirect('staff/ubah_dosen/' . $id); // Arahkan kembali ke halaman ubah_dosen dengan pesan kesalahan
+                    return; // Hentikan eksekusi lebih lanjut
+                } else {
+                    // Berhasil upload gambar
+                    $uploadData = $this->upload->data();
+                    $gambar = $uploadData['file_name'];
+                }
+            }
+
+            $data = [
+                'nidn' => htmlspecialchars($this->input->post('nidn')),
+                'nama' => htmlspecialchars($this->input->post('nama')),
+                'gambar' => $gambar
+            ];
+
+            $this->staff_model->update_dosen($id, $data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data dosen berhasil diubah!</div>');
+            redirect('staff/kelola_dosen');
+        }
+    }
+    // akhir kelola dosen
+
     // kelola mahasiswa
     public function kelola_mahasiswa()
     {
@@ -569,7 +732,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_mahasiswa', $data);
+        $this->load->view('staff/mahasiswa/v_kelola_mahasiswa', $data);
         $this->load->view('templates/footer');
     }
 
@@ -653,7 +816,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_mahasiswa', $data);
+        $this->load->view('staff/mahasiswa/v_detail_mahasiswa', $data);
         $this->load->view('templates/footer');
     }
 
@@ -666,7 +829,7 @@ class Staff extends CI_Controller {
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_mahasiswa', $data);
+        $this->load->view('staff/mahasiswa/v_ubah_mahasiswa', $data);
         $this->load->view('templates/footer');
     }
 
@@ -741,168 +904,5 @@ class Staff extends CI_Controller {
             redirect('staff/kelola_mahasiswa');
         }
     }
-        // akhir kelola mahasiswa
-
-        // kelola dosen
-    public function kelola_dosen()
-    {
-        $data['title'] = 'Kelola Dosen | Staff';
-        $data['dosen'] = $this->staff_model->get_all_dosen();
-        // Ambil user id yang sudah dipilih
-        $selectedUserIds = $this->staff_model->get_selected_user_dsn_ids();
-        
-        // Kirim user id yang sudah dipilih ke fungsi get_all_user_match_by_role_as_dosen
-        $data['users'] = $this->staff_model->get_all_user_match_by_role_as_dosen($selectedUserIds);
-        $data['active'] = 'kelola_dosen';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_kelola_dosen', $data);
-        $this->load->view('templates/footer');
-    }
-
-    public function tambah_dosen() 
-    {
-        // set_rules
-        $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|min_length[10]|is_unique[dosen.nidn]', [
-            'required' => 'Field {field} harus diisi.',
-            'min_length' => 'NIDN harus terdiri dari 10 digit karakter.',
-            'is_unique' => 'NIDN sudah terdaftar.'
-        ]);
-        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-        $this->form_validation->set_rules('user_id', 'User_id', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
-
-        if ($this->form_validation->run() == FALSE) {
-            // Jika validasi form gagal
-            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">Data dosen gagal ditambahkan!</div>');
-            $this->kelola_dosen();
-            return; // Hentikan eksekusi lebih lanjut
-        }
-
-        // Konfigurasi upload gambar
-        $config['upload_path'] = './assets/images/upload';
-        $config['allowed_types'] = 'jpg|jpeg|png';
-        $config['max_size'] = 1024; // ukuran file yang di upload max 1MB
-        $config['file_name'] = uniqid(); // generate nama file menjadi unik
-
-        $this->load->library('upload', $config);
-
-        // Set gambar default
-        $gambar = 'default.jpeg';
-
-        // Cek apakah ada file yang diupload
-        if (!empty($_FILES['gambar']['name'])) {
-            if (!$this->upload->do_upload('gambar')) {
-                // Jika ada kesalahan upload gambar
-                $error = $this->upload->display_errors('', '');
-                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$error.'</div>');
-                $this->kelola_dosen();
-                return; // Hentikan eksekusi lebih lanjut
-            } else {
-                // Berhasil upload gambar
-                $uploadData = $this->upload->data();
-                $gambar = $uploadData['file_name'];
-            }
-        }
-
-        $data = [
-            'nidn' => htmlspecialchars($this->input->post('nidn')),
-            'nama' => htmlspecialchars($this->input->post('nama')),
-            'user_id' => $this->input->post('user_id'),
-            'gambar' => $gambar
-        ];
-
-        $this->staff_model->insert_dosen($data);
-        $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data dosen berhasil ditambahkan!</div>');
-        redirect('staff/kelola_dosen');
-    }
-
-    public function detail_dosen($id)
-    {
-        $data['title'] = 'Detail Dosen | Staff';
-        $data['dosen'] = $this->staff_model->get_dosen_by_id($id);
-        $data['active'] = 'kelola_dosen';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_detail_dosen', $data);
-        $this->load->view('templates/footer');
-    }
-
-    public function ubah_dosen($id)
-    {
-        $data['title'] = 'Ubah Dosen | Staff';
-        $data['dosen'] = $this->staff_model->get_dosen_by_id($id);
-        $data['active'] = 'kelola_dosen';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar');
-        $this->load->view('staff/v_ubah_dosen', $data);
-        $this->load->view('templates/footer');
-    }
-
-    public function update_dosen()
-    {
-        $id = $this->input->post('id');
-        $dosen = $this->staff_model->get_dosen_by_id($id);
-
-        // Set rules untuk form validation
-        $this->form_validation->set_rules('nidn', 'Nidn', 'required|trim|exact_length[10]', [
-            'required' => 'Field {field} harus diisi.',
-            'exact_length' => 'Field {field} harus berisi 10 digit.'
-        ]);
-        $this->form_validation->set_rules('nama', 'Nama', 'required|trim', [
-            'required' => 'Field {field} harus diisi.'
-        ]);
-
-        if ($this->form_validation->run() == FALSE) {
-            $this->ubah_dosen($id); // Kembali ke form jika validasi gagal
-        } else {
-            $config['upload_path'] = './assets/images/upload';
-            $config['allowed_types'] = 'jpg|jpeg|png';
-            $config['max_size'] = 1024; // Ukuran file yang diupload max 1MB
-            $config['file_name'] = uniqid(); // Generate nama file menjadi unik
-
-            $this->load->library('upload', $config);
-
-            // Ambil nilai gambar dari input hidden gambarLama
-            $gambar = $this->input->post('gambarLama');
-
-            if (!empty($_FILES['gambar']['name'])) {
-                if (!$this->upload->do_upload('gambar')) {
-                    // Jika terjadi kesalahan upload gambar
-                    $error = $this->upload->display_errors('', '');
-                    if (strpos($error, 'The filetype you are attempting to upload is not allowed') !== false) {
-                        $err_message = 'File yang diupload harus berupa .png, .jpg, atau .jpeg.';
-                    } elseif (strpos($error, 'The file you are attempting to upload is larger than the permitted size') !== false) {
-                        $err_message = 'File yang diupload tidak boleh lebih dari 1MB.';
-                    } else {
-                        $err_message = $error;
-                    }
-                    $this->session->set_flashdata('pesan', '<div class="alert alert-danger" user="alert">'.$err_message.'</div>');
-                    redirect('staff/ubah_dosen/' . $id); // Arahkan kembali ke halaman ubah_dosen dengan pesan kesalahan
-                    return; // Hentikan eksekusi lebih lanjut
-                } else {
-                    // Berhasil upload gambar
-                    $uploadData = $this->upload->data();
-                    $gambar = $uploadData['file_name'];
-                }
-            }
-
-            $data = [
-                'nidn' => htmlspecialchars($this->input->post('nidn')),
-                'nama' => htmlspecialchars($this->input->post('nama')),
-                'gambar' => $gambar
-            ];
-
-            $this->staff_model->update_dosen($id, $data);
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Data dosen berhasil diubah!</div>');
-            redirect('staff/kelola_dosen');
-        }
-    }
-    // akhir kelola dosen
+    // akhir kelola mahasiswa
 }
