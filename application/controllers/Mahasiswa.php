@@ -24,6 +24,7 @@ class Mahasiswa extends CI_Controller {
             redirect('auth');
         }
 
+        $this->load->model('mahasiswa_model');
     }
 
 	public function index()
@@ -36,5 +37,28 @@ class Mahasiswa extends CI_Controller {
         $this->load->view('mahasiswa/v_dashboard');
         $this->load->view('templates/footer');
 	}
+
+    public function info_jadwal()
+	{
+		$data['title'] = 'Informasi Jadwal | Mahasiswa';
+        $data['active'] = 'info_jadwal';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('mahasiswa/v_info_jadwal');
+        $this->load->view('templates/footer');
+	}
+
+    public function kelola_absensi()
+    {
+        $data['title'] = 'Kelola Absensi | Mahasiswa';
+        $data['active'] = 'kelola_absensi';
+        $data['absensi_bimbingan'] = $this->mahasiswa_model->get_all_absensi_bimbingan();
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('mahasiswa/v_kelola_absensi');
+        $this->load->view('templates/footer');
+    }
 
 }

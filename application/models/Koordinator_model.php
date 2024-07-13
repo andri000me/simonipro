@@ -37,14 +37,14 @@ class Koordinator_model extends CI_Model {
     // Akhir kelola project
 
     // Kelola plotting    
-    // query get data plotting_pembimbing by id
+    // query get data plotting_pembimbing
     public function getAllPlotting() {
         $this->db->select('plotting.*, 
         k.nama as koordinator_nama, 
         dospem.nidn as dosen_pembimbing_nidn, dospem.nama as dosen_pembimbing_nama, 
         dp1.nidn as dosen_penguji_1_nidn, dp1.nama as dosen_penguji_1_nama, 
         dp2.nidn as dosen_penguji_2_nidn, dp2.nama as dosen_penguji_2_nama, 
-        mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, 
+        mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, mhs.kelas, 
         p.nama_project as project_nama, 
         jp.nama as jenis_plotting_nama');
         $this->db->from('plotting');
@@ -61,7 +61,7 @@ class Koordinator_model extends CI_Model {
 
     public function getPlottingById($id)
     {
-        $this->db->select('plotting.*, k.nama as koordinator_nama, dospem.nama as dosen_pembimbing_nama, dp1.nama as dosen_penguji_1_nama, dp2.nama as dosen_penguji_2_nama, mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, p.nama_project as project_nama, jp.nama as jenis_plotting_nama');
+        $this->db->select('plotting.*, k.nama as koordinator_nama, dospem.nama as dosen_pembimbing_nama, dp1.nama as dosen_penguji_1_nama, dp2.nama as dosen_penguji_2_nama, mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, mhs.kelas as mahasiswa_kelas, p.nama_project as project_nama, jp.nama as jenis_plotting_nama');
         $this->db->from('plotting');
         $this->db->join('koordinator k', 'k.id = plotting.koordinator_id', 'left');
         $this->db->join('dosen dospem', 'dospem.id = plotting.dosen_pembimbing_id', 'left');
@@ -122,5 +122,52 @@ class Koordinator_model extends CI_Model {
         return $query->result_array();
     }
     // Akhir kelola jenis plotting
+
+
+    // Kelola kelompok
+    public function get_all_kelompok() {
+        $this->db->select('kelompok.*, dosen.nama AS nama_pembimbing');
+        $this->db->from('kelompok');
+        $this->db->join('dosen', 'kelompok.dosen_pembimbing_id = dosen.id');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_last_kelompok() 
+    {
+        $this->db->select('kode_kelompok');
+        $this->db->from('kelompok');
+        $this->db->order_by('kode_kelompok', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // Ambil user id dosen yang sudah dipilih
+    public function get_selected_user_dsn_ids() {
+        $this->db->select('dosen_pembimbing_id');
+        $this->db->from('kelompok');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        $ids = array_column($result, 'dosen_pembimbing_id'); // Ambil hanya kolom 'dosen_pembimbing_id'
+        return $ids;
+    }
+
+    // Dapatkan semua user dosen yang sesuai dengan id
+    public function get_all_user_match_by_role_as_dosen($selectedUserIds) {
+        $this->db->select('id, nidn, nama');
+        $this->db->from('dosen');
+        if (!empty($selectedUserIds)) {
+            $this->db->where_not_in('id', $selectedUserIds);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function insert_kelompok($data)
+    {
+        return $this->db->insert('kelompok', $data);
+    }
+    // Akhir kelola kelompok
 
 }

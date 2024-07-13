@@ -13,7 +13,10 @@
                             <span class="fw-bold d-block">npm :</span> <?= $mahasiswa['npm']; ?>
                         </li>
                         <li class="mb-2 text-capitalize">
-                            <span class="fw-bold d-block">program studi :</span> <?= $mahasiswa['nama_prodi']; ?>
+                            <span class="fw-bold d-block">kelas :</span> <?= $mahasiswa['nama_kelas']; ?>
+                        </li>
+                        <li class="mb-2 text-capitalize">
+                            <span class="fw-bold d-block">program studi :</span> <?= $mahasiswa['jenjang'] . ' ' . $mahasiswa['nama_prodi']; ?>
                         </li>
                         <li class="mb-2 text-capitalize">
                             <span class="fw-bold d-block">semester :</span> <?= $mahasiswa['semester']; ?>

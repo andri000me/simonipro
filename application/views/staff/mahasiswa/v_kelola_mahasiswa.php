@@ -30,8 +30,8 @@
                             <th class="text-start">#</th>
                             <th class="text-start">NPM</th>
                             <th class="text-start">Nama</th>
+                            <th class="text-start">Kelas</th>
                             <th class="text-start">Program Studi</th>
-                            <th class="text-start">Semester</th>
                             <th class="text-start">Aksi</th>
                         </tr>
                     </thead>
@@ -42,8 +42,8 @@
                                 <th scope="row"><?= $i; ?></th>
                                 <td><?= $mhs['npm']; ?></td>
                                 <td><?= $mhs['nama']; ?></td>
-                                <td><?= $mhs['nama_prodi']; ?></td>
-                                <td><?= $mhs['semester']; ?></td>
+                                <td><?= $mhs['nama_kelas']; ?></td>
+                                <td><?= $mhs['jenjang'] . ' ' . $mhs['nama_prodi']; ?></td>
                                 <td>
                                     <small>
                                         <a href="detail_mahasiswa/<?= $mhs['id']; ?>" class="btn btn-outline-primary mb-2">
@@ -71,8 +71,8 @@
                             <th class="text-start">#</th>
                             <th class="text-start">NPM</th>
                             <th class="text-start">Nama</th>
+                            <th class="text-start">Kelas</th>
                             <th class="text-start">Program Studi</th>
-                            <th class="text-start">Semester</th>
                             <th class="text-start">Aksi</th>
                         </tr>
                     </tfoot>
@@ -124,6 +124,16 @@
                     <?php endforeach; ?>
                 </select>
                 <?= form_error('prodi_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+            </div>
+            <div class="mb-3">
+                <label for="kelas_id" class="form-label">Kelas</label>
+                <select class="form-select" id="kelas_id" name="kelas_id">
+                    <option value="" selected>-- Pilih Kelas --</option>
+                    <?php foreach ($kelas as $p) : ?>
+                        <option value="<?= $p['id']; ?>"><?= $p['nama_kelas']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <?= form_error('kelas', '<small class="text-danger fst-italic">', '</small>'); ?>
             </div>
             <div class="mb-3">
                 <label for="semester" class="form-label">Semester</label>

@@ -20,7 +20,7 @@
                         <span class="hide-menu">Home</span>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link <?= ($active == 'dashboard') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') == 'staff' ? 'staff/' : 'koordinator/'); ?>" aria-expanded="false">
+                        <a class="sidebar-link <?= ($active == 'dashboard') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role')); ?>" aria-expanded="false">
                             <span>
                                 <i class="ti ti-layout-dashboard"></i>
                             </span>
@@ -58,6 +58,14 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_kelas') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_kelas'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-chalkboard"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Kelas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_koordinator') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_koordinator'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-medal"></i>
@@ -68,7 +76,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_dosen') ? 'active' : '' ?>" href="<?= base_url('staff/kelola_dosen'); ?>" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-messages"></i>
+                                    <i class="ti ti-school"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Dosen</span>
                             </a>
@@ -94,18 +102,6 @@
                                 <span class="hide-menu">Kelola Project</span>
                             </a>
                         </li>
-                        <!-- <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'publish_jadwal') ? 'active' : '' ?>" href="<?= base_url('staff/publish_jadwal'); ?>" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-calendar-user"></i>
-                                </span>
-                                <span class="hide-menu">Publikasi Jadwal</span>
-                            </a>
-                        </li> -->
-                        <!-- <li class="nav-small-cap">
-                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                            <span class="hide-menu">PENGELOLAAN JADWAL</span>
-                        </li> -->
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_jadwal') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_jadwal'); ?>" aria-expanded="false">
                                 <span>
@@ -123,11 +119,41 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_kelompok') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_kelompok'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-messages"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Kelompok</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_plotting') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_plotting'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-sitemap"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Plotting</span>
+                            </a>
+                        </li>
+
+                    <?php elseif ($this->session->userdata('nama_role') == 'mahasiswa') : ?>
+                        <li class="nav-small-cap">
+                            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <span class="hide-menu">MY PROJECT</span>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'info_jadwal') ? 'active' : '' ?>" href="<?= base_url('mahasiswa/info_jadwal'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-calendar"></i>
+                                </span>
+                                <span class="hide-menu">Informasi Jadwal</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_absensi') ? 'active' : '' ?>" href="<?= base_url('mahasiswa/kelola_absensi'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-clipboard"></i>
+                                </span>
+                                <span class="hide-menu">Absensi Bimbingan</span>
                             </a>
                         </li>
                     <?php endif; ?>

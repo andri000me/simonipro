@@ -370,25 +370,177 @@ class Staff extends CI_Controller {
 
     public function update_prodi() {
         $id = $this->input->post('id');
-        $newProdiData = [
-            'kode_prodi' => htmlspecialchars($this->input->post('kode_prodi')),
-            'nama_prodi' => htmlspecialchars($this->input->post('nama_prodi')),
-            'jenjang' => htmlspecialchars($this->input->post('jenjang')),
-        ];
+        $prodi = $this->staff_model->get_prodi_by_id($id);
     
-        $update = $this->staff_model->update_prodi($id, $newProdiData);
+        $kode_prodi_lama = $prodi['kode_prodi'];
+        $kode_prodi_baru = $this->input->post('kode_prodi');
     
-        if ($update) {
-            // If update is successful
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data prodi berhasil di ubah!</div>');
-            redirect('staff/kelola_prodi'); // Adjust the redirect path as needed
+        if ($kode_prodi_baru == $kode_prodi_lama) {
+            // Jika kode prodi tidak berubah, tidak perlu memeriksa is_unique
+            $this->form_validation->set_rules('kode_prodi', 'Kode_prodi', 'required|trim|exact_length[5]|numeric', [
+                'required' => 'Field {field} harus diisi.',
+                'exact_length' => 'Field {field} harus berisi 5 digit karakter.', 
+                'numeric' => 'Format isian harus berupa angka / numerik.'
+            ]);
         } else {
-            // If update fails
-            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Gagal melakukan update data prodi!</div>');
-            redirect('staff/ubah_prodi/' . $id);
+            // Jika kode prodi berubah, periksa keunikannya
+            $this->form_validation->set_rules('kode_prodi', 'Kode_prodi', 'required|trim|is_unique[prodi.kode_prodi]|exact_length[5]|numeric', [
+                'required' => 'Field {field} harus diisi.',
+                'is_unique' => 'Kode prodi sudah terdaftar.',
+                'exact_length' => 'Field {field} harus berisi 5 digit karakter.', 
+                'numeric' => 'Format isian harus berupa angka / numerik.'
+            ]);
+        }
+    
+        $this->form_validation->set_rules('nama_prodi', 'Nama_prodi', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('jenjang', 'Jenjang', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+    
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_prodi($id); // Show the form again with errors
+        } else {
+            $newProdiData = [
+                'kode_prodi' => htmlspecialchars($this->input->post('kode_prodi')),
+                'nama_prodi' => htmlspecialchars($this->input->post('nama_prodi')),
+                'jenjang' => htmlspecialchars($this->input->post('jenjang')),
+            ];
+    
+            $update = $this->staff_model->update_prodi($id, $newProdiData);
+    
+            if ($update) {
+                // If update is successful
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data prodi berhasil diubah!</div>');
+                redirect('staff/kelola_prodi'); // Adjust the redirect path as needed
+            } else {
+                // If update fails
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update data prodi!</div>');
+                redirect('staff/ubah_prodi/' . $id);
+            }
         }
     }
+    
     // akhir kelola prodi
+
+    // Kelola kelas
+    public function kelola_kelas()
+    {
+        $data['title'] = 'Kelola kelas | Staff';
+        $data['kelas'] = $this->staff_model->get_all_kelas();
+        $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['active'] = 'kelola_kelas';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/kelas/v_kelola_kelas');
+        $this->load->view('templates/footer');
+    }
+
+    public function tambah_kelas()
+    {
+        // set_rules
+        $this->form_validation->set_rules('nama_kelas', 'Nama_Kelas', 'required|trim|is_unique[kelas.nama_kelas]|exact_length[2]', [
+            'required' => 'Field {field} harus diisi.',
+            'is_unique' => 'Nama kelas sudah terdaftar.',
+            'exact_length' => 'Field {field} harus berisi 2 digit karakter.', 
+        ]);
+        $this->form_validation->set_rules('prodi_id', 'Prodi_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        // jalankan form validation, dan jika bernilai false, maka
+        if ($this->form_validation->run() == FALSE) {
+            // beri pesan kesalahan
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Kelas baru gagal ditambahkan!</div>');
+            // kembalikan ke halaman kelola role
+            $this->kelola_kelas();
+        } else {
+            $data = [
+                'nama_kelas' => htmlspecialchars($this->input->post('nama_kelas')),
+                'prodi_id' => htmlspecialchars($this->input->post('prodi_id'))
+            ];
+
+            $this->staff_model->insert_kelas($data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Kelas baru berhasil ditambahkan!</div>');
+            redirect('staff/kelola_kelas');
+        }
+    }
+
+    public function detail_kelas($id)
+    {
+        $data['title'] = 'Detail Kelas | Staff';
+        $data['kelas'] = $this->staff_model->get_kelas_by_id($id);
+        $data['active'] = 'kelola_kelas';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/kelas/v_detail_kelas');
+        $this->load->view('templates/footer');
+    }
+
+    public function ubah_kelas($id)
+    {
+        $data['title'] = 'Ubah Kelas | Staff';
+        $data['kelas'] = $this->staff_model->get_kelas_by_id($id);
+        $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['active'] = 'kelola_kelas';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('staff/kelas/v_ubah_kelas');
+        $this->load->view('templates/footer');
+    }
+
+    public function update_kelas() {
+        $id = $this->input->post('id');
+        $kelas = $this->staff_model->get_kelas_by_id($id);
+    
+        $nama_kelas_lama = $kelas['nama_kelas'];
+        $nama_kelas_baru = $this->input->post('nama_kelas');
+    
+        if ($nama_kelas_baru == $nama_kelas_lama) {
+            // Jika nama kelas tidak berubah, tidak perlu memeriksa is_unique
+            $this->form_validation->set_rules('nama_kelas', 'Nama_Kelas', 'required|trim|exact_length[2]', [
+                'required' => 'Field {field} harus diisi.',
+                'exact_length' => 'Field {field} harus berisi 2 digit karakter.',
+            ]);
+        } else {
+            // Jika nama kelas berubah, periksa keunikannya
+            $this->form_validation->set_rules('nama_kelas', 'Nama_Kelas', 'required|trim|is_unique[kelas.nama_kelas]|exact_length[2]', [
+                'required' => 'Field {field} harus diisi.',
+                'is_unique' => 'Nama kelas sudah terdaftar.',
+                'exact_length' => 'Field {field} harus berisi 2 digit karakter.',
+            ]);
+        }
+    
+        $this->form_validation->set_rules('prodi_id', 'Prodi_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+    
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_kelas($id); // Show the form again with errors
+        } else {
+            $newKelasData = [
+                'nama_kelas' => htmlspecialchars($this->input->post('nama_kelas')),
+                'prodi_id' => htmlspecialchars($this->input->post('prodi_id')),
+            ];
+    
+            $update = $this->staff_model->update_kelas($id, $newKelasData);
+    
+            if ($update) {
+                // If update is successful
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data kelas berhasil diubah!</div>');
+                redirect('staff/kelola_kelas'); // Adjust the redirect path as needed
+            } else {
+                // If update fails
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update data kelas!</div>');
+                redirect('staff/ubah_kelas/' . $id);
+            }
+        }
+    }
+    // Akhir kelola kelas
 
     // Kelola koordinator
     public function kelola_koordinator()
@@ -726,6 +878,7 @@ class Staff extends CI_Controller {
         // Ambil user id yang sudah dipilih
         $selectedUserIds = $this->staff_model->get_selected_user_mhs_ids();
         $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['kelas'] = $this->staff_model->get_all_kelas();
         // Kirim user id yang sudah dipilih ke fungsi get_all_user_match_by_role_as_mahasiswa
         $data['users'] = $this->staff_model->get_all_user_match_by_role_as_mahasiswa($selectedUserIds);
         $data['active'] = 'kelola_mahasiswa';
@@ -751,6 +904,9 @@ class Staff extends CI_Controller {
             'required' => 'Field {field} harus diisi.'
         ]);
         $this->form_validation->set_rules('prodi_id', 'Prodi_id', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
+        $this->form_validation->set_rules('kelas_id', 'Kelas_id', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
         $this->form_validation->set_rules('semester', 'Semester', 'required|trim', [
@@ -798,6 +954,7 @@ class Staff extends CI_Controller {
             'npm' => htmlspecialchars($this->input->post('npm')),
             'nama' => htmlspecialchars($this->input->post('nama')),
             'prodi_id' => $this->input->post('prodi_id'),
+            'kelas_id' => $this->input->post('kelas_id'),
             'semester' => $this->input->post('semester'),
             'tahun_angkatan' => $this->input->post('tahun_angkatan'),
             'gambar' => $gambar
@@ -824,6 +981,7 @@ class Staff extends CI_Controller {
     {
         $data['title'] = 'Ubah Mahasiswa | Staff';
         $data['prodi'] = $this->staff_model->get_all_prodi();
+        $data['kelas'] = $this->staff_model->get_all_kelas();
         $data['mahasiswa'] = $this->staff_model->get_mahasiswa_by_id($id);
         $data['active'] = 'kelola_mahasiswa';
         $this->load->view('templates/header', $data);
@@ -834,7 +992,7 @@ class Staff extends CI_Controller {
     }
 
     public function update_mahasiswa()
-    {
+    { 
         $id = $this->input->post('id');
         $mahasiswa = $this->staff_model->get_mahasiswa_by_id($id);
 
@@ -846,6 +1004,9 @@ class Staff extends CI_Controller {
             'required' => 'Field {field} harus diisi.',
         ]);
         $this->form_validation->set_rules('prodi_id', 'Prodi_Id', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('kelas_id', 'Kelas_Id', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
         $this->form_validation->set_rules('semester', 'Semester', 'required|trim|is_numeric', [
@@ -894,6 +1055,7 @@ class Staff extends CI_Controller {
                 'npm' => htmlspecialchars($this->input->post('npm')),
                 'nama' => htmlspecialchars($this->input->post('nama')),
                 'prodi_id' => $this->input->post('prodi_id'),
+                'kelas_id' => $this->input->post('kelas_id'),
                 'semester' => $this->input->post('semester'),
                 'tahun_angkatan' => $this->input->post('tahun_angkatan'),
                 'gambar' => $gambar

@@ -64,14 +64,47 @@ class Staff_model extends CI_Model {
      }
     //  End Prodi
 
+    // Kelas
+    public function get_all_kelas() {
+        $this->db->select('kelas.*, prodi.nama_prodi, prodi.jenjang');
+        $this->db->from('kelas');
+        $this->db->join('prodi', 'prodi.id = kelas.prodi_id');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    //  tangkap data kelas berdasar id
+    public function get_kelas_by_id($id)
+    {
+        $this->db->select('kelas.*, prodi.nama_prodi, prodi.jenjang');
+        $this->db->from('kelas');
+        $this->db->join('prodi', 'kelas.prodi_id = prodi.id', 'left');
+        $this->db->where('kelas.id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function insert_kelas($data)
+    {
+        return $this->db->insert('kelas', $data);
+    }
+
+    public function update_kelas($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('kelas', $data);
+    }
+    // Akhir kelas
+
     // Mahasiswa
     public function get_all_mahasiswa()
     {
-        $this->db->select('mahasiswa.*, role.nama_role, prodi.nama_prodi');
+        $this->db->select('mahasiswa.*, role.nama_role, prodi.nama_prodi, prodi.jenjang, kelas.nama_kelas');
         $this->db->from('mahasiswa');
         $this->db->join('user', 'mahasiswa.user_id = user.id');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->join('prodi', 'mahasiswa.prodi_id = prodi.id'); // Pastikan penggabungan menggunakan kolom yang benar
+        $this->db->join('kelas', 'mahasiswa.kelas_id = kelas.id');
         $this->db->where('role.nama_role', 'mahasiswa');
         $query = $this->db->get();
         return $query->result_array();
@@ -112,11 +145,12 @@ class Staff_model extends CI_Model {
 
     public function get_mahasiswa_by_id($id)
     {
-        $this->db->select('mahasiswa.*, user.username, role.nama_role, prodi.nama_prodi');
+        $this->db->select('mahasiswa.*, user.username, role.nama_role, prodi.nama_prodi, prodi.jenjang, kelas.nama_kelas');
         $this->db->from('mahasiswa');
         $this->db->join('user', 'mahasiswa.user_id = user.id');
         $this->db->join('role', 'user.role_id = role.id');
         $this->db->join('prodi', 'mahasiswa.prodi_id = prodi.id'); // Join dengan tabel prodi menggunakan kolom prodi_id
+        $this->db->join('kelas', 'mahasiswa.kelas_id = kelas.id');
         $this->db->where('mahasiswa.id', $id);
         $query = $this->db->get();
         return $query->row_array();

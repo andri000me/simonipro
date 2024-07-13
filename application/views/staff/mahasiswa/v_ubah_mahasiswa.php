@@ -31,10 +31,28 @@
                                 </select>
                                 <?= form_error('prodi_id', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
-                            <div class="mb-3">
-                                <label for="semester" class="form-label">Semester</label>
-                                <input type="text" class="form-control" id="semester" name="semester" value="<?= set_value('semester', $mahasiswa['semester']); ?>" maxlength="2">
-                                <?= form_error('semester', '<small class="text-danger fst-italic">', '</small>'); ?>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label for="kelas_id" class="form-label">Kelas</label>
+                                        <select class="form-select" id="kelas_id" name="kelas_id">
+                                            <option value="" disabled>-- Pilih Kelas --</option>
+                                            <?php foreach ($kelas as $kls) : ?>
+                                                <option value="<?= $kls['id']; ?>" <?= set_select('kelas_id', $kls['id'], $kls['id'] == $mahasiswa['kelas_id']); ?>>
+                                                    <?= $kls['nama_kelas']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <?= form_error('kelas', '<small class="text-danger fst-italic">', '</small>'); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-3">
+                                        <label for="semester" class="form-label">Semester</label>
+                                        <input type="text" class="form-control" id="semester" name="semester" value="<?= set_value('semester', $mahasiswa['semester']); ?>" maxlength="2">
+                                        <?= form_error('semester', '<small class="text-danger fst-italic">', '</small>'); ?>
+                                    </div>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="tahun_angkatan" class="form-label">Tahun Angkatan</label>

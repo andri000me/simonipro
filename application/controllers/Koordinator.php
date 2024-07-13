@@ -351,6 +351,74 @@ class Koordinator extends CI_Controller {
     }
     // Akhir kelola kegiatan
 
+    // Kelola kelompok
+    public function kelola_kelompok() {
+        $data['title'] = 'Kelola Kelompok | Koordinator';
+        // Ambil data kelompok
+        $data['kelompok'] = $this->koordinator_model->get_all_kelompok();
+        $data['kode_kelompok'] = $this->generate_kode_kelompok(); // Generate kode kelompok berikutnya
+        $selectedUserIds = $this->koordinator_model->get_selected_user_dsn_ids();
+        $data['dosen'] = $this->koordinator_model->get_all_user_match_by_role_as_dosen($selectedUserIds);
+        $data['active'] = 'kelola_kelompok';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/kelompok/v_kelola_kelompok', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function generate_kode_kelompok() 
+    {
+        $last_kelompok = $this->koordinator_model->get_last_kelompok();
+        if ($last_kelompok) {
+            $next_code = intval($last_kelompok->kode_kelompok) + 1;
+        } else {
+            $next_code = 10; // Mulai dari 11 jika belum ada data
+        }
+
+        return str_pad($next_code, 2, '0', STR_PAD_LEFT); // Format menjadi 2 digit
+    }
+
+    // Tambah Kelompok
+    public function tambah_kelompok() 
+    {
+        // Set form validation rules
+        $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen_Pembimbing_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('semester', 'Semester', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('tahun_ajaran', 'Tahun_Ajaran', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('kode_kelompok', 'Kode_Kelompok', 'required|trim|exact_length[2]|is_unique[kelompok.kode_kelompok]', [
+            'required' => 'Field {field} harus diisi.',
+            'exact_length' => 'Kode kelompok harus berisikan 2 digit karakter.',
+            'is_unique' => 'Kode kelompok sudah ada.',
+        ]);
+
+        // Jalankan form validation, dan jika bernilai false, maka
+        if ($this->form_validation->run() == FALSE) {
+            // Beri pesan kesalahan
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Kelompok baru gagal ditambahkan!</div>');
+            // Kembalikan ke halaman kelola kelompok
+            $this->kelola_kelompok();
+        } else {
+            $data = [
+                'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
+                'semester' => htmlspecialchars($this->input->post('semester')),
+                'tahun_ajaran' => htmlspecialchars($this->input->post('tahun_ajaran')),
+                'kode_kelompok' => htmlspecialchars($this->input->post('kode_kelompok')),
+            ];
+
+            $this->koordinator_model->insert_kelompok($data);
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Kelompok baru berhasil ditambahkan!</div>');
+            redirect('koordinator/kelola_kelompok');
+        }
+    }
+    // Akhir kelola kelompok
+
     // Kelola Plotting
     public function kelola_plotting() {
         $data['plotting'] = $this->koordinator_model->getAllPlotting();
