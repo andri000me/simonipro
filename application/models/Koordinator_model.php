@@ -171,6 +171,23 @@ class Koordinator_model extends CI_Model {
         return $query->row_array();
     }
 
+    // query get data plotting by plotting id
+    public function get_plotting_by_kelompok_id($kelompok_id) {
+        $this->db->select('
+            mahasiswa.npm AS mahasiswa_npm,
+            mahasiswa.nama AS mahasiswa_nama,
+            kelas.nama_kelas,
+            prodi.nama_prodi,
+            prodi.jenjang
+        ');
+        $this->db->from('plotting');
+        $this->db->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id');
+        $this->db->join('kelas', 'mahasiswa.kelas_id = kelas.id');
+        $this->db->join('prodi', 'kelas.prodi_id = prodi.id');
+        $this->db->where('plotting.kelompok_id', $kelompok_id);
+        return $this->db->get()->result_array();
+    }
+
     public function insert_kelompok($data)
     {
         return $this->db->insert('kelompok', $data);

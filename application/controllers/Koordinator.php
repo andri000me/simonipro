@@ -427,6 +427,8 @@ class Koordinator extends CI_Controller {
     {
         $data['title'] = 'Detail Kelompok | Koordinator';
         $data['kelompok'] = $this->koordinator_model->get_kelompok_by_id($id);
+        $data['anggota_kelompok'] = $this->koordinator_model->get_plotting_by_kelompok_id($id);  // Menambahkan data plotting
+
 
         $data['active'] = 'kelola_kelompok';
         $this->load->view('templates/header', $data);
