@@ -2,7 +2,6 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-body">
-                <h1><?= $plotting['dosen_pembimbing_id']; ?></h1>
                 <h5 class="card-title fw-semibold mb-4 text-capitalize">Form Ubah Data Plotting</h5>
                 <div class="card">
                     <div class="card-body">
@@ -19,13 +18,13 @@
                                 <?= form_error('jenis_plotting_id', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
                             <div class="mb-3">
-                                <label for="dosen_pembimbing_id" class="form-label">Dosen Pembimbing</label>
-                                <select name="dosen_pembimbing_id" id="dosen_pembimbing_id" class="form-select">
-                                    <?php foreach ($dosen as $d) : ?>
-                                        <option value="<?= $d['id']; ?>" <?= $d['id'] == $plotting['dosen_pembimbing_id'] ? 'selected' : ''; ?>><?= $d['nama']; ?></option>
+                                <label for="kelompok_id" class="form-label">Dosen Pembimbing</label>
+                                <select name="kelompok_id" id="kelompok_id" class="form-select">
+                                    <?php foreach ($kelompok as $kel) : ?>
+                                        <option value="<?= $kel['id']; ?>" <?= $kel['id'] == $plotting['kelompok_id'] ? 'selected' : ''; ?>><?= $kel['nama_pembimbing']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <?= form_error('dosen_pembimbing_id', '<small class="text-danger">', '</small>'); ?>
+                                <?= form_error('kelompok_id', '<small class="text-danger">', '</small>'); ?>
                             </div>
                             <div class="mb-3" id="dosenPenguji1Field" style="display: <?= $plotting['jenis_plotting_id'] == 2 ? 'block' : 'none'; ?>;">
                                 <label for="dosen_penguji_1_id" class="form-label">Dosen Penguji 1</label>

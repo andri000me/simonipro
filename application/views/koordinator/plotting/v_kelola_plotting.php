@@ -127,14 +127,14 @@
             <?= form_error('koordinator_id', '<small class="text-danger fst-italic">', '</small>'); ?>
           </div>
           <div class="mb-3">
-            <label for="dosen_pembimbing_id" class="form-label">Dosen Pembimbing</label>
-            <select class="form-select" id="dosen_pembimbing_id" name="dosen_pembimbing_id">
-              <option value="" selected>-- Pilih Dosen Pembimbing --</option>
-              <?php foreach ($dosen as $dsn) : ?>
-                <option value="<?= $dsn['id']; ?>"><?= $dsn['nidn']; ?> - <?= $dsn['nama']; ?></option>
+            <label for="kelompok_id" class="form-label">Kelompok Pembimbing</label>
+            <select class="form-select" id="kelompok_id" name="kelompok_id">
+              <option value="" selected>-- Pilih Kelompok Pembimbing --</option>
+              <?php foreach ($kelompok as $kel) : ?>
+                <option value="<?= $kel['id']; ?>"><?= $kel['kode_kelompok']; ?>. <?= $kel['dosen_pembimbing_nidn']; ?> - <?= $kel['nama_pembimbing']; ?></option>
               <?php endforeach; ?>
             </select>
-            <?= form_error('dosen_pembimbing_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+            <?= form_error('kelompok_id', '<small class="text-danger fst-italic">', '</small>'); ?>
           </div>
           <div class="mb-3" id="dosenPenguji1Field" style="display: none;">
             <label for="dosen_penguji_1_id" class="form-label">Dosen Penguji 1</label>
@@ -176,13 +176,12 @@
             </select>
             <?= form_error('project_id', '<small class="text-danger fst-italic">', '</small>'); ?>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-        </div>
-        </form>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+      </div>
+      </form>
     </div>
   </div>
 </div>

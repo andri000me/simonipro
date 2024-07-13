@@ -26,8 +26,9 @@
                         <tr>
                             <th class="text-start">#</th>
                             <th class="text-start">Nama pembimbing</th>
-                            <th class="text-start">Semester / Tahun Ajaran</th>
-                            <th class="text-start">Kode kelompok</th>
+                            <th class="text-start">Semester/TA</th>
+                            <th class="text-start">Kode</th>
+                            <th class="text-start">Kelas</th>
                             <th class="text-start">Aksi</th>
                         </tr>
                     </thead>
@@ -36,9 +37,12 @@
                         <?php foreach ($kelompok as $kel) : ?>
                             <tr>
                                 <th scope="row"><?= $i; ?></th>
-                                <td><?= $kel['kode_kelompok']; ?></td>
                                 <td><?= $kel['nama_pembimbing']; ?></td>
-                                <td><?= $kel['semester'] . ',' . $kel['tahun_ajaran']; ?></td>
+                                <td>
+                                  <?= ($kel['semester'] % 2 == 0) ? 'Genap, ' : 'Ganjil, ' ?><?=$kel['tahun_ajaran']; ?>
+                                </td>
+                                <td><?= $kel['kode_kelompok']; ?></td>
+                                <td><?= $kel['jenjang']; ?>-<?= getShortProdi($kel['nama_prodi']); ?>-<?= $kel['nama_kelas']; ?></td>
                                 <td>
                                     <small>
                                         <a href="detail_kelompok/<?= $kel['id']; ?>" class="btn btn-outline-primary mb-2">
@@ -65,8 +69,9 @@
                         <tr>
                             <th class="text-start">#</th>
                             <th class="text-start">Nama pembimbing</th>
-                            <th class="text-start">Semester / Tahun Ajaran</th>
-                            <th class="text-start">Kode kelompok</th>
+                            <th class="text-start">Semester/TA</th>
+                            <th class="text-start">Kode</th>
+                            <th class="text-start">Kelas</th>
                             <th class="text-start">Aksi</th>
                         </tr>
                     </tfoot>
@@ -99,6 +104,16 @@
                 <?php endforeach; ?>
             </select>
             <?= form_error('dosen_pembimbing_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
+          <div class="mb-3">
+            <label for="kelas_id" class="form-label">Kelas</label>
+            <select class="form-select" id="kelas_id" name="kelas_id">
+                <option value="" selected>-- Pilih Kelas --</option>
+                <?php foreach ($kelas as $kls) : ?>
+                    <option value="<?= $kls['id']; ?>"><?= $kls['jenjang'] . '-' . getShortProdi($kls['nama_prodi']) . '-' . $kls['nama_kelas']; ?></option>
+                <?php endforeach; ?>
+            </select>
+            <?= form_error('kelas_id', '<small class="text-danger fst-italic">', '</small>'); ?>
           </div>
           <div class="mb-3">
             <label for="semester" class="form-label">Semester</label>

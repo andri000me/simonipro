@@ -356,6 +356,7 @@ class Koordinator extends CI_Controller {
         $data['title'] = 'Kelola Kelompok | Koordinator';
         // Ambil data kelompok
         $data['kelompok'] = $this->koordinator_model->get_all_kelompok();
+        $data['kelas'] = $this->koordinator_model->get_all_kelas();
         $data['kode_kelompok'] = $this->generate_kode_kelompok(); // Generate kode kelompok berikutnya
         $selectedUserIds = $this->koordinator_model->get_selected_user_dsn_ids();
         $data['dosen'] = $this->koordinator_model->get_all_user_match_by_role_as_dosen($selectedUserIds);
@@ -366,7 +367,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('koordinator/kelompok/v_kelola_kelompok', $data);
         $this->load->view('templates/footer');
     }
-
+    
     public function generate_kode_kelompok() 
     {
         $last_kelompok = $this->koordinator_model->get_last_kelompok();
@@ -392,6 +393,9 @@ class Koordinator extends CI_Controller {
         $this->form_validation->set_rules('tahun_ajaran', 'Tahun_Ajaran', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
+        $this->form_validation->set_rules('kelas_id', 'Kelas_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
         $this->form_validation->set_rules('kode_kelompok', 'Kode_Kelompok', 'required|trim|exact_length[2]|is_unique[kelompok.kode_kelompok]', [
             'required' => 'Field {field} harus diisi.',
             'exact_length' => 'Kode kelompok harus berisikan 2 digit karakter.',
@@ -409,12 +413,87 @@ class Koordinator extends CI_Controller {
                 'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
                 'semester' => htmlspecialchars($this->input->post('semester')),
                 'tahun_ajaran' => htmlspecialchars($this->input->post('tahun_ajaran')),
+                'kelas_id' => htmlspecialchars($this->input->post('kelas_id')),
                 'kode_kelompok' => htmlspecialchars($this->input->post('kode_kelompok')),
             ];
 
             $this->koordinator_model->insert_kelompok($data);
             $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Kelompok baru berhasil ditambahkan!</div>');
             redirect('koordinator/kelola_kelompok');
+        }
+    }
+
+    public function detail_kelompok($id)
+    {
+        $data['title'] = 'Detail Kelompok | Koordinator';
+        $data['kelompok'] = $this->koordinator_model->get_kelompok_by_id($id);
+
+        $data['active'] = 'kelola_kelompok';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/kelompok/v_detail_kelompok', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function ubah_kelompok($id)
+    {
+        $data['title'] = 'Ubah Data Kelompok | Koordinator';
+        $data['kelompok'] = $this->koordinator_model->get_kelompok_by_id($id);
+        $data['kelas'] = $this->koordinator_model->get_all_kelas();
+        $data['dosen'] = $this->koordinator_model->get_all_dosen();
+        $data['active'] = 'kelola_kelompok';
+        
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/kelompok/v_ubah_kelompok', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_kelompok()
+    {
+        $id = $this->input->post('id');
+
+        // set_rules
+        $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen Pembimbing', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('semester', 'Semester', 'required|trim|max_length[2]', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('tahun_ajaran', 'Tahun Ajaran', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('kelas_id', 'Kelas', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('kode_kelompok', 'Kode Kelompok', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_kelompok($id); // Kembali ke halaman ubah kelompok jika validasi gagal
+        } else {
+            $data = [
+                'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
+                'semester' => htmlspecialchars($this->input->post('semester')),
+                'tahun_ajaran' => htmlspecialchars($this->input->post('tahun_ajaran')),
+                'kelas_id' => htmlspecialchars($this->input->post('kelas_id')),
+                'kode_kelompok' => htmlspecialchars($this->input->post('kode_kelompok')),
+            ];
+
+            $update = $this->koordinator_model->update_kelompok($id, $data);
+
+            if ($update) {
+                // If update is successful
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data kelompok berhasil diubah!</div>');
+                redirect('koordinator/kelola_kelompok');
+            } else {
+                // If update fails
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update kelompok!</div>');
+                redirect('koordinator/ubah_kelompok/' . $id);
+            }
         }
     }
     // Akhir kelola kelompok
@@ -427,6 +506,7 @@ class Koordinator extends CI_Controller {
         $data['dosen'] = $this->staff_model->get_all_dosen();
         $data['projects'] = $this->koordinator_model->get_all_projects();
         $data['jenis_plotting'] = $this->koordinator_model->get_all_jenis_plotting();
+        $data['kelompok'] = $this->koordinator_model->get_all_kelompok(); // Ambil data kelompok
         // Ambil user id mahasiswa yang sudah dipilih
         $selectedUserIds = $this->koordinator_model->get_selected_user_mhs_ids();
         // Kirim user id yang sudah dipilih ke fungsi get_all_user_match_by_role_as_mahasiswa
@@ -443,69 +523,70 @@ class Koordinator extends CI_Controller {
     }
 
     public function tambah_plotting() 
-{
-    // Set rules for common fields
-    $this->form_validation->set_rules('koordinator_id', 'Koordinator_ID', 'required|trim', [
-        'required' => 'Field {field} harus diisi.',
-    ]);
-    $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen_Pembimbing_ID', 'required|trim', [
-        'required' => 'Field {field} harus diisi.',
-    ]);
-    $this->form_validation->set_rules('mahasiswa_id', 'Mahasiswa_ID', 'required|trim', [
-        'required' => 'Field {field} harus diisi.',
-    ]);
-    $this->form_validation->set_rules('project_id', 'Project_ID', 'required|trim', [
-        'required' => 'Field {field} harus diisi.',
-    ]);
-    $this->form_validation->set_rules('jenis_plotting_id', 'Jenis_Plotting_ID', 'required|trim', [
-        'required' => 'Field {field} harus diisi.',
-    ]);
-
-    // Get jenis_plotting_id value
-    $jenis_plotting_id = $this->input->post('jenis_plotting_id');
-
-    // If jenis_plotting_id is 'Penguji', set additional rules
-    if ($jenis_plotting_id == '2') { // Replace '2' with the actual ID for 'Penguji'
-        $this->form_validation->set_rules('dosen_penguji_1_id', 'Dosen_Penguji_1_ID', 'required|trim', [
+    {
+        // Set rules for common fields
+        $this->form_validation->set_rules('koordinator_id', 'Koordinator_ID', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
-        $this->form_validation->set_rules('dosen_penguji_2_id', 'Dosen_Penguji_2_ID', 'required|trim', [
+        $this->form_validation->set_rules('kelompok_id', 'Kelompok_ID', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
-    }
+        $this->form_validation->set_rules('mahasiswa_id', 'Mahasiswa_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('project_id', 'Project_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('jenis_plotting_id', 'Jenis_Plotting_ID', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
 
-    // Run form validation, if false, return with error message
-    if ($this->form_validation->run() == FALSE) {
-        // Set error message
-        $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting baru gagal ditambahkan!</div>');
-        // Redirect back to kelola plotting page
-        $this->kelola_plotting();
-    } else {
-        // Prepare data to be inserted
-        $data = [
-            'koordinator_id' => htmlspecialchars($this->input->post('koordinator_id')),
-            'dosen_pembimbing_id' => htmlspecialchars($this->input->post('dosen_pembimbing_id')),
-            'mahasiswa_id' => htmlspecialchars($this->input->post('mahasiswa_id')),
-            'project_id' => htmlspecialchars($this->input->post('project_id')),
-            'jenis_plotting_id' => htmlspecialchars($this->input->post('jenis_plotting_id')),
-            'created_at' => time(),
-            'updated_at' => time()
-        ];
+        // Get jenis_plotting_id value
+        $jenis_plotting_id = $this->input->post('jenis_plotting_id');
 
-        // If jenis_plotting_id is 'Penguji', add dosen_penguji_1_id and dosen_penguji_2_id to the data
+        // If jenis_plotting_id is 'Penguji', set additional rules
         if ($jenis_plotting_id == '2') { // Replace '2' with the actual ID for 'Penguji'
-            $data['dosen_penguji_1_id'] = htmlspecialchars($this->input->post('dosen_penguji_1_id'));
-            $data['dosen_penguji_2_id'] = htmlspecialchars($this->input->post('dosen_penguji_2_id'));
+            $this->form_validation->set_rules('dosen_penguji_1_id', 'Dosen_Penguji_1_ID', 'required|trim', [
+                'required' => 'Field {field} harus diisi.',
+            ]);
+            $this->form_validation->set_rules('dosen_penguji_2_id', 'Dosen_Penguji_2_ID', 'required|trim', [
+                'required' => 'Field {field} harus diisi.',
+            ]);
         }
 
-        // Insert data into database
-        $this->koordinator_model->insert_plotting($data);
-        // Set success message
-        $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data plotting baru berhasil ditambahkan!</div>');
-        // Redirect to kelola plotting page
-        redirect('koordinator/kelola_plotting');
+        // Run form validation, if false, return with error message
+        if ($this->form_validation->run() == FALSE) {
+            // Set error message
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting baru gagal ditambahkan!</div>');
+            // Redirect back to kelola plotting page
+            $this->kelola_plotting();
+        } else {
+            // Prepare data to be inserted
+            $data = [
+                'koordinator_id' => htmlspecialchars($this->input->post('koordinator_id')),
+                'kelompok_id' => htmlspecialchars($this->input->post('kelompok_id')),
+                'mahasiswa_id' => htmlspecialchars($this->input->post('mahasiswa_id')),
+                'project_id' => htmlspecialchars($this->input->post('project_id')),
+                'jenis_plotting_id' => htmlspecialchars($this->input->post('jenis_plotting_id')),
+                'created_at' => time(),
+                'updated_at' => time()
+            ];
+
+            // If jenis_plotting_id is 'Penguji', add dosen_penguji_1_id and dosen_penguji_2_id to the data
+            if ($jenis_plotting_id == '2') { // Replace '2' with the actual ID for 'Penguji'
+                $data['dosen_penguji_1_id'] = htmlspecialchars($this->input->post('dosen_penguji_1_id'));
+                $data['dosen_penguji_2_id'] = htmlspecialchars($this->input->post('dosen_penguji_2_id'));
+            }
+
+            // Insert data into database
+            $this->koordinator_model->insert_plotting($data);
+            // Set success message
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data plotting baru berhasil ditambahkan!</div>');
+            // Redirect to kelola plotting page
+            redirect('koordinator/kelola_plotting');
+        }
     }
-}
+
 
 
     public function detail_plotting($id)
@@ -525,6 +606,7 @@ class Koordinator extends CI_Controller {
         $data['plotting'] = $this->koordinator_model->getPlottingById($id);
         $data['dosen'] = $this->staff_model->get_all_dosen();
         $data['jenis_plotting'] = $this->koordinator_model->get_all_jenis_plotting();
+        $data['kelompok'] = $this->koordinator_model->get_all_kelompok();
         $data['active'] = 'kelola_plotting';
     
         $this->load->view('templates/header', $data);
@@ -539,24 +621,16 @@ class Koordinator extends CI_Controller {
         $this->form_validation->set_rules('jenis_plotting_id', 'Jenis Plotting', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
-        $this->form_validation->set_rules('dosen_pembimbing_id', 'Dosen Pembimbing', 'required|trim', [
+        $this->form_validation->set_rules('kelompok_id', 'Dosen Pembimbing', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
-    
+
         // Fetch form data
         $jenis_plotting_id = $this->input->post('jenis_plotting_id');
-        $dosen_pembimbing_id = $this->input->post('dosen_pembimbing_id');
+        $kelompok_id = $this->input->post('kelompok_id');
         $dosen_penguji_1_id = $this->input->post('dosen_penguji_1_id');
         $dosen_penguji_2_id = $this->input->post('dosen_penguji_2_id');
-    
-        // Debug form data
-        // var_dump($jenis_plotting_id);
-        // var_dump($dosen_pembimbing_id);
-        // var_dump($dosen_penguji_1_id);
-        // var_dump($dosen_penguji_2_id);
-        // var_dump($this->form_validation->run());
-        // die;
-    
+
         // Check if `jenis_plotting_id` is 2 to add rules for penguji
         if ($jenis_plotting_id == '2') {
             $this->form_validation->set_rules('dosen_penguji_1_id', 'Dosen Penguji 1', 'required|trim', [
@@ -566,39 +640,35 @@ class Koordinator extends CI_Controller {
                 'required' => 'Field {field} harus diisi.'
             ]);
         }
-    
+
         // Check if the form validation is successful
         if ($this->form_validation->run() == FALSE) {
-            // Debug form validation
-            var_dump($this->form_validation->error_array());
-            die;
-    
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting gagal diubah.</div>');
             redirect('koordinator/ubah_plotting/' . $this->input->post('id'));
         } else {
             // Prepare data for update
             $data = [
-                'jenis_plotting_id' => $jenis_plotting_id,
-                'dosen_pembimbing_id' => $dosen_pembimbing_id,
+                'jenis_plotting_id' => htmlspecialchars($jenis_plotting_id),
+                'kelompok_id' => htmlspecialchars($kelompok_id),
                 'updated_at' => time()
             ];
-    
-            if ($jenis_plotting_id == 2) {
-                $data['dosen_penguji_1_id'] = $dosen_penguji_1_id;
-                $data['dosen_penguji_2_id'] = $dosen_penguji_2_id;
+
+            if ($jenis_plotting_id == '2') {
+                $data['dosen_penguji_1_id'] = htmlspecialchars($dosen_penguji_1_id);
+                $data['dosen_penguji_2_id'] = htmlspecialchars($dosen_penguji_2_id);
             } else {
                 $data['dosen_penguji_1_id'] = null;
                 $data['dosen_penguji_2_id'] = null;
             }
-    
+
             $result = $this->koordinator_model->updatePlotting($this->input->post('id'), $data);
-    
+
             if ($result) {
                 $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data plotting berhasil diubah.</div>');
             } else {
                 $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data plotting gagal diubah.</div>');
             }
-    
+
             redirect('koordinator/kelola_plotting');
         }
     }

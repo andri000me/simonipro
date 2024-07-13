@@ -30,3 +30,14 @@
 </head>
 
 <body>
+
+<?php 
+  function getShortProdi($nama_prodi) {
+      $words = explode(' ', $nama_prodi);
+      $shortProdi = '';
+      foreach ($words as $word) {
+          $shortProdi .= strtoupper($word[0]);
+      }
+      return $shortProdi;
+  }
+?>

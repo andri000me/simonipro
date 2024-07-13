@@ -39,17 +39,11 @@ class Koordinator_model extends CI_Model {
     // Kelola plotting    
     // query get data plotting_pembimbing
     public function getAllPlotting() {
-        $this->db->select('plotting.*, 
-        k.nama as koordinator_nama, 
-        dospem.nidn as dosen_pembimbing_nidn, dospem.nama as dosen_pembimbing_nama, 
-        dp1.nidn as dosen_penguji_1_nidn, dp1.nama as dosen_penguji_1_nama, 
-        dp2.nidn as dosen_penguji_2_nidn, dp2.nama as dosen_penguji_2_nama, 
-        mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, mhs.kelas, 
-        p.nama_project as project_nama, 
-        jp.nama as jenis_plotting_nama');
+        $this->db->select('plotting.*, k.nama as koordinator_nama, dospem.nama as dosen_pembimbing_nama, dospem.nidn as dosen_pembimbing_nidn, dp1.nama as dosen_penguji_1_nama, dp2.nama as dosen_penguji_2_nama, mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, mhs.kelas_id as mahasiswa_kelas, p.nama_project as project_nama, jp.nama as jenis_plotting_nama');
         $this->db->from('plotting');
         $this->db->join('koordinator k', 'k.id = plotting.koordinator_id', 'left');
-        $this->db->join('dosen dospem', 'dospem.id = plotting.dosen_pembimbing_id', 'left');
+        $this->db->join('kelompok kel', 'kel.id = plotting.kelompok_id', 'left');
+        $this->db->join('dosen dospem', 'dospem.id = kel.dosen_pembimbing_id', 'left');  // Menggunakan dosen_pembimbing_id dari tabel kelompok
         $this->db->join('dosen dp1', 'dp1.id = plotting.dosen_penguji_1_id', 'left');
         $this->db->join('dosen dp2', 'dp2.id = plotting.dosen_penguji_2_id', 'left');
         $this->db->join('mahasiswa mhs', 'mhs.id = plotting.mahasiswa_id', 'left');
@@ -61,16 +55,16 @@ class Koordinator_model extends CI_Model {
 
     public function getPlottingById($id)
     {
-        $this->db->select('plotting.*, k.nama as koordinator_nama, dospem.nama as dosen_pembimbing_nama, dp1.nama as dosen_penguji_1_nama, dp2.nama as dosen_penguji_2_nama, mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, mhs.kelas as mahasiswa_kelas, p.nama_project as project_nama, jp.nama as jenis_plotting_nama');
+        $this->db->select('plotting.*, k.nama as koordinator_nama, dospem.nama as dosen_pembimbing_nama, dospem.nidn as dosen_pembimbing_nidn, dp1.nama as dosen_penguji_1_nama, dp2.nama as dosen_penguji_2_nama, mhs.nama as mahasiswa_nama, mhs.npm as mahasiswa_npm, mhs.kelas_id as mahasiswa_kelas, p.nama_project as project_nama, jp.nama as jenis_plotting_nama');
         $this->db->from('plotting');
         $this->db->join('koordinator k', 'k.id = plotting.koordinator_id', 'left');
-        $this->db->join('dosen dospem', 'dospem.id = plotting.dosen_pembimbing_id', 'left');
+        $this->db->join('kelompok kel', 'kel.id = plotting.kelompok_id', 'left');
+        $this->db->join('dosen dospem', 'dospem.id = kel.dosen_pembimbing_id', 'left');  // Menggunakan dosen_pembimbing_id dari tabel kelompok
         $this->db->join('dosen dp1', 'dp1.id = plotting.dosen_penguji_1_id', 'left');
         $this->db->join('dosen dp2', 'dp2.id = plotting.dosen_penguji_2_id', 'left');
         $this->db->join('mahasiswa mhs', 'mhs.id = plotting.mahasiswa_id', 'left');
         $this->db->join('project p', 'p.id = plotting.project_id', 'left');
         $this->db->join('jenis_plotting jp', 'jp.id = plotting.jenis_plotting_id', 'left');
-        // cari berdasarkan id yang dikirim melalui parameter
         $this->db->where('plotting.id', $id);
         $query = $this->db->get();
         return $query->row_array();
@@ -126,9 +120,11 @@ class Koordinator_model extends CI_Model {
 
     // Kelola kelompok
     public function get_all_kelompok() {
-        $this->db->select('kelompok.*, dosen.nama AS nama_pembimbing');
+        $this->db->select('kelompok.*, dosen.nama AS nama_pembimbing, dosen.nidn AS dosen_pembimbing_nidn, kelas.nama_kelas, prodi.nama_prodi, prodi.jenjang');
         $this->db->from('kelompok');
         $this->db->join('dosen', 'kelompok.dosen_pembimbing_id = dosen.id');
+        $this->db->join('kelas', 'kelompok.kelas_id = kelas.id');
+        $this->db->join('prodi', 'kelas.prodi_id = prodi.id');
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -164,10 +160,48 @@ class Koordinator_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function get_kelompok_by_id($id) {
+        $this->db->select('kelompok.*, dosen.nama AS nama_pembimbing, kelas.nama_kelas, prodi.nama_prodi, prodi.jenjang');
+        $this->db->from('kelompok');
+        $this->db->join('dosen', 'kelompok.dosen_pembimbing_id = dosen.id');
+        $this->db->join('kelas', 'kelompok.kelas_id = kelas.id');
+        $this->db->join('prodi', 'kelas.prodi_id = prodi.id');
+        $this->db->where('kelompok.id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
     public function insert_kelompok($data)
     {
         return $this->db->insert('kelompok', $data);
     }
+
+    public function update_kelompok($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('kelompok', $data);
+    }
     // Akhir kelola kelompok
 
+
+    // GET ALL DATA FROM TABLE KELAS
+    public function get_all_kelas() {
+        $this->db->select('kelas.*, prodi.nama_prodi, prodi.jenjang');
+        $this->db->from('kelas');
+        $this->db->join('prodi', 'prodi.id = kelas.prodi_id');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    
+    // GET ALL DATA FROM TABLE DOSEN
+    public function get_all_dosen()
+    {
+        $this->db->select('dosen.*, user.username, role.nama_role');
+        $this->db->from('dosen');
+        $this->db->join('user', 'dosen.user_id = user.id');
+        $this->db->join('role', 'user.role_id = role.id');
+        $this->db->where('role.nama_role', 'dosen');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
