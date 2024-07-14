@@ -58,80 +58,41 @@
   </script>
 
 
-<!-- kalender -->
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.2.0/main.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.3.0/main.min.js"></script>
+    <!-- kalender -->
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.2.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.3.0/main.min.js"></script>
 
-  <script>
-      document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var eventListEl = document.getElementById('event-list');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-          plugins: [ 'dayGrid' ],
-          initialView: 'dayGridMonth',
-          locale: 'id', // Bahasa Indonesia
-          dateClick: function(info) {
-              // Atur tanggal mulai dan akhir ketika mengklik tanggal di kalender
-              document.getElementById('start-date').value = info.dateStr;
-              document.getElementById('end-date').value = info.dateStr;
-              $('#form').modal('show'); // Tampilkan modal
-          },
-          events: []
-      });
-      calendar.render();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var events = <?= json_encode($events) ?>; // Pastikan $events didefinisikan di PHP
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'dayGrid' ],
+            initialView: 'dayGridMonth',
+            locale: 'id', // Bahasa Indonesia
+            dateClick: function(info) {
+                // Atur tanggal mulai dan akhir ketika mengklik tanggal di kalender
+                document.getElementById('start-date').value = info.dateStr;
+                document.getElementById('end-date').value = info.dateStr;
+                $('#form').modal('show'); // Tampilkan modal
+            },
+            events: [],
+                eventDidMount: function(info) {
+                var today = new Date().toISOString().split('T')[0];
 
-      // Tangkap data dari modal ketika formulir disubmit
-      $('#myForm').on('submit', function(event) {
-          event.preventDefault(); // Mencegah reload halaman
-          var title = $('#event-title').val();
-          var startDate = $('#start-date').val();
-          var endDate = $('#end-date').val();
-          var color = $('#event-color').val();
-
-          if (endDate && new Date(endDate) <= new Date(startDate)) {
-              $('#danger-alert').show();
-              return;
-          } else {
-              $('#danger-alert').hide();
-          }
-
-          // Tambahkan acara ke kalender
-          var newEvent = {
-              title: title,
-              start: startDate,
-              end: endDate ? new Date(new Date(endDate).setDate(new Date(endDate).getDate() + 1)).toISOString().slice(0, 10) : null, // end date harus eksklusif
-              color: color // Gunakan warna yang dipilih
-          };
-          calendar.addEvent(newEvent);
-
-          // Tambahkan acara ke daftar event
-          var eventHTML = `
-              <div class="alert alert-primary w-100 d-flex justify-content-between align-items-center" data-event='${JSON.stringify(newEvent)}'>
-                  <span>${title}</span>
-                  <small><button class="btn btn-info" data-event='${JSON.stringify(newEvent)}'>Detail</button></small>
-              </div>
-          `;
-          eventListEl.insertAdjacentHTML('beforeend', eventHTML);
-
-          // Sembunyikan modal
-          $('#form').modal('hide');
-      });
-
-      // Tangani klik tombol detail di daftar event
-      $(document).on('click', '.btn-info', function() {
-          var eventData = $(this).closest('.alert').data('event');
-          document.getElementById('event-detail-title').textContent = eventData.title;
-          document.getElementById('event-detail-dates').textContent = `Dari: ${eventData.start} ${eventData.end ? `s/d ${eventData.end}` : ''}`;
-          document.getElementById('event-detail-color').textContent = `Warna: ${eventData.color}`;
-          $('#event-detail-modal').modal('show');
-      });
-
-      // Tangani klik tombol "Tambah Acara"
-      document.getElementById('add-event-button').addEventListener('click', function() {
-          $('#form').modal('show');
-      });
-  });
-  </script>
+                if (info.event.extendedProps.start < today) {
+                    info.el.classList.add('past-event');
+                } else if (info.event.extendedProps.start > today) {
+                    info.el.classList.add('upcoming-event');
+                }
+            },
+                eventContent: function(arg) {
+                return { html: `<div class="event-title">${arg.event.title}</div>` };
+            }
+        });
+        calendar.render();
+        });
+    </script>
 </body>
 
 </html>

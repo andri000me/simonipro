@@ -7,6 +7,9 @@
   <title><?= $title; ?></title>
   <link rel="shortcut icon" type="image/png" href="<?= base_url('assets'); ?>/images/logos/favicon-simonipro.svg" />
   <link rel="stylesheet" href="<?= base_url('assets'); ?>/css/styles.min.css" />
+  <!-- my style -->
+  <link rel="stylesheet" href="<?= base_url('assets'); ?>/css/style.css" />
+
   <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.css">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.2.0/main.min.css">

@@ -141,19 +141,11 @@
                             <span class="hide-menu">MY PROJECT</span>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'info_jadwal') ? 'active' : '' ?>" href="<?= base_url('mahasiswa/info_jadwal'); ?>" aria-expanded="false">
-                                <span>
-                                    <i class="ti ti-calendar"></i>
-                                </span>
-                                <span class="hide-menu">Informasi Jadwal</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_absensi') ? 'active' : '' ?>" href="<?= base_url('mahasiswa/kelola_absensi'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-clipboard"></i>
                                 </span>
-                                <span class="hide-menu">Absensi Bimbingan</span>
+                                <span class="hide-menu">Kelola Absensi</span>
                             </a>
                         </li>
                     <?php endif; ?>
