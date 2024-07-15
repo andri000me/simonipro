@@ -23,7 +23,7 @@ class Mahasiswa extends CI_Controller {
             // Redirect ke halaman lain jika bukan koordinator
             redirect('auth');
         }
-
+        
         $this->load->model('jadwal_model');
         $this->load->model('mahasiswa_model');
     }
@@ -65,7 +65,7 @@ class Mahasiswa extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function detail_absensi()
+    public function detail_absensi($id)
     {
         // Ambil username dari session
         $username = $this->session->userdata('username');
@@ -78,7 +78,7 @@ class Mahasiswa extends CI_Controller {
         $data['kelompok'] = $this->mahasiswa_model->get_all_kelompok_match_current_mhs($username);
 
         // Ambil semua data absensi bimbingan yang relevan
-        $data['absensi_bimbingan'] = $this->mahasiswa_model->get_all_absensi_bimbingan_by_user($username);
+        $data['absensi_bimbingan'] = $this->mahasiswa_model->get_all_absensi_bimbingan_by_id($id);
 
         // Render halaman
         $this->load->view('templates/header', $data);
@@ -97,6 +97,9 @@ class Mahasiswa extends CI_Controller {
         $this->form_validation->set_rules('topik', 'Topik', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
+        $this->form_validation->set_rules('waktu', 'Waktu', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
 
         // Jalankan form validation, dan jika bernilai false, maka
         if ($this->form_validation->run() == FALSE) {
@@ -109,6 +112,7 @@ class Mahasiswa extends CI_Controller {
                 'kelompok_id' => htmlspecialchars($this->input->post('kelompok_id')),
                 'mahasiswa_id' => htmlspecialchars($this->input->post('mahasiswa_id')),
                 'tgl_bimbingan' => htmlspecialchars($this->input->post('tgl_bimbingan')),
+                'waktu' => htmlspecialchars($this->input->post('waktu')),
                 'topik' => htmlspecialchars($this->input->post('topik')),
                 'created_at' => time(),
                 'updated_at' => time(),
@@ -119,6 +123,52 @@ class Mahasiswa extends CI_Controller {
             redirect('mahasiswa/kelola_absensi');
         }
     }
+
+    public function update_absensi()
+    {
+        $this->form_validation->set_rules('tgl_bimbingan', 'Tanggal Bimbingan', 'required');
+        $this->form_validation->set_rules('topik', 'Topik', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data absensi gagal diupdate. Cek kembali inputan anda.</div>');
+            redirect('mahasiswa/kelola_absensi');
+        } else {
+            $id = $this->input->post('id');
+            $data = [
+                'tgl_bimbingan' => $this->input->post('tgl_bimbingan'),
+                'topik' => $this->input->post('topik'),
+                'updated_at' => time()
+            ];
+
+            $update = $this->mahasiswa_model->update_absensi($id, $data);
+
+            if ($update) {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data absensi berhasil diupdate.</div>');
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Data absensi gagal diupdate.</div>');
+            }
+            redirect('mahasiswa/kelola_absensi');
+        }
+    }
+
+    public function submit_absensi($id)
+    {
+        $data = [
+            'is_submitted' => 1, // Set is_submitted to true (1)
+            'updated_at' => time()
+        ];
+
+        $update = $this->mahasiswa_model->update_absensi($id, $data);
+
+        if ($update) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Absensi berhasil disubmit.</div>');
+        } else {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Absensi gagal disubmit.</div>');
+        }
+
+        redirect('mahasiswa/kelola_absensi');
+    }
+
     // Akhir kelola Absensi Bimbingan
 
 }

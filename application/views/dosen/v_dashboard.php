@@ -1,4 +1,4 @@
-    <div class="container-fluid">
+<div class="container-fluid">
         <div class="row">
             <div class="col-lg-3 col-md-4 col-12">
                 <div class="card w-100">
@@ -10,7 +10,7 @@
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Mahasiswa</span>
                                 <span class="d-block fw-bolder" style="font-size: 1.25rem;">65</span>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Pengajuan</span>
                                 <span class="d-block fw-bolder" style="font-size: 1.25rem;">22</span>
                             </div>
                         </div>
@@ -61,7 +61,7 @@
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Rekomendasi</span>
                                 <span class="d-block fw-bolder" style="font-size: 1.25rem;">12</span>
                             </div>
                         </div>
@@ -127,7 +127,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row align-items-start">
-                                    <div class="col-8">
+                                    <div class="col-9">
                                         <h5 class="card-title mb-9 fw-semibold">Monthly Earnings</h5>
                                         <h4 class="fw-semibold mb-3">$6,820</h4>
                                         <div class="d-flex align-items-center pb-1">
@@ -138,7 +138,7 @@
                                             <p class="fs-3 mb-0">last year</p>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <div class="d-flex justify-content-end">
                                             <div class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
                                                 <i class="ti ti-currency-dollar fs-6"></i>

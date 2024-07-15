@@ -135,13 +135,17 @@
                             </a>
                         </li>
 
-                    <?php elseif ($this->session->userdata('nama_role') == 'mahasiswa') : ?>
+                    <?php elseif ($this->session->userdata('nama_role') == 'mahasiswa' || $this->session->userdata('nama_role') == 'dosen') : ?>
                         <li class="nav-small-cap">
                             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                            <?php if ( $this->session->userdata('nama_role') == 'mahasiswa' ) : ?>
                             <span class="hide-menu">MY PROJECT</span>
+                            <?php else : ?>
+                                <span class="hide-menu">DATA PROJECT</span>
+                            <?php endif; ?>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link <?= ($active == 'kelola_absensi') ? 'active' : '' ?>" href="<?= base_url('mahasiswa/kelola_absensi'); ?>" aria-expanded="false">
+                            <a class="sidebar-link <?= ($active == 'kelola_absensi') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/kelola_absensi'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-clipboard"></i>
                                 </span>

@@ -61,6 +61,16 @@ class Mahasiswa_model extends CI_Model {
         }
     }
 
+    public function get_all_absensi_bimbingan_by_id($absensi_id)
+    {
+        $this->db->select('*');
+        $this->db->from('absensi_bimbingan');
+        $this->db->where('id', $absensi_id);
+        $query = $this->db->get();
+
+        return $query->result_array();
+    }
+
     public function get_mahasiswa_by_username($username)
     {
         $this->db->select('mahasiswa.*, user.username, role.nama_role, prodi.nama_prodi, prodi.jenjang, kelas.nama_kelas');
@@ -77,6 +87,12 @@ class Mahasiswa_model extends CI_Model {
     public function insert_absensi($data)
     {
         $this->db->insert('absensi_bimbingan', $data);
+    }
+
+    public function update_absensi($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('absensi_bimbingan', $data);
     }
 
     // Akhir kelola Absensi
