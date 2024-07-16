@@ -26,6 +26,7 @@ class Mahasiswa extends CI_Controller {
         
         $this->load->model('jadwal_model');
         $this->load->model('mahasiswa_model');
+
     }
 
 	public function index()
@@ -194,17 +195,24 @@ class Mahasiswa extends CI_Controller {
     // print absensi kehadiran
     public function print_pdf()
     {
-        $this->load->library('pdf');  // Pastikan Anda sudah memuat library PDF
-
         // Ambil data mahasiswa
         $username = $this->session->userdata('username');
+        // Ambil data kelompok yang sesuai dengan mahasiswa saat ini
+        $data['kelompok'] = $this->mahasiswa_model->get_all_kelompok_match_current_mhs($username);
+        // Ambil data absensi yang sesuai dengan mahasiswa saat ini
         $data['absensi_bimbingan'] = $this->mahasiswa_model->get_all_absensi_bimbingan_by_user($username);
 
         $html = $this->load->view('mahasiswa/absensi/v_print_pdf', $data, true);
+
         $this->pdf->load_html($html);
         $this->pdf->render();
+
+        // Save PDF file to a temporary location
+        $output = $this->pdf->output();
+        file_put_contents('./assets/docs/pdf/absensi_mahasiswa.pdf', $output);
+
+        // Optional: Download PDF instead of saving
         $this->pdf->stream("absensi_mahasiswa.pdf");
     }
-
 
 }
