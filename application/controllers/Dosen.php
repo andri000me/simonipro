@@ -81,6 +81,11 @@ class Dosen extends CI_Controller {
             $data['absensi_bimbingan'] = [$data['absensi_bimbingan']];
         }
 
+        // Menghitung jumlah status 'hadir'
+        $mahasiswa_id = $data['absensi_bimbingan'][0]['mahasiswa_id'];
+        $data['mahasiswa_id'] = $mahasiswa_id; // Set mahasiswa_id
+        $data['jumlahHadir'] = $this->dosen_model->count_hadir_by_mahasiswa_id($mahasiswa_id);
+
         // Render halaman
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -134,5 +139,32 @@ class Dosen extends CI_Controller {
             redirect('dosen/kelola_absensi');
         }
     }
+
+    public function rekomendasi_absensi($mahasiswa_id)
+    {
+        // Ambil data absensi mahasiswa terkait
+        $absensi_bimbingan = $this->dosen_model->get_absensi_by_mahasiswa($mahasiswa_id);
+
+        // Hitung jumlah status 'hadir'
+        $jumlahHadir = 0;
+        foreach ($absensi_bimbingan as $absen) {
+            if ($absen['status'] === 'hadir') {
+                $jumlahHadir++;
+            }
+        }
+
+        // Lakukan update status absensi jika jumlah 'hadir' >= 8
+        if ($jumlahHadir >= 8) {
+            $update_data = ['status' => 'rekomendasi'];
+            $this->dosen_model->update_status_absensi($mahasiswa_id, $update_data);
+
+            $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Status absensi berhasil direkomendasikan.</div>');
+        } else {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Jumlah absensi hadir belum mencapai 8.</div>');
+        }
+
+        redirect('dosen/kelola_absensi');
+    }
+
 
 }

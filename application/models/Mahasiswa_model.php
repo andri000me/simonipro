@@ -84,6 +84,30 @@ class Mahasiswa_model extends CI_Model {
         return $query->row_array();
     }
 
+    public function get_last_absensi_status($username)
+    {
+        // Ambil data user berdasarkan username
+        $this->db->select('user.id as user_id, mahasiswa.id as mahasiswa_id');
+        $this->db->from('user');
+        $this->db->join('mahasiswa', 'mahasiswa.user_id = user.id');
+        $this->db->where('user.username', $username);
+        $user = $this->db->get()->row();
+
+        if ($user) {
+            // Ambil status terakhir absensi bimbingan berdasarkan mahasiswa_id
+            $this->db->select('status');
+            $this->db->from('absensi_bimbingan');
+            $this->db->where('mahasiswa_id', $user->mahasiswa_id);
+            $this->db->order_by('tgl_bimbingan', 'DESC');
+            $this->db->limit(1);
+            $query = $this->db->get();
+            return $query->row_array();
+        } else {
+            return array();
+        }
+    }
+
+
     public function insert_absensi($data)
     {
         $this->db->insert('absensi_bimbingan', $data);

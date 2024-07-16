@@ -57,6 +57,23 @@ class Mahasiswa extends CI_Controller {
         // Ambil semua data absensi bimbingan yang relevan
         $data['absensi_bimbingan'] = $this->mahasiswa_model->get_all_absensi_bimbingan_by_user($username);
 
+        // Hitung jumlah kehadiran
+        $jumlahHadir = 0;
+        $statusTerakhir = '';
+
+        foreach ($data['absensi_bimbingan'] as $absen) {
+            if ($absen['status'] === 'hadir') {
+                $jumlahHadir++;
+            }
+            $statusTerakhir = $absen['status'];
+        }
+
+        $data['jumlahHadir'] = $jumlahHadir;
+
+        // Ambil status terakhir absensi bimbingan
+        $statusTerakhirData = $this->mahasiswa_model->get_last_absensi_status($username);
+        $data['statusTerakhir'] = isset($statusTerakhirData['status']) ? $statusTerakhirData['status'] : '';
+
         // Render halaman
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar', $data);
@@ -64,6 +81,7 @@ class Mahasiswa extends CI_Controller {
         $this->load->view('mahasiswa/absensi/v_kelola_absensi', $data);
         $this->load->view('templates/footer');
     }
+
 
     public function detail_absensi($id)
     {
@@ -171,7 +189,22 @@ class Mahasiswa extends CI_Controller {
 
         redirect('mahasiswa/kelola_absensi');
     }
-
     // Akhir kelola Absensi Bimbingan
+
+    // print absensi kehadiran
+    public function print_pdf()
+    {
+        $this->load->library('pdf');  // Pastikan Anda sudah memuat library PDF
+
+        // Ambil data mahasiswa
+        $username = $this->session->userdata('username');
+        $data['absensi_bimbingan'] = $this->mahasiswa_model->get_all_absensi_bimbingan_by_user($username);
+
+        $html = $this->load->view('mahasiswa/absensi/v_print_pdf', $data, true);
+        $this->pdf->load_html($html);
+        $this->pdf->render();
+        $this->pdf->stream("absensi_mahasiswa.pdf");
+    }
+
 
 }

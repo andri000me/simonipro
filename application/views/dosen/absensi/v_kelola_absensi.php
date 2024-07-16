@@ -16,6 +16,7 @@
                                 <tr>
                                     <th class="text-start">#</th>
                                     <th class="text-start">Tanggal Bimbingan</th>
+                                    <th class="text-start">Mahasiswa</th>
                                     <th class="text-start">Topik</th>
                                     <th class="text-start">Status</th>
                                     <th class="text-start">Aksi</th>
@@ -54,6 +55,10 @@
                                                 <i class="ti ti-clock"></i>
                                                 <?= substr($absensi['waktu'], 0, 5); ?>
                                             </span>
+                                        </td>
+                                        <td>
+                                            <?= $absensi['nama_mahasiswa']; ?><br>
+                                            <small><?= $absensi['mahasiswa_npm']; ?></small>
                                         </td>
                                         <td><?= $absensi['topik']; ?></td>
                                         <td>
@@ -97,6 +102,7 @@
                                 <tr>
                                     <th class="text-start">#</th>
                                     <th class="text-start">Tanggal Bimbingan</th>
+                                    <th class="text-start">Mahasiswa</th>
                                     <th class="text-start">Topik</th>
                                     <th class="text-start">Status</th>
                                     <th class="text-start">Aksi</th>

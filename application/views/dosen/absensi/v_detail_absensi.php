@@ -82,7 +82,7 @@
                                                     <?php elseif ( $absen['is_confirmed'] == 'confirmed' ) : ?>
                                                     <small class="text-success fst-italic">
                                                         <sup>*</sup>Terkonfirmasi
-                                                    </small> 
+                                                    </small>
                                                 <?php else : ?>
                                                     <button class="btn btn-outline-danger mb-1" data-bs-toggle="modal" data-bs-target="#modalEditAbsensiBimbingan" onclick="editAbsensi(
                                                         <?= $absen['id']; ?>, 
@@ -105,10 +105,13 @@
                     </div>
                 </div>
                 <a href="<?= base_url('dosen/kelola_absensi'); ?>" class="btn btn-primary">Kembali</a>
+                <!-- jika jumlah hadir absensi mahasiswa belum >= 8, tombol dibawah ini akan disabled, akan aktif jika jumlah absensi mahasiswa sudah >= 8 -->
+                <a href="<?= base_url('dosen/rekomendasi_absensi/' . $mahasiswa_id); ?>" class="btn btn-danger <?= $jumlahHadir >= 8 ? '' : 'disabled'; ?>" onclick="return confirm('Rekomendasikan Mahasiswa ?');">Rekomendasi</a>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <!-- Modal Edit Absensi Bimbingan -->
@@ -161,6 +164,7 @@
                         </select>
                         <?= form_error('is_confirmed', '<small class="text-danger fst-italic">', '</small>'); ?>
                     </div>
+                    <!-- input ini hanya akan muncul ketika status hadir sudah >= 8 -->
                     <div class="mb-3" id="catatan_penolakan_div" style="display: none;">
                         <label for="catatan_penolakan" class="form-label">Catatan Penolakan</label>
                         <textarea name="catatan_penolakan" id="catatan_penolakan" class="form-control"></textarea>
