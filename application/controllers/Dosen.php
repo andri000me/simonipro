@@ -110,10 +110,14 @@ class Dosen extends CI_Controller {
             // Set is_submitted menjadi 0 (false) jika is_confirmed adalah 'rejected'
             $is_submitted = $is_confirmed === 'rejected' ? 0 : 1;
 
+             // Tambahkan kondisi untuk status
+            $status = $is_confirmed === 'confirmed' ? 'hadir' : null;
+
             $data = [
                 'tgl_bimbingan' => $tgl_bimbingan,
                 'waktu' => $waktu,
                 'topik' => $topik,
+                'status' => $status,
                 'is_confirmed' => $is_confirmed,
                 'is_submitted' => $is_submitted,  // Tambahkan is_submitted
                 'catatan_penolakan' => $is_confirmed === 'rejected' ? $catatan_penolakan : null,

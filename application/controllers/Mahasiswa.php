@@ -127,6 +127,7 @@ class Mahasiswa extends CI_Controller {
     public function update_absensi()
     {
         $this->form_validation->set_rules('tgl_bimbingan', 'Tanggal Bimbingan', 'required');
+        $this->form_validation->set_rules('waktu', 'Waktu', 'required');
         $this->form_validation->set_rules('topik', 'Topik', 'required');
 
         if ($this->form_validation->run() == false) {
@@ -136,7 +137,9 @@ class Mahasiswa extends CI_Controller {
             $id = $this->input->post('id');
             $data = [
                 'tgl_bimbingan' => $this->input->post('tgl_bimbingan'),
+                'waktu' => $this->input->post('waktu'),
                 'topik' => $this->input->post('topik'),
+                'is_confirmed' => 'pending',
                 'updated_at' => time()
             ];
 

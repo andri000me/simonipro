@@ -75,10 +75,14 @@
                                             <?= $absen['is_confirmed'] === 'confirmed' ? '<small class="badge text-bg-success">Paraf Lengkap</small>' : '<small class="badge text-bg-danger">Belum Diparaf</small>'; ?>
                                         </td>
                                         <td>
-                                            <?php if ($absen['status'] == 'rejected') : ?>
-                                                    <small class="text-danger">
+                                            <?php if ($absen['is_confirmed'] == 'rejected') : ?>
+                                                    <small class="text-danger fst-italic">
                                                         <sup>*</sup>Ditolak
                                                     </small>
+                                                    <?php elseif ( $absen['is_confirmed'] == 'confirmed' ) : ?>
+                                                    <small class="text-success fst-italic">
+                                                        <sup>*</sup>Terkonfirmasi
+                                                    </small> 
                                                 <?php else : ?>
                                                     <button class="btn btn-outline-danger mb-1" data-bs-toggle="modal" data-bs-target="#modalEditAbsensiBimbingan" onclick="editAbsensi(
                                                         <?= $absen['id']; ?>, 

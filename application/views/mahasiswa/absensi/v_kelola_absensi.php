@@ -1,3 +1,15 @@
+      <!-- Menghitung jumlah status 'hadir' -->
+      <?php
+      $jumlahHadir = 0;
+      $statusTerakhir = '';
+      foreach ($absensi_bimbingan as $absen) {
+          if ($absen['status'] === 'hadir') {
+              $jumlahHadir++;
+          }
+          $statusTerakhir = $absen['status'];
+      }
+      ?>
+      
       <!--  Row 1 -->
         <div class="row">
           <div class="col-lg-12 d-flex align-items-strech">
@@ -20,6 +32,17 @@
                         Tambah Data
                       </button>
                     </div>
+                    <!-- Tombol ini hanya akan muncul ketika status hadir sudah >= 8 dan is status terakhir adalah rekomendasi -->
+                    <?php if ($jumlahHadir >= 8 && $statusTerakhir === 'rekomendasi') : ?>
+                        <div class="mb-3">
+                            <a href="#" class="btn btn-danger">
+                                <span class="d-flex align-items-center fw-bold">
+                                    <iconify-icon icon="ant-design:file-pdf-outlined" class="me-1"></iconify-icon>
+                                    Print PDF
+                                </span>
+                            </a>
+                        </div>
+                    <?php endif; ?>
                   </div>
                   <table id="myTable" class="table table-hover table-responsive">
                     <thead>

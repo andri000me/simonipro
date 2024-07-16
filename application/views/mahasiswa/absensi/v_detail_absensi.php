@@ -94,7 +94,7 @@
                                         </td>
                                         <td>
                                             <?php if ( $absen['is_submitted'] == FALSE ) : ?>
-                                                <button type="button" class="btn btn-warning mb-1" data-bs-toggle="modal" data-bs-target="#modalEditAbsensiBimbingan" onclick="editAbsensi(<?= $absen['id']; ?>, '<?= $absen['tgl_bimbingan']; ?>', '<?= $absen['topik']; ?>')">
+                                                <button type="button" class="btn btn-warning mb-1" data-bs-toggle="modal" data-bs-target="#modalEditAbsensiBimbingan" onclick="editAbsensi(<?= $absen['id']; ?>, '<?= $absen['tgl_bimbingan']; ?>', '<?= $absen['waktu']; ?>', '<?= $absen['topik']; ?>')">
                                                     <span>
                                                         <i class="ti ti-edit"></i>
                                                     </span>
@@ -173,10 +173,21 @@
               <label for="mahasiswa_nama" class="form-label">Nama Mahasiswa</label>
               <input type="text" class="form-control" name="mahasiswa_nama" id="mahasiswa_nama" autocomplete="off" value="<?= $kelompok['nama_mahasiswa']; ?>" disabled>
             </div>
-            <div class="mb-3">
-                <label for="tgl_bimbingan" class="form-label">Tanggal Bimbingan</label>
-                <input type="date" name="tgl_bimbingan" id="tgl_bimbingan" class="form-control" autocomplete="off">
-                <?= form_error('tgl_bimbingan', '<small class="text-danger fst-italic">', '</small>'); ?>
+            <div class="row">
+                <div class="col-8">
+                    <div class="mb-3">
+                        <label for="tgl_bimbingan" class="form-label">Tanggal Bimbingan</label>
+                        <input type="date" name="tgl_bimbingan" id="tgl_bimbingan" class="form-control" autocomplete="off">
+                        <?= form_error('tgl_bimbingan', '<small class="text-danger fst-italic">', '</small>'); ?>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="mb-3">
+                        <label for="waktu" class="form-label">Waktu Bimbingan</label>
+                        <input type="time" name="waktu" id="waktu" class="form-control" autocomplete="off">
+                        <?= form_error('waktu', '<small class="text-danger fst-italic">', '</small>'); ?>
+                    </div>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="topik" class="form-label">Topik</label>
@@ -194,9 +205,10 @@
 </div>
 
 <script>
-function editAbsensi(id, tgl_bimbingan, topik) {
+function editAbsensi(id, tgl_bimbingan, waktu, topik) {
     document.getElementById('absensi_id').value = id;
     document.getElementById('tgl_bimbingan').value = tgl_bimbingan;
     document.getElementById('topik').value = topik;
+    document.getElementById('waktu').value = waktu;
 }
 </script>
