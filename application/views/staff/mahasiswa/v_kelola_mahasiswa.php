@@ -31,7 +31,7 @@
                             <th class="text-start">NPM</th>
                             <th class="text-start">Nama</th>
                             <th class="text-start">Kelas</th>
-                            <th class="text-start">Program Studi</th>
+                            <th class="text-start">IPK</th>
                             <th class="text-start">Aksi</th>
                         </tr>
                     </thead>
@@ -43,7 +43,7 @@
                                 <td><?= $mhs['npm']; ?></td>
                                 <td><?= $mhs['nama']; ?></td>
                                 <td><?= $mhs['nama_kelas']; ?></td>
-                                <td><?= $mhs['jenjang'] . ' ' . $mhs['nama_prodi']; ?></td>
+                                <td><?= $mhs['ipk']; ?></td>
                                 <td>
                                     <small>
                                         <a href="detail_mahasiswa/<?= $mhs['id']; ?>" class="btn btn-outline-primary mb-2">
@@ -72,7 +72,7 @@
                             <th class="text-start">NPM</th>
                             <th class="text-start">Nama</th>
                             <th class="text-start">Kelas</th>
-                            <th class="text-start">Program Studi</th>
+                            <th class="text-start">IPK</th>
                             <th class="text-start">Aksi</th>
                         </tr>
                     </tfoot>
@@ -154,6 +154,11 @@
                 <label for="gambar" class="form-label">Gambar</label>
                 <input type="file" name="gambar" id="gambar" class="form-control" value="<?= set_value('gambar'); ?>">
                 <?= form_error('gambar', '<small class="text-danger fst-italic">', '</small>'); ?>
+            </div>
+            <div class="mb-3">
+              <label for="ipk" class="form-label">Nilai IPK</label>
+              <input type="text" class="form-control" id="ipk" name="ipk" value="<?= set_value('ipk'); ?>" placeholder="0.00" maxlength="4">
+              <?= form_error('ipk', '<small class="text-danger fst-italic">', '</small>'); ?>
             </div>
         </div>
         <div class="modal-footer">

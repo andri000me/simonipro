@@ -74,6 +74,11 @@
                                 <input type="file" class="form-control" id="gambar" name="gambar">
                                 <?= form_error('gambar', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
+                            <div class="mb-3">
+                                <label for="ipk" class="form-label">Nilai IPK</label>
+                                <input type="text" class="form-control" id="ipk" name="ipk" value="<?= set_value('ipk', $mahasiswa['ipk']); ?>" maxlength="4">
+                                <?= form_error('ipk', '<small class="text-danger fst-italic">', '</small>'); ?>
+                            </div>
                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </form>
                     </div>

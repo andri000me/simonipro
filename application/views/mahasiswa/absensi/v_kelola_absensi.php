@@ -26,10 +26,16 @@
                             <!-- Tombol ini hanya akan muncul ketika jumlahHadir >= 8 dan statusTerakhir adalah rekomendasi -->
                             <?php if ($statusTerakhir === 'rekomendasi') : ?>
                                 <div class="mb-3">
-                                    <a href="<?= base_url('mahasiswa/print_pdf') ?>" class="btn btn-danger">
+                                    <a href="<?= base_url('mahasiswa/print_absensi') ?>" class="btn btn-secondary">
                                         <span class="d-flex align-items-center fw-bold">
                                             <iconify-icon icon="ant-design:file-pdf-outlined" class="me-1"></iconify-icon>
-                                            Print PDF
+                                            Print Absensi
+                                        </span>
+                                    </a>
+                                    <a href="<?= base_url('mahasiswa/print_rekomendasi') ?>" class="btn btn-primary">
+                                        <span class="d-flex align-items-center fw-bold">
+                                            <iconify-icon icon="tabler:file-certificate" class="me-1"></iconify-icon>
+                                           Print Rekomendasi
                                         </span>
                                     </a>
                                 </div>

@@ -79,7 +79,7 @@
                                 <h5 class="card-title fw-semibold">Kalender Proyek 2</h5>
                             </div>
                             <div class="mb-3 mb-sm-0">
-                                <a href="#" class="btn btn-danger d-flex">
+                                <a href="<?= base_url('mahasiswa/print_kalender') ?>" class="btn btn-danger d-flex">
                                     <span class="text-white d-inline-block d-flex align-items-center me-1">
                                         <iconify-icon icon="ant-design:file-pdf-outlined"></iconify-icon>
                                     </span>

@@ -909,11 +909,16 @@ class Staff extends CI_Controller {
         $this->form_validation->set_rules('kelas_id', 'Kelas_id', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
-        $this->form_validation->set_rules('semester', 'Semester', 'required|trim', [
-            'required' => 'Field {field} harus diisi.'
+        $this->form_validation->set_rules('semester', 'Semester', 'required|trim|is_numeric', [
+            'required' => 'Field {field} harus diisi.',
+            'is_numeric' => 'Field {field} hanya memperbolehkan input berupa angka.'
         ]);
         $this->form_validation->set_rules('tahun_angkatan', 'Tahun_Angkatan', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
+        ]);
+        $this->form_validation->set_rules('ipk', 'IPK', 'required|trim|is_numeric', [
+            'required' => 'Field {field} harus diisi.',
+            'is_numeric' => 'Field {field} hanya memperbolehkan input berupa angka (cth: 3.25).'
         ]);
         
         if ($this->form_validation->run() == FALSE) {
@@ -957,7 +962,8 @@ class Staff extends CI_Controller {
             'kelas_id' => $this->input->post('kelas_id'),
             'semester' => $this->input->post('semester'),
             'tahun_angkatan' => $this->input->post('tahun_angkatan'),
-            'gambar' => $gambar
+            'gambar' => $gambar,
+            'ipk' => $this->input->post('ipk')
         ];
 
         $this->staff_model->insert_mahasiswa($data);
@@ -1016,6 +1022,10 @@ class Staff extends CI_Controller {
         $this->form_validation->set_rules('tahun_angkatan', 'Tahun_Angkatan', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
+        $this->form_validation->set_rules('ipk', 'IPK', 'required|trim|is_numeric', [
+            'required' => 'Field {field} harus diisi.',
+            'is_numeric' => 'Field {field} hanya memperbolehkan input berupa angka (cth: 3.25).'
+        ]);
 
         if ($this->form_validation->run() == FALSE) {
             $this->ubah_mahasiswa($id); // Kembali ke form jika validasi gagal
@@ -1058,7 +1068,8 @@ class Staff extends CI_Controller {
                 'kelas_id' => $this->input->post('kelas_id'),
                 'semester' => $this->input->post('semester'),
                 'tahun_angkatan' => $this->input->post('tahun_angkatan'),
-                'gambar' => $gambar
+                'gambar' => $gambar,
+                'ipk' => $this->input->post('ipk'),
             ];
 
             $this->staff_model->update_mahasiswa($id, $data);

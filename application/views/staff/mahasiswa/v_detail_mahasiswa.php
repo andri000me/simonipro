@@ -21,6 +21,9 @@
                         <li class="mb-2 text-capitalize">
                             <span class="fw-bold d-block">semester :</span> <?= $mahasiswa['semester']; ?>
                         </li>
+                        <li class="mb-2 text-capitalize">
+                            <span class="fw-bold d-block">nilai ipk :</span> <?= $mahasiswa['ipk']; ?>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-6 d-flex justify-content-center align-items-center">

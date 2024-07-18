@@ -27,6 +27,14 @@ class Jadwal_model extends CI_Model {
         return $this->db->get('kegiatan')->result_array();
     }
 
+    public function get_published_jadwal()
+    {
+        $this->db->where('status', 'published');
+        $query = $this->db->get('jadwal');
+
+        return $query->row_array();
+    }
+
     // query update data jadwal
     public function update_jadwal($id, $data) {
         $this->db->where('id', $id);

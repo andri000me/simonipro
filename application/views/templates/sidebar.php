@@ -152,6 +152,14 @@
                                 <span class="hide-menu">Kelola Absensi</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'upload_draft') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/upload_draft'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-book-upload"></i>
+                                </span>
+                                <span class="hide-menu">Upload Draft</span>
+                            </a>
+                        </li>
                     <?php endif; ?>
 
                     <li class="nav-small-cap">

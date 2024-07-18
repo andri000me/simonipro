@@ -9,7 +9,7 @@ class Mahasiswa_model extends CI_Model {
     public function get_all_kelompok_match_current_mhs($username)
     {
         // Ambil data mahasiswa berdasarkan username
-        $this->db->select('mahasiswa.id as mahasiswa_id, mahasiswa.nama as nama_mahasiswa, mahasiswa.npm, kelompok.id as kelompok_id, kelompok.kode_kelompok, kelompok.dosen_pembimbing_id, kelompok.kelas_id, kelompok.semester, kelompok.tahun_ajaran');
+        $this->db->select('mahasiswa.id as mahasiswa_id, mahasiswa.nama as nama_mahasiswa, mahasiswa.npm, mahasiswa.ipk, kelompok.id as kelompok_id, kelompok.kode_kelompok, kelompok.dosen_pembimbing_id, kelompok.kelas_id, kelompok.semester, kelompok.tahun_ajaran');
         $this->db->from('user');
         $this->db->join('mahasiswa', 'mahasiswa.user_id = user.id');
         $this->db->join('plotting', 'plotting.mahasiswa_id = mahasiswa.id');
@@ -33,6 +33,7 @@ class Mahasiswa_model extends CI_Model {
             $kelompok['mahasiswa_id'] = $mahasiswa->mahasiswa_id;
             $kelompok['nama_mahasiswa'] = $mahasiswa->nama_mahasiswa;
             $kelompok['npm'] = $mahasiswa->npm;
+            $kelompok['ipk'] = $mahasiswa->ipk;
 
             return $kelompok;  // Mengembalikan data sebagai array tunggal
         } else {
@@ -95,9 +96,10 @@ class Mahasiswa_model extends CI_Model {
 
         if ($user) {
             // Ambil status terakhir absensi bimbingan berdasarkan mahasiswa_id
-            $this->db->select('status');
+            $this->db->select('status, tgl_bimbingan');
             $this->db->from('absensi_bimbingan');
             $this->db->where('mahasiswa_id', $user->mahasiswa_id);
+            $this->db->where('status', 'rekomendasi');
             $this->db->order_by('tgl_bimbingan', 'DESC');
             $this->db->limit(1);
             $query = $this->db->get();
@@ -106,7 +108,6 @@ class Mahasiswa_model extends CI_Model {
             return array();
         }
     }
-
 
     public function insert_absensi($data)
     {
@@ -119,6 +120,33 @@ class Mahasiswa_model extends CI_Model {
         return $this->db->update('absensi_bimbingan', $data);
     }
 
+    public function insert_draft($data)
+    {
+        $this->db->insert('draft_sidang', $data);
+    }
+
     // Akhir kelola Absensi
+
+    // Upload draft
+    // Fungsi untuk mendapatkan status upload draft mahasiswa
+    public function has_uploaded_draft($mahasiswa_id) {
+        $this->db->select('id');
+        $this->db->from('draft_sidang');
+        $this->db->where('mahasiswa_id', $mahasiswa_id);
+        $query = $this->db->get();
+        return $query->num_rows() > 0;
+    }
+
+    // Fungsi untuk mendapatkan mahasiswa_id dari username
+    public function get_mahasiswa_id_by_username($username) {
+        $this->db->select('mahasiswa.id');
+        $this->db->from('mahasiswa');
+        $this->db->join('user', 'mahasiswa.user_id = user.id');
+        $this->db->where('user.username', $username);
+        $query = $this->db->get();
+        return $query->row()->id;
+    }
+
+    // Akhir upload draft
 
 }
