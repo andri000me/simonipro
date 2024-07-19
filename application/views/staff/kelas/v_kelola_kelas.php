@@ -22,53 +22,55 @@
                       </button>
                     </div>
                   </div>
-                  <table id="myTable" class="table table-hover table-responsive">
-                    <thead>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Nama kelas</th>
-                        <th class="text-start">Program Studi</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php $i = 1; ?>
-                      <?php foreach ($kelas as $kls) : ?>
-                      <tr>
-                        <th scope="row"><?= $i; ?></th>
-                        <td><?= $kls['nama_kelas']; ?></td>
-                        <td><?= $kls['jenjang'] . ' ' . $kls['nama_prodi']; ?></td>
-                        <td>
-                          <small>
-                          <a href="detail_kelas/<?= $kls['id']; ?>" class="btn btn-outline-primary mb-2">
-                              <span>
-                                <i class="ti ti-info-circle"></i>
-                              </span>
-                              Detail
-                            </a>
-                          </small>
-                          <small>
-                          <a href="ubah_kelas/<?= $kls['id']; ?>" class="btn btn-outline-warning mb-2">
-                              <span>
-                                <i class="ti ti-edit"></i>
-                              </span>
-                              Ubah
-                            </a>
-                          </small>
-                        </td>
-                      </tr>
-                      <?php $i++; ?>
-                      <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Nama kelas</th>
-                        <th class="text-start">Program Studi</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <div class="table-responsive">
+                    <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                      <thead>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Nama kelas</th>
+                          <th class="text-start">Program Studi</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($kelas as $kls) : ?>
+                        <tr>
+                          <th scope="row"><?= $i; ?></th>
+                          <td><?= $kls['nama_kelas']; ?></td>
+                          <td><?= $kls['jenjang'] . ' ' . $kls['nama_prodi']; ?></td>
+                          <td>
+                            <small>
+                            <a href="detail_kelas/<?= $kls['id']; ?>" class="btn btn-outline-primary mb-2">
+                                <span>
+                                  <i class="ti ti-info-circle"></i>
+                                </span>
+                                Detail
+                              </a>
+                            </small>
+                            <small>
+                            <a href="ubah_kelas/<?= $kls['id']; ?>" class="btn btn-outline-warning mb-2">
+                                <span>
+                                  <i class="ti ti-edit"></i>
+                                </span>
+                                Ubah
+                              </a>
+                            </small>
+                          </td>
+                        </tr>
+                        <?php $i++; ?>
+                        <?php endforeach; ?>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Nama kelas</th>
+                          <th class="text-start">Program Studi</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

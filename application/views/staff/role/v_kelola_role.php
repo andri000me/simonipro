@@ -22,50 +22,52 @@
                       </button>
                     </div>
                   </div>
-                  <table id="myTable" class="table table-hover table-responsive">
-                    <thead>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Nama Role</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php $i = 1; ?>
-                      <?php foreach ($roles as $role) : ?>
-                      <tr>
-                        <th scope="row"><?= $i; ?></th>
-                        <td><?= $role['nama_role']; ?></td>
-                        <td>
-                          <small>
-                          <a href="ubah_role/<?= $role['id']; ?>" class="btn btn-outline-warning mb-2">
-                              <span>
-                                <i class="ti ti-edit"></i>
-                              </span>
-                              Ubah
-                            </a>
-                          </small>
-                          <small>
-                            <a href="hapus_role/<?= $role['id']; ?>" class="btn btn-outline-danger mb-2" onclick="return confirm('Yakin ingin menghapus data yang dipilih ?')">
-                              <span>
-                                <i class="ti ti-trash"></i>
-                              </span>
-                              Hapus
-                            </a>
-                          </small>
-                        </td>
-                      </tr>
-                      <?php $i++; ?>
-                      <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Nama Role</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <div class="table-responsive">
+                    <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                      <thead>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Nama Role</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($roles as $role) : ?>
+                        <tr>
+                          <th scope="row"><?= $i; ?></th>
+                          <td><?= $role['nama_role']; ?></td>
+                          <td>
+                            <small>
+                            <a href="ubah_role/<?= $role['id']; ?>" class="btn btn-outline-warning mb-2">
+                                <span>
+                                  <i class="ti ti-edit"></i>
+                                </span>
+                                Ubah
+                              </a>
+                            </small>
+                            <small>
+                              <a href="hapus_role/<?= $role['id']; ?>" class="btn btn-outline-danger mb-2" onclick="return confirm('Yakin ingin menghapus data yang dipilih ?')">
+                                <span>
+                                  <i class="ti ti-trash"></i>
+                                </span>
+                                Hapus
+                              </a>
+                            </small>
+                          </td>
+                        </tr>
+                        <?php $i++; ?>
+                        <?php endforeach; ?>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Nama Role</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

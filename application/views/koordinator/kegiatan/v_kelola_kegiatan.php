@@ -21,56 +21,58 @@
                       </button>
                     </div>
                   </div>
-                  <table id="myTable" class="table table-hover table-responsive">
-                    <thead>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Tanggal Dimulai</th>
-                        <th class="text-start">Tanggal Selesai</th>
-                        <th class="text-start">Nama Kegiatan</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php $i = 1; ?>
-                      <?php foreach ($kegiatan as $keg) : ?>
-                      <tr>
-                        <th scope="row"><?= $i; ?></th>
-                        <td><?= $keg['tgl_awal']; ?></td>
-                        <td><?= $keg['tgl_selesai']; ?></td>
-                        <td><?= $keg['nama_kegiatan']; ?></td>
-                        <td>
-                          <small>
-                          <a href="ubah_kegiatan/<?= $keg['id']; ?>" class="btn btn-outline-warning mb-1">
-                              <span>
-                                <i class="ti ti-edit"></i>
-                              </span>
-                              Ubah
-                            </a>
-                          </small>
-                          <small>
-                          <a href="hapus_kegiatan/<?= $keg['id']; ?>" class="btn btn-outline-danger mb-1" onclick="return confirm('Yakin ingin menghapus ?')">
-                              <span>
-                                <i class="ti ti-trash"></i>
-                              </span>
-                              Hapus
-                            </a>
-                          </small>
-                        </td>
-                      </tr>
-                      <?php $i++; ?>
-                      <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Tanggal Dimulai</th>
-                        <th class="text-start">Tanggal Selesai</th>
-                        <th class="text-start">Nama Kegiatan</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <div class="table-responsive">
+                    <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                      <thead>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Tanggal Dimulai</th>
+                          <th class="text-start">Tanggal Selesai</th>
+                          <th class="text-start">Nama Kegiatan</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($kegiatan as $keg) : ?>
+                        <tr>
+                          <th scope="row"><?= $i; ?></th>
+                          <td><?= $keg['tgl_awal']; ?></td>
+                          <td><?= $keg['tgl_selesai']; ?></td>
+                          <td><?= $keg['nama_kegiatan']; ?></td>
+                          <td>
+                            <small>
+                            <a href="ubah_kegiatan/<?= $keg['id']; ?>" class="btn btn-outline-warning mb-1">
+                                <span>
+                                  <i class="ti ti-edit"></i>
+                                </span>
+                                Ubah
+                              </a>
+                            </small>
+                            <small>
+                            <a href="hapus_kegiatan/<?= $keg['id']; ?>" class="btn btn-outline-danger mb-1" onclick="return confirm('Yakin ingin menghapus ?')">
+                                <span>
+                                  <i class="ti ti-trash"></i>
+                                </span>
+                                Hapus
+                              </a>
+                            </small>
+                          </td>
+                        </tr>
+                        <?php $i++; ?>
+                        <?php endforeach; ?>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Tanggal Dimulai</th>
+                          <th class="text-start">Tanggal Selesai</th>
+                          <th class="text-start">Nama Kegiatan</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

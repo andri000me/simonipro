@@ -21,53 +21,55 @@
                       </a>
                     </div>
                   </div>
-                  <table id="myTable" class="table table-hover table-responsive">
-                    <thead>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">NIDN</th>
-                        <th class="text-start">Nama</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php $i = 1; ?>
-                      <?php foreach ($dosen as $dsn) : ?>
-                      <tr>
-                        <th scope="row"><?= $i; ?></th>
-                        <td><?= $dsn['nidn']; ?></td>
-                        <td><?= $dsn['nama']; ?></td>
-                        <td>
-                          <small>
-                            <a href="detail_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-primary mb-2">
-                              <span>
-                                <i class="ti ti-info-circle"></i>
-                              </span>
-                              Detail
-                            </a>
-                          </small>
-                          <small>
-                            <a href="ubah_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-warning mb-2">
-                              <span>
-                                <i class="ti ti-edit"></i>
-                              </span>
-                              Ubah
-                            </a>
-                          </small>
-                        </td>
-                      </tr>
-                      <?php $i++; ?>
-                      <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">NIDN</th>
-                        <th class="text-start">Nama</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <div class="table-responsive">
+                    <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                      <thead>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">NIDN</th>
+                          <th class="text-start">Nama</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($dosen as $dsn) : ?>
+                        <tr>
+                          <th scope="row"><?= $i; ?></th>
+                          <td><?= $dsn['nidn']; ?></td>
+                          <td><?= $dsn['nama']; ?></td>
+                          <td>
+                            <small>
+                              <a href="detail_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-primary mb-2">
+                                <span>
+                                  <i class="ti ti-info-circle"></i>
+                                </span>
+                                Detail
+                              </a>
+                            </small>
+                            <small>
+                              <a href="ubah_dosen/<?= $dsn['id']; ?>" class="btn btn-outline-warning mb-2">
+                                <span>
+                                  <i class="ti ti-edit"></i>
+                                </span>
+                                Ubah
+                              </a>
+                            </small>
+                          </td>
+                        </tr>
+                        <?php $i++; ?>
+                        <?php endforeach; ?>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">NIDN</th>
+                          <th class="text-start">Nama</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

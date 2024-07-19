@@ -24,59 +24,61 @@
                       </a>
                     </div>
                   </div>
-                  <table id="myTable" class="table table-hover table-responsive">
-                    <thead>
-                        <tr>
-                            <th class="text-start">#</th>
-                            <th class="text-start">NPM</th>
-                            <th class="text-start">Nama</th>
-                            <th class="text-start">Kelas</th>
-                            <th class="text-start">IPK</th>
-                            <th class="text-start">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $i = 1; ?>
-                        <?php foreach ($mahasiswa as $mhs) : ?>
-                            <tr>
-                                <th scope="row"><?= $i; ?></th>
-                                <td><?= $mhs['npm']; ?></td>
-                                <td><?= $mhs['nama']; ?></td>
-                                <td><?= $mhs['nama_kelas']; ?></td>
-                                <td><?= $mhs['ipk']; ?></td>
-                                <td>
-                                    <small>
-                                        <a href="detail_mahasiswa/<?= $mhs['id']; ?>" class="btn btn-outline-primary mb-2">
-                                            <span>
-                                                <i class="ti ti-info-circle"></i>
-                                            </span>
-                                            Detail
-                                        </a>
-                                    </small>
-                                    <small>
-                                        <a href="ubah_mahasiswa/<?= $mhs['id']; ?>" class="btn btn-outline-warning mb-2">
-                                            <span>
-                                                <i class="ti ti-edit"></i>
-                                            </span>
-                                            Ubah
-                                        </a>
-                                    </small>
-                                </td>
-                            </tr>
-                            <?php $i++; ?>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th class="text-start">#</th>
-                            <th class="text-start">NPM</th>
-                            <th class="text-start">Nama</th>
-                            <th class="text-start">Kelas</th>
-                            <th class="text-start">IPK</th>
-                            <th class="text-start">Aksi</th>
-                        </tr>
-                    </tfoot>
-                </table>
+                  <div class="table-responsive">
+                    <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                      <thead>
+                          <tr>
+                              <th class="text-start">#</th>
+                              <th class="text-start">NPM</th>
+                              <th class="text-start">Nama</th>
+                              <th class="text-start">Kelas</th>
+                              <th class="text-start">IPK</th>
+                              <th class="text-start">Aksi</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <?php $i = 1; ?>
+                          <?php foreach ($mahasiswa as $mhs) : ?>
+                              <tr>
+                                  <th scope="row"><?= $i; ?></th>
+                                  <td><?= $mhs['npm']; ?></td>
+                                  <td><?= $mhs['nama']; ?></td>
+                                  <td><?= $mhs['nama_kelas']; ?></td>
+                                  <td><?= $mhs['ipk']; ?></td>
+                                  <td>
+                                      <small>
+                                          <a href="detail_mahasiswa/<?= $mhs['id']; ?>" class="btn btn-outline-primary mb-2">
+                                              <span>
+                                                  <i class="ti ti-info-circle"></i>
+                                              </span>
+                                              Detail
+                                          </a>
+                                      </small>
+                                      <small>
+                                          <a href="ubah_mahasiswa/<?= $mhs['id']; ?>" class="btn btn-outline-warning mb-2">
+                                              <span>
+                                                  <i class="ti ti-edit"></i>
+                                              </span>
+                                              Ubah
+                                          </a>
+                                      </small>
+                                  </td>
+                              </tr>
+                              <?php $i++; ?>
+                          <?php endforeach; ?>
+                      </tbody>
+                      <tfoot>
+                          <tr>
+                              <th class="text-start">#</th>
+                              <th class="text-start">NPM</th>
+                              <th class="text-start">Nama</th>
+                              <th class="text-start">Kelas</th>
+                              <th class="text-start">IPK</th>
+                              <th class="text-start">Aksi</th>
+                          </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

@@ -152,6 +152,7 @@
                                 <span class="hide-menu">Kelola Absensi</span>
                             </a>
                         </li>
+                        <?php if ( $this->session->userdata('nama_role') == 'mahasiswa' ) : ?>
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'upload_draft') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/upload_draft'); ?>" aria-expanded="false">
                                 <span>
@@ -160,6 +161,15 @@
                                 <span class="hide-menu">Upload Draft</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'jadwal_sidang') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/jadwal_sidang'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-gavel"></i>
+                                </span>
+                                <span class="hide-menu">Info Jadwal Sidang</span>
+                            </a>
+                        </li>
+                        <?php endif; ?>
                     <?php endif; ?>
 
                     <li class="nav-small-cap">

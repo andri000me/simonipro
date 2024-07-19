@@ -1,6 +1,3 @@
-        <?php 
-        // var_dump(password_verify('332211',$pengguna[3]['password'])); die;
-         ?>
         <!--  Row 1 -->
         <div class="row">
           <div class="col-lg-12 d-flex align-items-strech">
@@ -24,72 +21,74 @@
                       </button>
                     </div>
                   </div>
-                  <table id="myTable" class="table table-hover table-responsive">
-                    <thead>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Nama</th>
-                        <th class="text-start">Role</th>
-                        <th class="text-start">Status</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php $i = 1; ?>
-                      <?php foreach ($pengguna as $user) : ?>
-                      <tr>
-                        <th scope="row"><?= $i; ?></th>
-                        <td>
-                          <?= $user['nama']; ?> <br>
-                          <span><i class="ti ti-user"></i></span>
-                          <small class="fw-bold"><?= $user['username']; ?></small>
-                        </td>
-                        <td><?= $user['nama_role']; ?></td>
-                        <td>
-                        <span class="badge <?= $user['is_active'] == 1 ? 'text-bg-success' : 'badge-muted' ?>">
-                          <?= $user['is_active'] == 1 ? 'aktif' : 'tidak aktif' ?>
-                        </span>
-                        </td>
-                        <td>
-                          <small>
-                          <a href="detail_pengguna/<?= $user['id']; ?>" class="btn btn-outline-primary mb-2">
-                              <span>
-                                <i class="ti ti-info-circle"></i>
-                              </span>
-                              Detail
-                            </a>
-                          </small>
-                          <small>
-                          <a href="ubah_pengguna/<?= $user['id']; ?>" class="btn btn-outline-warning mb-2">
-                              <span>
-                                <i class="ti ti-edit"></i>
-                              </span>
-                              Ubah
-                            </a>
-                          </small>
-                          <small>
-                            <a href="hapus_pengguna/<?= $user['id']; ?>" class="btn btn-outline-danger mb-2" onclick="return confirm('Yakin ingin menghapus data yang dipilih ?')">
-                              <span>
-                                <i class="ti ti-trash"></i>
-                              </span>
-                              Hapus
-                            </a>
-                          </small>
-                        </td>
-                      </tr>
-                      <?php $i++; ?>
-                      <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                      <tr>
-                        <th class="text-start">#</th>
-                        <th class="text-start">Nama</th>
-                        <th class="text-start">Role</th>
-                        <th class="text-start">Status</th>
-                        <th class="text-start">Aksi</th>
-                      </tr>
-                    </tfoot>
-                  </table>
+                  <div class="table-responsive">
+                    <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                      <thead>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Nama</th>
+                          <th class="text-start">Role</th>
+                          <th class="text-start">Status</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($pengguna as $user) : ?>
+                        <tr>
+                          <th scope="row"><?= $i; ?></th>
+                          <td>
+                            <?= $user['nama']; ?> <br>
+                            <span><i class="ti ti-user"></i></span>
+                            <small class="fw-bold"><?= $user['username']; ?></small>
+                          </td>
+                          <td><?= $user['nama_role']; ?></td>
+                          <td>
+                          <span class="badge <?= $user['is_active'] == 1 ? 'text-bg-success' : 'badge-muted' ?>">
+                            <?= $user['is_active'] == 1 ? 'aktif' : 'tidak aktif' ?>
+                          </span>
+                          </td>
+                          <td>
+                            <small>
+                            <a href="detail_pengguna/<?= $user['id']; ?>" class="btn btn-outline-primary mb-2">
+                                <span>
+                                  <i class="ti ti-info-circle"></i>
+                                </span>
+                                Detail
+                              </a>
+                            </small>
+                            <small>
+                            <a href="ubah_pengguna/<?= $user['id']; ?>" class="btn btn-outline-warning mb-2">
+                                <span>
+                                  <i class="ti ti-edit"></i>
+                                </span>
+                                Ubah
+                              </a>
+                            </small>
+                            <small>
+                              <a href="hapus_pengguna/<?= $user['id']; ?>" class="btn btn-outline-danger mb-2" onclick="return confirm('Yakin ingin menghapus data yang dipilih ?')">
+                                <span>
+                                  <i class="ti ti-trash"></i>
+                                </span>
+                                Hapus
+                              </a>
+                            </small>
+                          </td>
+                        </tr>
+                        <?php $i++; ?>
+                        <?php endforeach; ?>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th class="text-start">#</th>
+                          <th class="text-start">Nama</th>
+                          <th class="text-start">Role</th>
+                          <th class="text-start">Status</th>
+                          <th class="text-start">Aksi</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

@@ -22,74 +22,79 @@
                 </button>
               </div>
             </div>
-            <table id="myTable" class="table table-hover table-responsive">
-              <thead>
-                <tr>
-                  <th class="text-start">#</th>
-                  <th class="text-start">Koordinator</th>
-                  <th class="text-start">NIDN</th>
-                  <th class="text-start">Pembimbing</th>
-                  <!-- <th class="text-start">Dosen Penguji 1</th>
-                  <th class="text-start">Dosen Penguji 2</th> -->
-                  <th class="text-start">NPM</th>
-                  <th class="text-start">Mahasiswa</th>
-                  <!-- <th class="text-start">Project</th> -->
-                  <!-- <th class="text-start">Jenis Plotting</th> -->
-                  <th class="text-start">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php $i = 1; ?>
-                <?php foreach ($plotting as $plot) : ?>
-                <tr>
-                  <th scope="row"><?= $i; ?></th>
-                  <td><?= $plot['koordinator_nama']; ?></td>
-                  <td><?= $plot['dosen_pembimbing_nidn']; ?></td>
-                  <td><?= $plot['dosen_pembimbing_nama']; ?></td>
-                  <!-- <td><?= $plot['dosen_penguji_1_nama']; ?></td>
-                  <td><?= $plot['dosen_penguji_2_nama']; ?></td> -->
-                  <td><?= $plot['mahasiswa_npm']; ?></td>
-                  <td><?= $plot['mahasiswa_nama']; ?></td>
-                  <!-- <td><?= $plot['project_nama']; ?></td> -->
-                  <!-- <td><?= $plot['jenis_plotting_nama']; ?></td> -->
-                  <td>
-                    <small>
-                      <a href="detail_plotting/<?= $plot['id']; ?>" class="btn btn-outline-primary mb-2">
-                        <span>
-                          <i class="ti ti-info-circle"></i>
-                        </span>
-                        Detail
-                      </a>
-                    </small>
-                    <small>
-                      <a href="ubah_plotting/<?= $plot['id']; ?>" class="btn btn-outline-warning mb-2">
-                        <span>
-                          <i class="ti ti-edit"></i>
-                        </span>
-                        Ubah
-                      </a>
-                    </small>
-                  </td>
-                </tr>
-                <?php $i++; ?>
-                <?php endforeach; ?>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th class="text-start">#</th>
-                  <th class="text-start">Koordinator</th>
-                  <th class="text-start">NIDN</th>
-                  <th class="text-start">Pembimbing</th>
-                  <!-- <th class="text-start">Dosen Penguji 1</th>
-                  <th class="text-start">Dosen Penguji 2</th> -->
-                  <th class="text-start">NPM</th>
-                  <th class="text-start">Mahasiswa</th>
-                  <!-- <th class="text-start">Project</th> -->
-                  <!-- <th class="text-start">Jenis Plotting</th> -->
-                  <th class="text-start">Aksi</th>
-                </tr>
-              </tfoot>
-            </table>
+            <div class="table-responsive">
+              <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
+                <thead>
+                  <tr>
+                    <th class="text-start">#</th>
+                    <th class="text-start">Project</th>
+                    <th class="text-start">Koordinator</th>
+                    <th class="text-start">NIDN</th>
+                    <th class="text-start">Pembimbing</th>
+                    <!-- <th class="text-start">Dosen Penguji 1</th>
+                    <th class="text-start">Dosen Penguji 2</th> -->
+                    <th class="text-start">NPM</th>
+                    <th class="text-start">Mahasiswa</th>
+                    <!-- <th class="text-start">Project</th> -->
+                    <!-- <th class="text-start">Jenis Plotting</th> -->
+                    <th class="text-start">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php $i = 1; ?>
+                  <?php foreach ($plotting as $plot) : ?>
+                  <tr>
+                    <th scope="row"><?= $i; ?></th>
+                    <td><?= $plot['project_nama']; ?></td>
+                    <td><?= $plot['koordinator_nama']; ?></td>
+                    <td><?= $plot['dosen_pembimbing_nidn']; ?></td>
+                    <td><?= $plot['dosen_pembimbing_nama']; ?></td>
+                    <!-- <td><?= $plot['dosen_penguji_1_nama']; ?></td>
+                    <td><?= $plot['dosen_penguji_2_nama']; ?></td> -->
+                    <td><?= $plot['mahasiswa_npm']; ?></td>
+                    <td><?= $plot['mahasiswa_nama']; ?></td>
+                    <!-- <td><?= $plot['project_nama']; ?></td> -->
+                    <!-- <td><?= $plot['jenis_plotting_nama']; ?></td> -->
+                    <td>
+                      <small>
+                        <a href="detail_plotting/<?= $plot['id']; ?>" class="btn btn-outline-primary mb-2">
+                          <span>
+                            <i class="ti ti-info-circle"></i>
+                          </span>
+                          Detail
+                        </a>
+                      </small>
+                      <small>
+                        <a href="ubah_plotting/<?= $plot['id']; ?>" class="btn btn-outline-warning mb-2">
+                          <span>
+                            <i class="ti ti-edit"></i>
+                          </span>
+                          Ubah
+                        </a>
+                      </small>
+                    </td>
+                  </tr>
+                  <?php $i++; ?>
+                  <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th class="text-start">#</th>
+                    <th class="text-start">Project</th>
+                    <th class="text-start">Koordinator</th>
+                    <th class="text-start">NIDN</th>
+                    <th class="text-start">Pembimbing</th>
+                    <!-- <th class="text-start">Dosen Penguji 1</th>
+                    <th class="text-start">Dosen Penguji 2</th> -->
+                    <th class="text-start">NPM</th>
+                    <th class="text-start">Mahasiswa</th>
+                    <!-- <th class="text-start">Project</th> -->
+                    <!-- <th class="text-start">Jenis Plotting</th> -->
+                    <th class="text-start">Aksi</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
         </div>
       </div>
