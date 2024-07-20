@@ -200,6 +200,56 @@ class Koordinator_model extends CI_Model {
     }
     // Akhir kelola kelompok
 
+    // Kelola Draft
+    public function get_all_draft() {
+        $this->db->select('draft_sidang.*, 
+                           kelompok.kode_kelompok, 
+                           dosen.nama as dosen_pembimbing_nama, 
+                           dosen.nidn as dosen_pembimbing_nidn, 
+                           mahasiswa.nama as mahasiswa_nama, 
+                           mahasiswa.npm as mahasiswa_npm');
+        $this->db->from('draft_sidang');
+        $this->db->join('kelompok', 'draft_sidang.kelompok_id = kelompok.id');
+        $this->db->join('dosen', 'kelompok.dosen_pembimbing_id = dosen.id');
+        $this->db->join('mahasiswa', 'draft_sidang.mahasiswa_id = mahasiswa.id');
+        $this->db->where('is_submitted', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_all_draft_by_id($id) {
+        $this->db->select('draft_sidang.*, 
+                           kelompok.kode_kelompok, 
+                           dosen.nama as dosen_pembimbing_nama, 
+                           dosen.nidn as dosen_pembimbing_nidn, 
+                           mahasiswa.nama as mahasiswa_nama, 
+                           mahasiswa.npm as mahasiswa_npm');
+        $this->db->from('draft_sidang');
+        $this->db->join('kelompok', 'draft_sidang.kelompok_id = kelompok.id');
+        $this->db->join('dosen', 'kelompok.dosen_pembimbing_id = dosen.id');
+        $this->db->join('mahasiswa', 'draft_sidang.mahasiswa_id = mahasiswa.id');
+        $this->db->where('draft_sidang.is_submitted', 1);
+        $this->db->where('draft_sidang.id', $id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+
+    public function get_draft_by_id($id)
+    {
+        // Ambil data draft berdasarkan ID
+        $this->db->where('id', $id);
+        $query = $this->db->get('draft_sidang'); // Sesuaikan nama tabel dengan yang Anda gunakan
+        return $query->row_array();
+    }
+    
+    public function update_draft($id, $data)
+    {
+        // Update data draft berdasarkan ID
+        $this->db->where('id', $id);
+        $this->db->update('draft_sidang', $data); // Sesuaikan nama tabel dengan yang Anda gunakan
+    }
+    // Akhir kelola draft
+
 
     // GET ALL DATA FROM TABLE KELAS
     public function get_all_kelas() {

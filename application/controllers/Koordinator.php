@@ -676,4 +676,143 @@ class Koordinator extends CI_Controller {
     }
     
     // Akhir kelola plotting
+
+    // Kelola Draft
+    public function kelola_draft() {
+        $data['title'] = 'Kelola Draft | Koordinator';
+        // Ambil data draft
+        $data['drafts'] = $this->koordinator_model->get_all_draft();
+        $data['active'] = 'kelola_draft';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/draft/v_kelola_draft', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function detail_draft($id) {
+        $data['title'] = 'Detail Draft | Koordinator';
+        // Ambil data draft
+        $data['draft'] = $this->koordinator_model->get_all_draft_by_id($id);
+        $data['active'] = 'kelola_draft';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/draft/v_detail_draft', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function do_validasi_draft($id) {
+        // Set rules for form validation
+        $this->form_validation->set_rules('status', 'Status Validasi', 'required|trim', [
+            'required' => 'Field {field} harus diisi.'
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            // Jika validasi form gagal
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal memvalidasi draft, periksa kembali form input!</div>');
+            redirect('koordinator/detail_draft/' . $id); // Sesuaikan dengan route yang tepat
+            return; // Hentikan eksekusi lebih lanjut
+        }
+    
+        // Ambil data draft yang ada berdasarkan ID
+        $current_draft = $this->koordinator_model->get_all_draft_by_id($id);
+        if (!$current_draft) {
+            // Jika draft tidak ditemukan
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Draft tidak ditemukan!</div>');
+            redirect('koordinator/kelola_draft'); // Sesuaikan dengan route yang tepat
+            return; // Hentikan eksekusi lebih lanjut
+        }
+    
+        // Ambil input
+        $status = $this->input->post('status');
+        $catatan_penolakan = ($status === 'rejected') ? $this->input->post('catatan_penolakan') : NULL;
+    
+        // Set data untuk update
+        $data = [
+            'status' => $status,
+            'catatan_penolakan' => $catatan_penolakan,
+        ];
+    
+        if ($status === 'rejected') {
+            $data['is_submitted'] = 0;
+            $data['submitted_at'] = NULL;
+    
+            // Pindahkan file laporan dan file dpl
+            $old_file_laporan_path = './assets/docs/submitted_drafts/' . $current_draft['file_laporan'];
+            $new_file_laporan_path = './assets/docs/drafts/' . $current_draft['file_laporan'];
+            $old_file_dpl_path = './assets/docs/submitted_drafts/' . $current_draft['file_dpl'];
+            $new_file_dpl_path = './assets/docs/drafts/' . $current_draft['file_dpl'];
+    
+            if (file_exists($old_file_laporan_path)) {
+                rename($old_file_laporan_path, $new_file_laporan_path);
+            }
+            if (file_exists($old_file_dpl_path)) {
+                rename($old_file_dpl_path, $new_file_dpl_path);
+            }
+        }
+    
+        // Update data draft
+        $this->koordinator_model->update_draft($id, $data);
+        $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Draft berhasil divalidasi!</div>');
+        redirect('koordinator/kelola_draft'); // Sesuaikan dengan route yang tepat
+    }
+    
+
+    public function do_download_file_laporan($id)
+    {
+        // Ambil data draft berdasarkan ID
+        $draft = $this->mahasiswa_model->get_draft_by_id($id);
+
+        // Periksa apakah draft ditemukan
+        if (!$draft) {
+            // Jika draft tidak ditemukan, tampilkan pesan error
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Draft tidak ditemukan!</div>');
+            redirect('koordinator/detail_draft'); // Sesuaikan dengan route yang tepat
+            return;
+        }
+
+        // Tentukan path file yang akan di-download
+        $file_path = './assets/docs/submitted_drafts/' . $draft['file_laporan'];
+
+        // Periksa apakah file ada di path yang ditentukan
+        if (file_exists($file_path)) {
+            // Set header untuk file download
+            $this->load->helper('download');
+            force_download($file_path, NULL);
+        } else {
+            // Jika file tidak ditemukan, tampilkan pesan error
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">File tidak ditemukan!</div>');
+            redirect('koordinator/detail_draft'); // Sesuaikan dengan route yang tepat
+        }
+    }
+
+    public function do_download_file_dpl($id)
+    {
+        // Ambil data draft berdasarkan ID
+        $draft = $this->koordinator_model->get_draft_by_id($id);
+
+        // Periksa apakah draft ditemukan
+        if (!$draft) {
+            // Jika draft tidak ditemukan, tampilkan pesan error
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Draft tidak ditemukan!</div>');
+            redirect('koordinator/upload_draft'); // Sesuaikan dengan route yang tepat
+            return;
+        }
+
+        // Tentukan path file yang akan di-download
+        $file_path = './assets/docs/submitted_drafts/' . $draft['file_dpl'];
+
+        // Periksa apakah file ada di path yang ditentukan
+        if (file_exists($file_path)) {
+            // Set header untuk file download
+            $this->load->helper('download');
+            force_download($file_path, NULL);
+        } else {
+            // Jika file tidak ditemukan, tampilkan pesan error
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">File tidak ditemukan!</div>');
+            redirect('koordinator/upload_draft'); // Sesuaikan dengan route yang tepat
+        }
+    }
+    // Akhir kelola draft
 }

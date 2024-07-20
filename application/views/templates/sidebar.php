@@ -134,6 +134,14 @@
                                 <span class="hide-menu">Kelola Plotting</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_draft') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_draft'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-license"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Draft Sidang</span>
+                            </a>
+                        </li>
 
                     <?php elseif ($this->session->userdata('nama_role') == 'mahasiswa' || $this->session->userdata('nama_role') == 'dosen') : ?>
                         <li class="nav-small-cap">

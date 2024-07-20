@@ -94,6 +94,27 @@
         });
     </script>
 
+    <!-- catatan penolakan -->
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.getElementById('status');
+            const catatanPenolakanField = document.getElementById('catatan_penolakan').closest('.mb-3');
+
+            // Awalnya sembunyikan field catatan penolakan
+            if (statusSelect.value !== 'rejected') {
+                catatanPenolakanField.style.display = 'none';
+            }
+
+            statusSelect.addEventListener('change', function() {
+                if (this.value === 'rejected') {
+                    catatanPenolakanField.style.display = 'block';
+                } else {
+                    catatanPenolakanField.style.display = 'none';
+                }
+            });
+        });
+     </script>
+
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     
 </body>
