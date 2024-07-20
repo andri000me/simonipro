@@ -147,6 +147,48 @@ class Mahasiswa_model extends CI_Model {
         return $query->row()->id;
     }
 
+    // Ambil semua draft sidang yang sesuai dengan mahasiswa saat ini
+    public function get_all_draft_match_current_mhs($username) {
+        $this->db->select('draft_sidang.*, mahasiswa.nama as nama_mahasiswa, kelompok.kode_kelompok');
+        $this->db->from('draft_sidang');
+        $this->db->join('mahasiswa', 'mahasiswa.id = draft_sidang.mahasiswa_id');
+        $this->db->join('kelompok', 'kelompok.id = draft_sidang.kelompok_id');
+        $this->db->join('user', 'user.id = mahasiswa.user_id');
+        $this->db->where('user.username', $username);
+        $result = $this->db->get()->result_array();
+        return $result;
+    }
+
+    // Cek apakah mahasiswa sudah submit draft
+    public function cek_submitted($mahasiswa_id) {
+        $this->db->select('is_submitted');
+        $this->db->from('draft_sidang');
+        $this->db->where('mahasiswa_id', $mahasiswa_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $result = $query->row();
+            return $result->is_submitted == 1; // Mengembalikan true jika is_submitted bernilai 1
+        } else {
+            return false; // Jika tidak ada data, return false
+        }
+    }
+
+    public function get_draft_by_id($id)
+    {
+        // Ambil data draft berdasarkan ID
+        $this->db->where('id', $id);
+        $query = $this->db->get('draft_sidang'); // Sesuaikan nama tabel dengan yang Anda gunakan
+        return $query->row_array();
+    }
+
+    public function update_draft($id, $data)
+    {
+        // Update data draft berdasarkan ID
+        $this->db->where('id', $id);
+        $this->db->update('draft_sidang', $data); // Sesuaikan nama tabel dengan yang Anda gunakan
+    }
+
     // Akhir upload draft
 
 }
