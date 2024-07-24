@@ -142,6 +142,14 @@
                                 <span class="hide-menu">Kelola Draft Sidang</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_jadwal_sidang') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_jadwal_sidang'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-scale"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Jadwal Sidang</span>
+                            </a>
+                        </li>
 
                     <?php elseif ($this->session->userdata('nama_role') == 'mahasiswa' || $this->session->userdata('nama_role') == 'dosen') : ?>
                         <li class="nav-small-cap">

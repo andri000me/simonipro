@@ -106,6 +106,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('koordinator/project/v_detail_project', $data);
         $this->load->view('templates/footer');
     }
+
     public function ubah_project($id)
     {
         $data['title'] = 'Ubah Mahasiswa | Staff';
@@ -589,8 +590,6 @@ class Koordinator extends CI_Controller {
         }
     }
 
-
-
     public function detail_plotting($id)
     {
         $data['title'] = 'Detail Plotting | Koordinator';
@@ -737,19 +736,6 @@ class Koordinator extends CI_Controller {
         if ($status === 'rejected') {
             $data['is_submitted'] = 0;
             $data['submitted_at'] = NULL;
-    
-            // Pindahkan file laporan dan file dpl
-            $old_file_laporan_path = './assets/docs/submitted_drafts/' . $current_draft['file_laporan'];
-            $new_file_laporan_path = './assets/docs/drafts/' . $current_draft['file_laporan'];
-            $old_file_dpl_path = './assets/docs/submitted_drafts/' . $current_draft['file_dpl'];
-            $new_file_dpl_path = './assets/docs/drafts/' . $current_draft['file_dpl'];
-    
-            if (file_exists($old_file_laporan_path)) {
-                rename($old_file_laporan_path, $new_file_laporan_path);
-            }
-            if (file_exists($old_file_dpl_path)) {
-                rename($old_file_dpl_path, $new_file_dpl_path);
-            }
         }
     
         // Update data draft
@@ -758,22 +744,21 @@ class Koordinator extends CI_Controller {
         redirect('koordinator/kelola_draft'); // Sesuaikan dengan route yang tepat
     }
     
-
     public function do_download_file_laporan($id)
     {
         // Ambil data draft berdasarkan ID
-        $draft = $this->mahasiswa_model->get_draft_by_id($id);
+        $draft = $this->koordinator_model->get_draft_by_id($id);
 
         // Periksa apakah draft ditemukan
         if (!$draft) {
             // Jika draft tidak ditemukan, tampilkan pesan error
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Draft tidak ditemukan!</div>');
-            redirect('koordinator/detail_draft'); // Sesuaikan dengan route yang tepat
+            redirect('koordinator/detail_draft' . $id); // Sesuaikan dengan route yang tepat
             return;
         }
 
         // Tentukan path file yang akan di-download
-        $file_path = './assets/docs/submitted_drafts/' . $draft['file_laporan'];
+        $file_path = './assets/docs/drafts/' . $draft['file_laporan'];
 
         // Periksa apakah file ada di path yang ditentukan
         if (file_exists($file_path)) {
@@ -783,7 +768,7 @@ class Koordinator extends CI_Controller {
         } else {
             // Jika file tidak ditemukan, tampilkan pesan error
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">File tidak ditemukan!</div>');
-            redirect('koordinator/detail_draft'); // Sesuaikan dengan route yang tepat
+            redirect('koordinator/detail_draft/' . $id); // Sesuaikan dengan route yang tepat
         }
     }
 
@@ -796,12 +781,12 @@ class Koordinator extends CI_Controller {
         if (!$draft) {
             // Jika draft tidak ditemukan, tampilkan pesan error
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Draft tidak ditemukan!</div>');
-            redirect('koordinator/upload_draft'); // Sesuaikan dengan route yang tepat
+            redirect('koordinator/detail_draft/' . $id); // Sesuaikan dengan route yang tepat
             return;
         }
 
         // Tentukan path file yang akan di-download
-        $file_path = './assets/docs/submitted_drafts/' . $draft['file_dpl'];
+        $file_path = './assets/docs/drafts/' . $draft['file_dpl'];
 
         // Periksa apakah file ada di path yang ditentukan
         if (file_exists($file_path)) {
@@ -811,8 +796,96 @@ class Koordinator extends CI_Controller {
         } else {
             // Jika file tidak ditemukan, tampilkan pesan error
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">File tidak ditemukan!</div>');
-            redirect('koordinator/upload_draft'); // Sesuaikan dengan route yang tepat
+            redirect('koordinator/detail_draft/' . $id); // Sesuaikan dengan route yang tepat
         }
     }
     // Akhir kelola draft
+
+    // Kelola Jadwal Sidang
+    public function kelola_jadwal_sidang() {
+        $data['title'] = 'Kelola Jadwal Sidang | Koordinator';
+        $data['projects'] = $this->koordinator_model->get_all_projects();
+        $data['dosen'] = $this->koordinator_model->get_all_dosen();
+        
+         // Ambil data mahasiswa yang sudah memiliki jadwal sidang
+        $mahasiswaWithJadwalSidang = $this->koordinator_model->get_mahasiswa_with_jadwal_sidang();
+        
+        // Ambil data mahasiswa yang belum memiliki jadwal sidang
+        $selectedMhsIds = $this->koordinator_model->get_selected_mhs_ids();
+        $data['mahasiswa'] = $this->koordinator_model->get_all_mhs_already_plotting_penguji($selectedMhsIds, $mahasiswaWithJadwalSidang);
+
+        $data['jadwal_sidang'] = $this->koordinator_model->get_all_jadwal_sidang();
+        $data['active'] = 'kelola_jadwal_sidang';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/sidang/v_kelola_jadwal_sidang', $data);
+        $this->load->view('templates/footer');
+    }
+
+    // Function to get penguji by mahasiswa ID (for AJAX)
+    public function get_penguji_by_mahasiswa_id($mahasiswa_id) {
+        $data = $this->koordinator_model->get_penguji_by_mahasiswa_id($mahasiswa_id);
+        echo json_encode($data);
+    }
+
+    public function tambah_jadwal_sidang() {
+        // var_dump(
+        //     $this->input->post('project_id'),
+        //     $this->input->post('plotting_id'),
+        //     $this->input->post('no_ruangan'),
+        //     $this->input->post('nama_ruangan'),
+        //     $this->input->post('tgl_sidang'),
+        //     $this->input->post('waktu_sidang'),
+        // );
+        // die;
+        
+        // Validasi input
+        $this->form_validation->set_rules('project_id', 'Nama Project', 'required', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('mahasiswa_id', 'Mahasiswa ID', 'required', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('tgl_sidang', 'Tanggal Sidang', 'required', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('waktu_sidang', 'Waktu Sidang', 'required', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('no_ruangan', 'No. Ruangan', 'required|numeric|max_length[3]', [
+            'required' => 'Field {field} harus diisi.',
+            'numeric' => 'Field {field} hanya menerima input berupa angka.',
+            'max_length' => 'Field {field} tidak boleh melebihi {param} karakter.',
+        ]);
+        $this->form_validation->set_rules('nama_ruangan', 'Nama Ruangan', 'required', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+    
+        if ($this->form_validation->run() == FALSE) {
+            // Jika validasi gagal, kembali ke halaman form dengan pesan error
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Jadwal Sidang baru gagal ditambahkan!</div>');
+            redirect('koordinator/kelola_jadwal_sidang'); // Ganti dengan URL yang sesuai
+        } else {
+            // Ambil data dari form
+            $data = [
+                'project_id' => $this->input->post('project_id'),
+                'plotting_id' => $this->input->post('plotting_id'), // Mengambil nilai hidden field
+                'no_ruangan' => $this->input->post('no_ruangan'),
+                'nama_ruangan' => $this->input->post('nama_ruangan'),
+                'tgl_sidang' => $this->input->post('tgl_sidang'),
+                'waktu_sidang' => $this->input->post('waktu_sidang'),
+                'created_at' => time()
+            ];
+    
+            if ($this->koordinator_model->insert_jadwal_sidang($data)) {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Jadwal Sidang baru berhasil ditambahkan.</div>');
+            } else {
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Jadwal Sidang baru gagal ditambahkan!</div>');
+            }
+            redirect('koordinator/kelola_jadwal_sidang'); // Ganti dengan URL yang sesuai
+        }
+    }    
+    
+    // Akhir kelola jadwal sidang
 }

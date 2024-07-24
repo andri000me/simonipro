@@ -1,4 +1,3 @@
-
   <script src="<?= base_url('assets'); ?>/libs/jquery/dist/jquery.min.js"></script>
   <script src="<?= base_url('assets'); ?>/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?= base_url('assets'); ?>/js/sidebarmenu.js"></script>
@@ -9,6 +8,38 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
   <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+
+    <!-- sweet alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- using sweet alert -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutLink = document.querySelector('.sidebar-link[href="<?= base_url('auth/logout'); ?>"]');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(event) {
+                    event.preventDefault(); // Mencegah link dari tindakan default
+
+                    Swal.fire({
+                        title: "Apakah Anda yakin?",
+                        text: "Anda akan keluar dari akun ini!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Ya, keluar!",
+                        cancelButtonText: "Batal"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "<?= base_url('auth/logout'); ?>"; // Mengarahkan ke URL logout jika dikonfirmasi
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+
   <script>
     new DataTable('#myTable');
 

@@ -7,6 +7,7 @@
                     Detail Draft Sidang
                 </div>
                 <div class="card-body">
+                    <?= $this->session->flashdata('pesan'); ?>
                     <table class="table">
                         <tr>
                             <th>Kode Kelompok</th>

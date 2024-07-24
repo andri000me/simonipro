@@ -242,8 +242,7 @@ class Mahasiswa extends CI_Controller {
             return; // Hentikan eksekusi lebih lanjut
         }
 
-        $action = $this->input->post('action');
-        $upload_path = ($action == 'draft') ? './assets/docs/drafts' : './assets/docs/submitted_drafts';
+        $upload_path = './assets/docs/drafts';
 
         // Konfigurasi upload file
         $config['upload_path'] = $upload_path;
@@ -284,9 +283,9 @@ class Mahasiswa extends CI_Controller {
             'judul' => htmlspecialchars($this->input->post('judul')),
             'file_laporan' => $file_laporan,
             'file_dpl' => $file_dpl,
-            'is_submitted' => ($action == 'submit') ? 1 : 0,
+            'is_submitted' => ($this->input->post('action') == 'submit') ? 1 : 0,
             'status' => 'pending',
-            'submitted_at' => ($action == 'submit') ? time() : NULL
+            'submitted_at' => ($this->input->post('action') == 'submit') ? time() : NULL
         ];
 
         $this->mahasiswa_model->insert_draft($data);
@@ -294,19 +293,20 @@ class Mahasiswa extends CI_Controller {
         redirect('mahasiswa/upload_draft'); // Sesuaikan dengan route yang tepat
     }
 
-    public function do_update_uploaded_draft($id) {
+    public function do_update_uploaded_draft($id)
+    {
         // Set rules for form validation
         $this->form_validation->set_rules('judul', 'Judul', 'required|trim', [
             'required' => 'Field {field} harus diisi.'
         ]);
-    
+
         if ($this->form_validation->run() == FALSE) {
             // Jika validasi form gagal
             $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal memperbarui draft, periksa kembali form input!</div>');
             redirect('mahasiswa/upload_draft'); // Sesuaikan dengan route yang tepat
             return; // Hentikan eksekusi lebih lanjut
         }
-    
+
         // Ambil data draft yang ada berdasarkan ID
         $current_draft = $this->mahasiswa_model->get_draft_by_id($id);
         if (!$current_draft) {
@@ -315,18 +315,17 @@ class Mahasiswa extends CI_Controller {
             redirect('mahasiswa/upload_draft'); // Sesuaikan dengan route yang tepat
             return; // Hentikan eksekusi lebih lanjut
         }
-    
-        $action = $this->input->post('action');
-        $upload_path = ($action == 'draft') ? './assets/docs/drafts' : './assets/docs/submitted_drafts';
-    
+
+        $upload_path = './assets/docs/drafts';
+
         // Konfigurasi upload file
         $config['upload_path'] = $upload_path;
         $config['allowed_types'] = 'pdf';
         $config['max_size'] = 5120; // Ukuran file yang di upload max 5MB
         $config['file_name'] = uniqid(); // Generate nama file menjadi unik
-    
+
         $this->load->library('upload', $config);
-    
+
         // Cek dan update file laporan jika diupload
         $file_laporan = $current_draft['file_laporan'];
         if (!empty($_FILES['file_laporan']['name'])) {
@@ -340,22 +339,15 @@ class Mahasiswa extends CI_Controller {
                 // Berhasil upload file laporan
                 $uploadData = $this->upload->data();
                 $file_laporan = $uploadData['file_name'];
-    
-                // Hapus file lama jika ada dan pindahkan file jika perlu
-                if ($action == 'submit') {
-                    $old_file_laporan_path = './assets/docs/drafts/' . $current_draft['file_laporan'];
-                    if (file_exists($old_file_laporan_path)) {
-                        rename($old_file_laporan_path, $upload_path . '/' . $file_laporan);
-                    }
-                } else {
-                    $old_file_laporan_path = $upload_path . '/' . $current_draft['file_laporan'];
-                    if (file_exists($old_file_laporan_path)) {
-                        unlink($old_file_laporan_path);
-                    }
+
+                // Hapus file lama jika ada
+                $old_file_laporan_path = $upload_path . '/' . $current_draft['file_laporan'];
+                if (file_exists($old_file_laporan_path)) {
+                    unlink($old_file_laporan_path);
                 }
             }
         }
-    
+
         // Cek dan update file dpl jika diupload
         $file_dpl = $current_draft['file_dpl'];
         if (!empty($_FILES['file_dpl']['name'])) {
@@ -369,36 +361,29 @@ class Mahasiswa extends CI_Controller {
                 // Berhasil upload file dpl
                 $uploadData = $this->upload->data();
                 $file_dpl = $uploadData['file_name'];
-    
-                // Hapus file lama jika ada dan pindahkan file jika perlu
-                if ($action == 'submit') {
-                    $old_file_dpl_path = './assets/docs/drafts/' . $current_draft['file_dpl'];
-                    if (file_exists($old_file_dpl_path)) {
-                        rename($old_file_dpl_path, $upload_path . '/' . $file_dpl);
-                    }
-                } else {
-                    $old_file_dpl_path = $upload_path . '/' . $current_draft['file_dpl'];
-                    if (file_exists($old_file_dpl_path)) {
-                        unlink($old_file_dpl_path);
-                    }
+
+                // Hapus file lama jika ada
+                $old_file_dpl_path = $upload_path . '/' . $current_draft['file_dpl'];
+                if (file_exists($old_file_dpl_path)) {
+                    unlink($old_file_dpl_path);
                 }
             }
         }
-    
+
         // Update data draft
         $data = [
             'judul' => htmlspecialchars($this->input->post('judul')),
             'file_laporan' => $file_laporan,
             'file_dpl' => $file_dpl,
-            'is_submitted' => ($action == 'submit') ? 1 : 0,
+            'is_submitted' => ($this->input->post('action') == 'submit') ? 1 : 0,
             'status' => 'pending',
-            'submitted_at' => ($action == 'submit') ? time() : NULL
+            'submitted_at' => ($this->input->post('action') == 'submit') ? time() : NULL
         ];
-    
+
         $this->mahasiswa_model->update_draft($id, $data);
         $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Draft berhasil diperbarui!</div>');
         redirect('mahasiswa/upload_draft'); // Sesuaikan dengan route yang tepat
-    }        
+    }       
 
     public function do_download_file_laporan($id)
     {

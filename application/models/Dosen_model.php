@@ -15,10 +15,15 @@ class Dosen_model extends CI_Model {
             $this->db->from('absensi_bimbingan');
             $this->db->join('kelompok', 'kelompok.id = absensi_bimbingan.kelompok_id');
             $this->db->join('dosen', 'dosen.id = kelompok.dosen_pembimbing_id');
-            $this->db->join('mahasiswa', 'mahasiswa.id = mahasiswa_id');
+            $this->db->join('mahasiswa', 'mahasiswa.id = absensi_bimbingan.mahasiswa_id');
             $this->db->where('kelompok.dosen_pembimbing_id', $user->dosen_pembimbing_id);
             $this->db->where('absensi_bimbingan.is_submitted', 1); // Hanya ambil data yang disubmit
-            $this->db->order_by('absensi_bimbingan.tgl_bimbingan, absensi_bimbingan.waktu', 'DESC'); // Urutkan berdasarkan tanggal bimbingan terbaru
+
+            // Urutkan berdasarkan status, tanggal bimbingan, dan waktu
+            $this->db->order_by("FIELD(absensi_bimbingan.is_confirmed, 'pending', 'confirmed', 'rejected')"); // Urutkan status dengan "pending" lebih dulu
+            $this->db->order_by('absensi_bimbingan.tgl_bimbingan', 'DESC'); // Urutkan berdasarkan tanggal bimbingan terbaru
+            $this->db->order_by('absensi_bimbingan.waktu', 'DESC'); // Urutkan berdasarkan waktu terbaru
+
             $query = $this->db->get();
             return $query->result_array();
         } else {

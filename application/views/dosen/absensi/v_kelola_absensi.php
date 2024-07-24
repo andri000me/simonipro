@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive">
-                            <?= $this->session->flashdata('message'); ?>
+                            <?= $this->session->flashdata('pesan'); ?>
                             <table id="myTable" class="table table-hover text-wrap mb-0 align-middle">
                                 <thead>
                                     <tr>

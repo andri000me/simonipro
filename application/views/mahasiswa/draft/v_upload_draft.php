@@ -77,6 +77,14 @@
         </div>
     </div>
 <?php elseif ($isRekomendasi && $has_uploaded_draft && !$is_submitted): ?>
+    <?php if ( $draft[0]['status'] == 'rejected' ) : ?>
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Draft Ditolak!</h4>
+            <p><?= $draft[0]['catatan_penolakan']; ?></p>
+            <hr>
+            <p class="mb-0">Harap upload ulang draft dengan perbaikan-perbaikan yang tertera pada catatan diatas.</p>
+        </div>
+    <?php endif ?>
     <div class="row">
         <div class="col-lg-12 d-flex align-items-stretch">
             <div class="card w-100">
@@ -180,6 +188,13 @@
         </div>
     </div>
 <?php elseif ($isRekomendasi && $has_uploaded_draft && $is_submitted): ?>
+    <?php if ( $draft[0]['status'] == 'approved' ) : ?>
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Draft Berhasil Di Approve!</h4>
+            <hr>
+            <p class="mb-0">Selamat! Draft Anda telah disetujui. Teruslah berusaha dan pertahankan semangat kerja keras Anda!</p>
+        </div>
+    <?php endif ?>
     <div class="card w-100">
         <div class="card-header bg-success text-white">
             Berhasil Upload Draft Sidang
@@ -198,7 +213,6 @@
                                     <thead class="text-uppercase">
                                         <tr>
                                             <th>Waktu Upload</th>
-                                            <th>Nama File</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
@@ -236,7 +250,6 @@
                                                                 <?= date('H:i', $d['submitted_at']); ?>
                                                             </span>
                                                         </td>
-                                                        <td><?= $d['file_laporan']; ?></td>
                                                         <td>
                                                             <div class="d-flex align-items-center gap-2">
                                                                 <?php if ( $d['status'] == 'pending' ) : ?>

@@ -620,7 +620,6 @@ class Staff extends CI_Controller {
         redirect('staff/kelola_koordinator');
     }
 
-
     public function detail_koordinator($id)
     {
         $data['title'] = 'Detail Koordinator | Staff';

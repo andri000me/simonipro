@@ -106,6 +106,7 @@ class Koordinator_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+    
     // Akhir kelola plotting 
 
     // Kelola Jenis Plotting
@@ -271,4 +272,101 @@ class Koordinator_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    // Kelola jadwal sidang
+    public function get_all_jadwal_sidang()
+    {
+        $this->db->select('
+            jadwal_sidang.*, 
+            p1.nama as dosen_penguji_1_nama, 
+            p1.nidn as dosen_penguji_1_nidn, 
+            p2.nama as dosen_penguji_2_nama, 
+            p2.nidn as dosen_penguji_2_nidn, 
+            mahasiswa.nama as mahasiswa_nama, 
+            mahasiswa.npm as mahasiswa_npm, 
+            project.nama_project as project_nama
+        ');
+        $this->db->from('jadwal_sidang');
+        $this->db->join('plotting', 'jadwal_sidang.plotting_id = plotting.id');
+        $this->db->join('dosen p1', 'plotting.dosen_penguji_1_id = p1.id', 'left');
+        $this->db->join('dosen p2', 'plotting.dosen_penguji_2_id = p2.id', 'left');
+        $this->db->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id');
+        $this->db->join('project', 'plotting.project_id = project.id');
+        $this->db->join('jenis_plotting', 'plotting.jenis_plotting_id = jenis_plotting.id');
+        $this->db->where('plotting.jenis_plotting_id', 2);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_selected_mhs_ids() {
+        $this->db->select('mahasiswa_id');
+        $this->db->from('plotting');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return array_column($result, 'mahasiswa_id'); // Ambil hanya kolom 'mahasiswa_id'
+    }
+    
+    public function get_all_mhs_already_plotting_penguji($selectedMhsIds, $mahasiswaWithJadwalSidang) {
+        $this->db->select('mahasiswa.id, mahasiswa.nama, plotting.id as plotting_id');
+        $this->db->from('mahasiswa');
+        $this->db->join('plotting', 'mahasiswa.id = plotting.mahasiswa_id', 'left');
+        $this->db->where('plotting.jenis_plotting_id', 2);
+    
+        // Filter mahasiswa yang sudah ada di jadwal_sidang
+        if (!empty($mahasiswaWithJadwalSidang)) {
+            $this->db->where_not_in('mahasiswa.id', $mahasiswaWithJadwalSidang);
+        }
+        
+        if (!empty($selectedMhsIds)) {
+            $this->db->where_in('mahasiswa.id', $selectedMhsIds);
+        }
+        
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+      
+
+    public function get_penguji_by_mahasiswa_id($mahasiswa_id) {
+        $this->db->select('dosen_penguji_1_id, dosen_penguji_2_id');
+        $this->db->from('plotting');
+        $this->db->where('mahasiswa_id', $mahasiswa_id);
+        $query = $this->db->get();
+        $result = $query->row_array();
+    
+        if ($result) {
+            // Ambil nama dosen dari tabel dosen
+            $this->db->select('nama');
+            $this->db->where('id', $result['dosen_penguji_1_id']);
+            $dosen_penguji_1 = $this->db->get('dosen')->row()->nama;
+            
+            $this->db->where('id', $result['dosen_penguji_2_id']);
+            $dosen_penguji_2 = $this->db->get('dosen')->row()->nama;
+            
+            return array(
+                'dosen_penguji_1' => $dosen_penguji_1,
+                'dosen_penguji_2' => $dosen_penguji_2
+            );
+        }
+    
+        return array(
+            'dosen_penguji_1' => '',
+            'dosen_penguji_2' => ''
+        );
+    }
+
+    public function get_mahasiswa_with_jadwal_sidang() {
+        $this->db->select('plotting.mahasiswa_id');
+        $this->db->from('jadwal_sidang');
+        $this->db->join('plotting', 'jadwal_sidang.plotting_id = plotting.id');
+        $query = $this->db->get();
+        $result = $query->result_array();
+        return array_column($result, 'mahasiswa_id'); // Ambil hanya kolom 'mahasiswa_id'
+    }
+
+    public function insert_jadwal_sidang($data)
+    {
+        return $this->db->insert('jadwal_sidang', $data);
+    }
+    
+    // Akhir kelola jadwal sidang
 }
