@@ -78,9 +78,16 @@ class Jadwal_model extends CI_Model {
     public function get_all_events() {
         $this->db->select('id, nama_kegiatan as title, tgl_awal as start, tgl_selesai as end');
         $this->db->from('kegiatan');
-        $this->db->where('DATE(tgl_awal) <=', date('Y-m-d'));
-        $this->db->where('DATE(tgl_selesai) >=', date('Y-m-d'));
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    // public function get_all_events() {
+    //     $this->db->select('id, nama_kegiatan as title, tgl_awal as start, tgl_selesai as end');
+    //     $this->db->from('kegiatan');
+    //     $this->db->where('DATE(tgl_awal) <=', date('Y-m-d'));
+    //     $this->db->where('DATE(tgl_selesai) >=', date('Y-m-d'));
+    //     $query = $this->db->get();
+    //     return $query->result_array();
+    // }
 }

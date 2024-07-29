@@ -1,9 +1,20 @@
 <?php 
 class Mahasiswa_model extends CI_Model {    
-    // public function get_all_absensi_bimbingan() {
-    //     $query = $this->db->get('absensi_bimbingan');
-    //      return $query->result_array();
-    // }
+
+    // count
+    public function count_absensi_bimbingan($mahasiswa_id) {
+        // Build the query
+        $this->db->select('COUNT(*) AS jumlah_hadir');
+        $this->db->from('absensi_bimbingan');
+        $this->db->where('(status = "hadir" OR status = "rekomendasi")');
+        $this->db->where('mahasiswa_id', $mahasiswa_id);
+        
+        // Execute the query
+        $query = $this->db->get();
+        
+        // Return the result as an array
+        return $query->row_array();
+    }
 
     // Kelola Absensi
     public function get_all_kelompok_match_current_mhs($username)

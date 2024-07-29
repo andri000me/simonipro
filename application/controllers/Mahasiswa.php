@@ -31,6 +31,12 @@ class Mahasiswa extends CI_Controller {
 
 	public function index()
 	{
+        $username = $this->session->userdata('username');
+        // Ambil data mahasiswa_id dari username
+        $mahasiswa_id = $this->mahasiswa_model->get_mahasiswa_id_by_username($username);
+
+        $data['jml_absensi'] = $this->mahasiswa_model->count_absensi_bimbingan($mahasiswa_id);
+
 		$data['title'] = 'Dashboard | Mahasiswa';
         $data['active'] = 'dashboard';
         // Memuat model dan mengambil data jadwal

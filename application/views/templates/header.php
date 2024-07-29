@@ -30,6 +30,26 @@
       menubar: 'favs',
     });
   </script>
+
+  <!-- kalender -->
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var events = <?php echo json_encode($events); ?>; // Encode data event ke JSON
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek'
+        },
+        initialDate: '2024-07-12',
+        events: events // Gunakan data event yang diambil dari database
+      });
+      calendar.render();
+    });
+  </script>
 </head>
 
 <body>

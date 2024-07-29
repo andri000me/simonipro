@@ -1,70 +1,111 @@
 .past-event {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
 }
 .upcoming-event {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+	background-color: #d4edda;
+	border-color: #c3e6cb;
 }
 
 .card .icon-container {
-    font-size: 2.65rem;
+	font-size: 2.65rem;
 }
 .card .fw-bolder {
-    font-size: 0.595rem;
+	font-size: 0.595rem;
 }
 .card .total-value {
-    font-size: 1.25rem;
+	font-size: 1.25rem;
 }
 
 /* Media queries for responsive design */
 @media (max-width: 1200px) {
-    .card .icon-container {
-        font-size: 2.5rem;
-    }
-    .card .fw-bolder {
-        font-size: 0.7rem;
-    }
-    .card .total-value {
-        font-size: 1.15rem;
-    }
+	.card .icon-container {
+		font-size: 2.5rem;
+	}
+	.card .fw-bolder {
+		font-size: 0.7rem;
+	}
+	.card .total-value {
+		font-size: 1.15rem;
+	}
 }
 
 @media (max-width: 992px) {
-    .card .icon-container {
-        font-size: 2.2rem;
-    }
-    .card .fw-bolder {
-        font-size: 0.75rem;
-    }
-    .card .total-value {
-        font-size: 1.1rem;
-    }
+	.card .icon-container {
+		font-size: 2.2rem;
+	}
+	.card .fw-bolder {
+		font-size: 0.75rem;
+	}
+	.card .total-value {
+		font-size: 1.1rem;
+	}
 }
 
 @media (max-width: 768px) {
-    .card .icon-container {
-        font-size: 2rem;
-    }
-    .card .fw-bolder {
-        font-size: 0.8rem;
-    }
-    .card .total-value {
-        font-size: 1rem;
-    }
+	.card .icon-container {
+		font-size: 2rem;
+	}
+	.card .fw-bolder {
+		font-size: 0.8rem;
+	}
+	.card .total-value {
+		font-size: 1rem;
+	}
 }
 
 @media (max-width: 576px) {
-    .card .icon-container {
-        font-size: 1.8rem;
-    }
-    .card .fw-bolder {
-        font-size: 0.75rem;
-    }
-    .card .total-value {
-        font-size: 0.9rem;
-    }
-    .card .card-body {
-        padding: 1rem;
-    }
+	.card .icon-container {
+		font-size: 1.8rem;
+	}
+	.card .fw-bolder {
+		font-size: 0.75rem;
+	}
+	.card .total-value {
+		font-size: 0.9rem;
+	}
+	.card .card-body {
+		padding: 1rem;
+	}
+}
+
+/* Kalender */
+.fc .fc-col-header-cell-cushion {
+	display: inline-block;
+	padding: 2px 4px;
+	color: #333;
+}
+.fc .fc-daygrid-day-number {
+	color: #333;
+}
+.fc .fc-toolbar-title {
+	font-size: 1.525rem;
+}
+
+/* For small screens (mobile devices) */
+@media (max-width: 576px) {
+	.fc .fc-toolbar-title {
+		font-size: 1.2rem;
+	}
+}
+
+/* For medium screens (tablets) */
+@media (min-width: 577px) and (max-width: 768px) {
+	.fc .fc-toolbar-title {
+		font-size: 1.4rem;
+	}
+}
+
+/* For large screens (desktops) */
+@media (min-width: 769px) and (max-width: 992px) {
+	.fc .fc-toolbar-title {
+		font-size: 1.6rem;
+	}
+}
+
+/* For extra large screens (large desktops) */
+@media (min-width: 993px) {
+	.fc .fc-toolbar-title {
+		font-size: 1.8rem;
+	}
 }

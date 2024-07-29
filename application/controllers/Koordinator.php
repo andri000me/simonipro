@@ -30,6 +30,8 @@ class Koordinator extends CI_Controller {
 
 	public function index()
 	{
+        $data['events'] = $this->jadwal_model->get_all_events();
+
         $data['title'] = 'Dashboard | Koordinator';
         $data['active'] = 'dashboard';
         $this->load->view('templates/header', $data);
@@ -888,4 +890,28 @@ class Koordinator extends CI_Controller {
     }    
     
     // Akhir kelola jadwal sidang
+
+    // print kalender proyek 2
+    public function print_kalender()
+    {
+        // Mengambil jadwal_id yang statusnya 'published'
+        $jadwal_published = $this->jadwal_model->get_published_jadwal();
+
+        $jadwal_id = $jadwal_published['id'];
+
+        $data['jadwal'] = $this->jadwal_model->get_jadwal_by_id($jadwal_id);
+        $data['kegiatan'] = $this->jadwal_model->get_kegiatan_by_jadwal_id($jadwal_id);  // Menambahkan data kegiatan
+
+        $html = $this->load->view('pdfGenerator/v_print_kalender_pdf', $data, true);
+
+        $this->pdf->load_html($html);
+        $this->pdf->render();
+
+        // Save PDF file to a temporary location
+        $output = $this->pdf->output();
+        file_put_contents('./assets/docs/pdf/kalender.pdf', $output);
+
+        // Optional: Download PDF instead of saving
+        $this->pdf->stream("kalender.pdf");
+    }
 }

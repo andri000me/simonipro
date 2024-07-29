@@ -88,43 +88,6 @@
   document.addEventListener('DOMContentLoaded', togglePengujiFields);
   </script>
 
-
-    <!-- kalender -->
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.2.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.3.0/main.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var events = <?= json_encode($events) ?>; // Pastikan $events didefinisikan di PHP
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: [ 'dayGrid' ],
-            initialView: 'dayGridMonth',
-            locale: 'id', // Bahasa Indonesia
-            dateClick: function(info) {
-                // Atur tanggal mulai dan akhir ketika mengklik tanggal di kalender
-                document.getElementById('start-date').value = info.dateStr;
-                document.getElementById('end-date').value = info.dateStr;
-                $('#form').modal('show'); // Tampilkan modal
-            },
-            events: [],
-                eventDidMount: function(info) {
-                var today = new Date().toISOString().split('T')[0];
-
-                if (info.event.extendedProps.start < today) {
-                    info.el.classList.add('past-event');
-                } else if (info.event.extendedProps.start > today) {
-                    info.el.classList.add('upcoming-event');
-                }
-            },
-                eventContent: function(arg) {
-                return { html: `<div class="event-title">${arg.event.title}</div>` };
-            }
-        });
-        calendar.render();
-        });
-    </script>
-
     <!-- catatan penolakan -->
      <script>
         document.addEventListener('DOMContentLoaded', function() {
