@@ -36,9 +36,9 @@
                     <input type="password" class="form-control" id="password" name="password">
                     <?= form_error('password', '<small class="text-danger fst-italic">', '</small>'); ?>
                   </div>
-                  <div class="d-flex align-items-center justify-content-end mb-4">
+                  <!-- <div class="d-flex align-items-center justify-content-end mb-4">
                     <a class="text-primary fw-bold" href="#">Lupa password ?</a>
-                  </div>
+                  </div> -->
                   <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Login</button>
                   <!-- <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-bold">Belum punya akun?</p>

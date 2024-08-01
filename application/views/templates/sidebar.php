@@ -168,6 +168,14 @@
                                 <span class="hide-menu">Kelola Absensi</span>
                             </a>
                         </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_penilaian') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/kelola_penilaian'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-scale"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Penilaian</span>
+                            </a>
+                        </li>
                         <?php if ( $this->session->userdata('nama_role') == 'mahasiswa' ) : ?>
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'upload_draft') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/upload_draft'); ?>" aria-expanded="false">
@@ -201,14 +209,14 @@
                         </a>
                     </li>
                     <?php if ($this->session->userdata('nama_role') == 'staff') : ?>
-                        <li class="sidebar-item">
+                        <!-- <li class="sidebar-item">
                             <a class="sidebar-link" href="<?= base_url('auth/register'); ?>" aria-expanded="false">
                                 <span>
                                     <i class="ti ti-user-plus"></i>
                                 </span>
                                 <span class="hide-menu">Register</span>
                             </a>
-                        </li>
+                        </li> -->
                     <?php endif; ?>
                 </ul>
             </nav>

@@ -5,9 +5,6 @@ class Koordinator extends CI_Controller {
     // construct method
     public function __construct() {
         parent::__construct();
-        $this->load->model('staff_model');
-        $this->load->model('jadwal_model');
-        $this->load->model('koordinator_model');
 
         // set local timezone
         date_default_timezone_set('Asia/jakarta');
@@ -26,11 +23,29 @@ class Koordinator extends CI_Controller {
             redirect('auth');
         }
 
+        // hubungkan dengan models
+        $this->load->model('staff_model');
+        $this->load->model('jadwal_model');
+        $this->load->model('koordinator_model');
+
     }
 
 	public function index()
 	{
         $data['events'] = $this->jadwal_model->get_all_events();
+
+        // count data from tables
+        $data['count_mhs'] = $this->koordinator_model->count_all_mahasiswa();
+        $data['count_dsn'] = $this->koordinator_model->count_all_dosen();
+        $data['count_rekomendasi'] = $this->koordinator_model->count_mahasiswa_rekomendasi();
+        $data['count_siap_sidang'] = $this->koordinator_model->count_draft_sidang_approved();
+        $data['count_belum_terpenuhi'] = $this->koordinator_model->count_mahasiswa_belum_terpenuhi();
+
+        // Calculate percentages
+        $total_mahasiswa = $data['count_mhs'];
+        $data['percent_siap_sidang'] = ($total_mahasiswa > 0) ? ($data['count_siap_sidang'] / $total_mahasiswa) * 100 : 0;
+        $data['percent_rekomendasi'] = ($total_mahasiswa > 0) ? ($data['count_rekomendasi'] / $total_mahasiswa) * 100 : 0;
+        $data['percent_belum_terpenuhi'] = ($total_mahasiswa > 0) ? ($data['count_belum_terpenuhi'] / $total_mahasiswa) * 100 : 0;
 
         $data['title'] = 'Dashboard | Koordinator';
         $data['active'] = 'dashboard';
@@ -38,7 +53,7 @@ class Koordinator extends CI_Controller {
         $this->load->view('templates/sidebar', $data);
         $this->load->view('templates/topbar');
         $this->load->view('koordinator/v_dashboard');
-        $this->load->view('templates/footer');
+        $this->load->view('templates/footer', $data);
 	}
 
     // Kelola Project
@@ -507,7 +522,9 @@ class Koordinator extends CI_Controller {
     public function kelola_plotting() {
         $data['plotting'] = $this->koordinator_model->getAllPlotting();
         // data from other tables
-        $data['koordinator'] = $this->staff_model->get_all_koordinator();
+        $username = $this->session->userdata['username'];
+        $data['koordinator'] = $this->koordinator_model->get_current_koordinator($username);
+
         $data['dosen'] = $this->staff_model->get_all_dosen();
         $data['projects'] = $this->koordinator_model->get_all_projects();
         $data['jenis_plotting'] = $this->koordinator_model->get_all_jenis_plotting();
@@ -530,9 +547,6 @@ class Koordinator extends CI_Controller {
     public function tambah_plotting() 
     {
         // Set rules for common fields
-        $this->form_validation->set_rules('koordinator_id', 'Koordinator_ID', 'required|trim', [
-            'required' => 'Field {field} harus diisi.',
-        ]);
         $this->form_validation->set_rules('kelompok_id', 'Kelompok_ID', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);

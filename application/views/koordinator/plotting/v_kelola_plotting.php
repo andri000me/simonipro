@@ -1,5 +1,4 @@
 <!-- Row 1 -->
-<!-- Row 1 -->
 <div class="row">
   <div class="col-lg-12 d-flex align-items-strech">
     <div class="card w-100">
@@ -112,6 +111,7 @@
       </div>
       <div class="modal-body">
         <form action="<?= base_url('koordinator/tambah_plotting'); ?>" method="post">
+          <input type="hidden" name="koordinator_id" id="koordinator_id" value="<?= $koordinator['id']; ?>">
           <div class="mb-3">
             <label for="jenis_plotting_id" class="form-label">Jenis Plotting</label>
             <select class="form-select" id="jenis_plotting_id" name="jenis_plotting_id" onchange="togglePengujiFields()">
@@ -122,14 +122,8 @@
             <?= form_error('jenis_plotting_id', '<small class="text-danger fst-italic">', '</small>'); ?>
           </div>
           <div class="mb-3">
-            <label for="koordinator_id" class="form-label">Koordinator</label>
-            <select class="form-select" id="koordinator_id" name="koordinator_id">
-              <option value="" selected>-- Pilih Koordinator --</option>
-              <?php foreach ($koordinator as $koor) : ?>
-                <option value="<?= $koor['id']; ?>"><?= $koor['nidn']; ?> - <?= $koor['nama']; ?></option>
-              <?php endforeach; ?>
-            </select>
-            <?= form_error('koordinator_id', '<small class="text-danger fst-italic">', '</small>'); ?>
+            <label for="koordinator" class="form-label">Koordinator</label>
+            <input type="text" class="form-control" id="koordinator" value="<?= $this->session->userdata['nama']; ?>" readonly>
           </div>
           <div class="mb-3">
             <label for="kelompok_id" class="form-label">Kelompok Pembimbing</label>

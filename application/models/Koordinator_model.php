@@ -1,6 +1,44 @@
 <?php
 class Koordinator_model extends CI_Model {
 
+    // Count data from tables
+    // Menghitung jumlah data pada tabel mahasiswa
+    public function count_all_mahasiswa() {
+        return $this->db->count_all('mahasiswa');
+    }
+
+    // Menghitung jumlah data pada tabel dosen
+    public function count_all_dosen() {
+        return $this->db->count_all('dosen');
+    }
+
+    // Menghitung jumlah mahasiswa yang statusnya "rekomendasi"
+    public function count_mahasiswa_rekomendasi() {
+        $this->db->distinct();
+        $this->db->select('mahasiswa_id');
+        $this->db->from('absensi_bimbingan');
+        $this->db->where('status', 'rekomendasi');
+        $query = $this->db->get();
+        
+        return $query->num_rows();
+    }
+
+    // Menghitung jumlah draft sidang yang statusnya "approved"
+    public function count_draft_sidang_approved() {
+        $this->db->from('draft_sidang');
+        $this->db->where('status', 'approved');
+        return $this->db->count_all_results();
+    }
+
+    // Menghitung jumlah mahasiswa yang belum memenuhi syarat
+    public function count_mahasiswa_belum_terpenuhi() {
+        $total_mahasiswa = $this->count_all_mahasiswa();
+        $mahasiswa_rekomendasi = $this->count_mahasiswa_rekomendasi();
+        $mahasiswa_siap_sidang = $this->count_draft_sidang_approved();
+        return $total_mahasiswa - ($mahasiswa_rekomendasi + $mahasiswa_siap_sidang);
+    }
+    // End count data from tables
+
     // Kelola Project
     public function get_all_projects()
     {
@@ -81,10 +119,21 @@ class Koordinator_model extends CI_Model {
         return $this->db->affected_rows(); // Mengembalikan jumlah baris yang dipengaruhi
     }    
 
-    public function deletePlotting($id)
-    {
-        return $this->db->delete('plotting', ['id' => $id]);
+    public function get_current_koordinator($username) {
+        // Lakukan join dengan tabel user untuk mendapatkan id koordinator berdasarkan username
+        $this->db->select('koordinator.id');
+        $this->db->from('koordinator');
+        $this->db->join('user', 'user.id = koordinator.user_id');
+        $this->db->where('user.username', $username);
+        $query = $this->db->get();
+        
+        if ($query->num_rows() > 0) {
+            return $query->row_array(); // Mengembalikan seluruh baris data koordinator
+        } else {
+            return null; // Jika tidak ada data yang ditemukan
+        }
     }
+    // Akhir kelola plotting
 
     // Ambil user id mahasiswa yang sudah dipilih
     public function get_selected_user_mhs_ids() {

@@ -104,4 +104,102 @@ class Dosen_model extends CI_Model {
         $this->db->where('status !=', 'rekomendasi'); // Tambahkan kondisi ini
         $this->db->update('absensi_bimbingan', $update_data);
     }
+
+    // Kelola penilaian
+    // Method untuk mengambil data mahasiswa berdasarkan plotting
+    public function get_all_mahasiswa_by_plotting($username) {
+        // Ambil ID dosen dari username di tabel user
+        $this->db->select('dosen.id');
+        $this->db->from('user');
+        $this->db->join('dosen', 'user.id = dosen.user_id'); // Join tabel user dengan tabel dosen
+        $this->db->where('user.username', $username);
+        $dosen = $this->db->get()->row();
+
+        if (!$dosen) {
+            return []; // Jika dosen tidak ditemukan, kembalikan array kosong
+        }
+
+        $dosen_id = $dosen->id;
+
+        // Query untuk mengambil data mahasiswa dan informasi dosen penguji
+        $this->db->select('
+            mahasiswa.id AS mahasiswa_id, 
+            mahasiswa.npm AS mahasiswa_npm, 
+            mahasiswa.nama AS mahasiswa_nama, 
+            plotting.id AS plotting_id,
+            dosen_penguji_1.nama AS dosen_penguji_1_nama,
+            dosen_penguji_1.nidn AS dosen_penguji_1_nidn,
+            dosen_penguji_2.nama AS dosen_penguji_2_nama,
+            dosen_penguji_2.nidn AS dosen_penguji_2_nidn
+        ');
+        $this->db->from('plotting');
+        $this->db->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id');
+        $this->db->join('dosen AS dosen_penguji_1', 'plotting.dosen_penguji_1_id = dosen_penguji_1.id', 'left');
+        $this->db->join('dosen AS dosen_penguji_2', 'plotting.dosen_penguji_2_id = dosen_penguji_2.id', 'left');
+        $this->db->where('plotting.dosen_penguji_2_id', $dosen_id);
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_all_penilaian_by_dosen($username) {
+        // Ambil ID dosen dari username di tabel user
+        $this->db->select('dosen.id');
+        $this->db->from('user');
+        $this->db->join('dosen', 'user.id = dosen.user_id'); // Join tabel user dengan tabel dosen
+        $this->db->where('user.username', $username);
+        $dosen = $this->db->get()->row();
+    
+        if (!$dosen) {
+            return [];
+        }
+    
+        $dosen_id = $dosen->id;
+    
+        // Query untuk mengambil data penilaian yang relevan untuk dosen
+        $this->db->select('
+                penilaian.id as id,
+                mahasiswa.nama as mahasiswa_nama,
+                mahasiswa.npm as mahasiswa_npm,
+                penilaian.nilai_penguji_1,
+                penilaian.nilai_penguji_2,
+                penilaian.grade,
+                penilaian.status_kelulusan
+            ')
+            ->from('penilaian')
+            ->join('plotting', 'penilaian.plotting_id = plotting.id')
+            ->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id')
+            ->where('plotting.dosen_penguji_1_id', $dosen_id)
+            ->or_where('plotting.dosen_penguji_2_id', $dosen_id);
+    
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function get_penilaian_by_id($id)
+    {
+        $this->db->select('
+                penilaian.id,
+                penilaian.nilai_penguji_1,
+                penilaian.nilai_penguji_2,
+                penilaian.grade,
+                penilaian.status_kelulusan
+            ')
+            ->from('penilaian')
+            ->where('penilaian.id', $id);
+
+        return $this->db->get()->row_array();
+    }    
+
+    // insert penilaian
+    public function insert_penilaian($data) {
+        $this->db->insert('penilaian', $data);
+    }
+
+    public function update_penilaian($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('penilaian', $data);
+    }
+    // Akhir kelola penilaian
 }

@@ -4,10 +4,73 @@
   <script src="<?= base_url('assets'); ?>/js/app.min.js"></script>
   <script src="<?= base_url('assets'); ?>/libs/apexcharts/dist/apexcharts.min.js"></script>
   <script src="<?= base_url('assets'); ?>/libs/simplebar/dist/simplebar.js"></script>
-  <script src="<?= base_url('assets'); ?>/js/dashboard.js"></script>
+  <!-- <script src="<?= base_url('assets'); ?>/js/dashboard.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
   <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var breakup = {
+            series: [
+                <?= round($percent_siap_sidang, 2); ?>,
+                <?= round($percent_rekomendasi, 2); ?>,
+                <?= round($percent_belum_terpenuhi, 2); ?>
+            ],
+            labels: ['Siap Sidang', 'Rekomendasi', 'Belum Terpenuhi'],
+            chart: {
+                width: 180,
+                type: "donut",
+                fontFamily: "Plus Jakarta Sans', sans-serif",
+                foreColor: "#adb0bb",
+            },
+            plotOptions: {
+                pie: {
+                    startAngle: 0,
+                    endAngle: 360,
+                    donut: {
+                        size: '75%',
+                    },
+                },
+            },
+            stroke: {
+                show: false,
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return val + "%"; // Format data label as percentage
+                }
+            },
+            legend: {
+                show: false,
+            },
+            colors: ["#5D87FF", "#ecf2ff", "#F9F9FD"],
+            responsive: [
+                {
+                    breakpoint: 991,
+                    options: {
+                        chart: {
+                            width: 150,
+                        },
+                    },
+                },
+            ],
+            tooltip: {
+                theme: "dark",
+                fillSeriesColor: false,
+            },
+        };
+
+        var chartElement = document.querySelector("#breakup");
+        if (chartElement) {
+            var chart = new ApexCharts(chartElement, breakup);
+            chart.render();
+        } else {
+            console.error("Element with ID 'breakup' not found.");
+        }
+    });
+</script>
 
     <!-- sweet alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

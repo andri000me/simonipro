@@ -176,7 +176,7 @@ class Staff extends CI_Controller {
 
             $this->user_model->insert_user($data);
             $this->session->set_flashdata('pesan', '<div class="alert alert-success" user="alert">Pengguna baru berhasil ditambahkan!</div>');
-            redirect('staff/pengguna/kelola_pengguna');
+            redirect('staff/pengguna/v_kelola_pengguna');
         }
     }
 

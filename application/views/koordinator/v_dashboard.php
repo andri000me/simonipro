@@ -3,8 +3,7 @@
         'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
         'September', 'Oktober', 'November', 'Desember'
     ];
-?>    
-
+?>
     <div class="container-fluid">
         <div class="row">
         <div class="col-lg-3 col-md-4 col-12">
@@ -13,12 +12,12 @@
                         <div class="row">
                             <div class="col-3 d-flex justify-content-center align-items-center">
                                 <span>
-                                    <iconify-icon icon="lucide:github" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                    <iconify-icon icon="ph:student" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">22</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Mahasiswa</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_mhs; ?></span>
                             </div>
                         </div>
                     </div>
@@ -30,12 +29,12 @@
                         <div class="row">
                             <div class="col-3 d-flex justify-content-center align-items-center">
                                 <span>
-                                    <iconify-icon icon="lucide:github" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                    <iconify-icon icon="material-symbols:school-outline-rounded" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">22</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Dosen</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_dsn; ?></span>
                             </div>
                         </div>
                     </div>
@@ -47,12 +46,12 @@
                         <div class="row">
                             <div class="col-3 d-flex justify-content-center align-items-center">
                                 <span>
-                                    <iconify-icon icon="lucide:github" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                    <iconify-icon icon="octicon:verified-16" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">22</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Rekomendasi</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_rekomendasi; ?></span>
                             </div>
                         </div>
                     </div>
@@ -64,12 +63,12 @@
                         <div class="row">
                             <div class="col-3 d-flex justify-content-center align-items-center">
                                 <span>
-                                    <iconify-icon icon="lucide:github" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                    <iconify-icon icon="fluent:document-folder-16-regular" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
                                 </span>
                             </div>
                             <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">22</span>
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Siap Sidang</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_siap_sidang; ?></span>
                             </div>
                         </div>
                     </div>
@@ -101,43 +100,40 @@
             <div class="col-lg-4">
             <div class="row">
               <div class="col-lg-12">
-                <!-- Yearly Breakup -->
+                <!-- Perkembangan Proyek -->
                 <div class="card overflow-hidden">
-                  <div class="card-body p-4">
-                    <h5 class="card-title mb-9 fw-semibold">Perkembangan Proyek</h5>
-                    <div class="row align-items-center">
-                      <div class="col-8">
-                        <h4 class="fw-semibold mb-3">$36,358</h4>
-                        <div class="d-flex align-items-center mb-3">
-                          <span
-                            class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                            <i class="ti ti-arrow-up-left text-success"></i>
-                          </span>
-                          <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                          <p class="fs-3 mb-0">last year</p>
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-9 fw-semibold">Perkembangan Proyek</h5>
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h4 class="mb-3"><?= round($percent_siap_sidang, 2); ?> / <span class="fw-semibold">100%</span></h4>
+                                <div class="d-block">
+                                    <div class="me-4">
+                                        <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
+                                        <span class="fs-2">Siap Sidang</span>
+                                    </div>
+                                    <div>
+                                        <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
+                                        <span class="fs-2">Rekomendasi</span>
+                                    </div>
+                                    <div>
+                                        <span class="round-8 bg-light rounded-circle me-2 d-inline-block"></span>
+                                        <span class="fs-2">Belum Terpenuhi</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                    <div id="breakup"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex align-items-center">
-                          <div class="me-4">
-                            <span class="round-8 bg-primary rounded-circle me-2 d-inline-block"></span>
-                            <span class="fs-2">2023</span>
-                          </div>
-                          <div>
-                            <span class="round-8 bg-light-primary rounded-circle me-2 d-inline-block"></span>
-                            <span class="fs-2">2023</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                          <div id="breakup"></div>
-                        </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
+                <!-- End Perkembangan Proyek -->
               </div>
                 <div class="col-lg-12">
-                    <!-- Monthly Earnings -->
+                    <!-- Riwayat kegiatan -->
                     <div class="card w-100" style="max-height: 60vh;">
                     <div class="card-body p-4 overflow-auto">
                         <div class="mb-4">
