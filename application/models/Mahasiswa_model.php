@@ -202,4 +202,21 @@ class Mahasiswa_model extends CI_Model {
 
     // Akhir upload draft
 
+    // Jadwal sidang
+    // Method to get jadwal sidang by username
+    public function get_jadwal_sidang($username)
+    {
+        $this->db->select('js.*, d1.nama as penguji_1_nama, d2.nama as penguji_2_nama, m.npm as mahasiswa_npm, m.nama as mahasiswa_nama, k.nama_kelas as nama_kelas');
+        $this->db->from('jadwal_sidang js');
+        $this->db->join('plotting pl', 'js.plotting_id = pl.id');
+        $this->db->join('mahasiswa m', 'pl.mahasiswa_id = m.id');
+        $this->db->join('kelas k', 'm.kelas_id = k.id');
+        $this->db->join('dosen d1', 'pl.dosen_penguji_1_id = d1.id', 'left');
+        $this->db->join('dosen d2', 'pl.dosen_penguji_2_id = d2.id', 'left');
+        $this->db->join('user u', 'm.user_id = u.id');
+        $this->db->where('u.username', $username);
+        return $this->db->get()->row_array();
+    }
+    // Akhir jadwal sidang
+
 }

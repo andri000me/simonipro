@@ -168,6 +168,7 @@
                                 <span class="hide-menu">Kelola Absensi</span>
                             </a>
                         </li>
+                        <?php if ( $this->session->userdata('nama_role') == 'dosen' ) : ?>
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_penilaian') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/kelola_penilaian'); ?>" aria-expanded="false">
                                 <span>
@@ -176,6 +177,7 @@
                                 <span class="hide-menu">Kelola Penilaian</span>
                             </a>
                         </li>
+                        <?php endif; ?>
                         <?php if ( $this->session->userdata('nama_role') == 'mahasiswa' ) : ?>
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'upload_draft') ? 'active' : '' ?>" href="<?= base_url($this->session->userdata('nama_role') . '/upload_draft'); ?>" aria-expanded="false">

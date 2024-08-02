@@ -449,6 +449,33 @@ class Mahasiswa extends CI_Controller {
 
     // akhir upload draft
 
+    // Informasi jadwal sidang
+    public function jadwal_sidang() {
+        // data jadwal sidang dicari berdasarkan mahasiswa saat ini/yang sedang login saat ini
+        $username = $this->session->userdata('username');
+        $data['jadwal_sidang'] = $this->mahasiswa_model->get_jadwal_sidang($username);
+        $data['title'] = 'Informasi Sidang | Mahasiswa';
+        $data['active'] = 'jadwal_sidang';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('mahasiswa/sidang/v_jadwal_sidang');
+        $this->load->view('templates/footer');
+    }
+
+    public function detail_jadwal_sidang($id) {
+        $data['title'] = 'Detail Jadwal Sidang | Mahasiswa';
+        $data['jadwal_sidang'] = $this->jadwal_model->get_jadwal_sidang_by_id($id);
+
+        $data['active'] = 'jadwal_sidang';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('mahasiswa/sidang/v_detail_jadwal_sidang', $data);
+        $this->load->view('templates/footer');
+    }
+    // Akhir informasi jadwal sidang
+
     // print absensi kehadiran
     public function print_absensi()
     {
