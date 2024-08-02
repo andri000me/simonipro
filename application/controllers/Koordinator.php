@@ -846,15 +846,6 @@ class Koordinator extends CI_Controller {
     }
 
     public function tambah_jadwal_sidang() {
-        // var_dump(
-        //     $this->input->post('project_id'),
-        //     $this->input->post('plotting_id'),
-        //     $this->input->post('no_ruangan'),
-        //     $this->input->post('nama_ruangan'),
-        //     $this->input->post('tgl_sidang'),
-        //     $this->input->post('waktu_sidang'),
-        // );
-        // die;
         
         // Validasi input
         $this->form_validation->set_rules('project_id', 'Nama Project', 'required', [
@@ -901,7 +892,74 @@ class Koordinator extends CI_Controller {
             }
             redirect('koordinator/kelola_jadwal_sidang'); // Ganti dengan URL yang sesuai
         }
-    }    
+    }
+
+    public function detail_jadwal_sidang($id) {
+        $data['title'] = 'Detail Jadwal Sidang | Koordinator';
+        $data['jadwal_sidang'] = $this->jadwal_model->get_jadwal_sidang_by_id($id);
+
+        $data['active'] = 'kelola_jadwal_sidang';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/sidang/v_detail_jadwal_sidang', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function ubah_jadwal_sidang($id) {
+        $data['title'] = 'Ubah Jadwal Sidang | Koordinator';
+        $data['jadwal_sidang'] = $this->jadwal_model->get_jadwal_sidang_by_id($id);
+
+        $data['active'] = 'kelola_jadwal_sidang';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/sidang/v_ubah_jadwal_sidang', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function update_jadwal_sidang()
+    {
+        $id = $this->input->post('id');
+
+        // Set validation rules
+        $this->form_validation->set_rules('tgl_sidang', 'Tanggal Sidang', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('waktu_sidang', 'Waktu Sidang', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('no_ruangan', 'Nomor Ruangan', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('nama_ruangan', 'Nama Ruangan', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->ubah_jadwal_sidang($id); // Kembali ke halaman ubah jadwal sidang jika validasi gagal
+        } else {
+            $data = [
+                'tgl_sidang' => htmlspecialchars($this->input->post('tgl_sidang')),
+                'waktu_sidang' => htmlspecialchars($this->input->post('waktu_sidang')),
+                'no_ruangan' => htmlspecialchars($this->input->post('no_ruangan')),
+                'nama_ruangan' => htmlspecialchars($this->input->post('nama_ruangan')),
+                'updated_at' => time()
+            ];
+
+            $update = $this->koordinator_model->update_jadwal_sidang($id, $data);
+
+            if ($update) {
+                // If update is successful
+                $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Jadwal sidang berhasil diubah!</div>');
+                redirect('koordinator/kelola_jadwal_sidang'); // Adjust the redirect path as needed
+            } else {
+                // If update fails
+                $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update jadwal sidang!</div>');
+                redirect('koordinator/ubah_jadwal_sidang/' . $id);
+            }
+        }
+    }
     
     // Akhir kelola jadwal sidang
 

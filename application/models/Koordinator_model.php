@@ -416,6 +416,11 @@ class Koordinator_model extends CI_Model {
     {
         return $this->db->insert('jadwal_sidang', $data);
     }
-    
+
+    public function update_jadwal_sidang($id, $data)
+    {
+        $this->db->where('id', $id);
+        return $this->db->update('jadwal_sidang', $data);
+    }
     // Akhir kelola jadwal sidang
 }

@@ -90,4 +90,43 @@ class Jadwal_model extends CI_Model {
     //     $query = $this->db->get();
     //     return $query->result_array();
     // }
+
+
+    // Kelola jadwal sidang
+    public function get_jadwal_sidang_by_id($id)
+    {
+        $this->db->select('
+            jadwal_sidang.*, 
+            project.nama_project AS project_nama,
+            plotting.dosen_penguji_1_id,
+            plotting.dosen_penguji_2_id,
+            plotting.mahasiswa_id,
+            dosen1.nama AS penguji_1_nama,
+            dosen1.nidn AS penguji_1_nidn,
+            dosen2.nama AS penguji_2_nama,
+            dosen2.nidn AS penguji_2_nidn,
+            mahasiswa.nama AS mahasiswa_nama,
+            mahasiswa.npm AS mahasiswa_npm,
+            mahasiswa.kelas_id,
+            kelas.nama_kelas,
+            jadwal_sidang.created_at,
+            jadwal_sidang.updated_at
+        ');
+        $this->db->from('jadwal_sidang');
+        $this->db->join('project', 'jadwal_sidang.project_id = project.id');
+        $this->db->join('plotting', 'jadwal_sidang.plotting_id = plotting.id');
+        $this->db->join('dosen dosen1', 'plotting.dosen_penguji_1_id = dosen1.id', 'left');
+        $this->db->join('dosen dosen2', 'plotting.dosen_penguji_2_id = dosen2.id', 'left');
+        $this->db->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id');
+        $this->db->join('kelas', 'mahasiswa.kelas_id = kelas.id', 'left');
+        $this->db->where('jadwal_sidang.id', $id);
+        $query = $this->db->get();
+        
+        if ($query->num_rows() == 1) {
+            return $query->row_array();
+        } else {
+            return false;
+        }
+    }
+    // Akhir kelola jadwal sidang
 }

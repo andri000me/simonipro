@@ -172,6 +172,65 @@
         });
      </script>
 
+    <script>
+        // Fungsi untuk memunculkan field dosen penguji berdasarkan pemilihan mahasiswa
+        function fetchPenguji(mahasiswa_id) {
+            if (mahasiswa_id) {
+                $.ajax({
+                    url: '<?= base_url('koordinator/get_penguji_by_mahasiswa_id/'); ?>' + mahasiswa_id,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data) {
+                            $('#dosen_penguji_1').val(data.dosen_penguji_1 || '');
+                            $('#dosen_penguji_2').val(data.dosen_penguji_2 || '');
+                            $('#dosenPenguji1Field').removeClass('d-none');
+                            $('#dosenPenguji2Field').removeClass('d-none');
+                        } else {
+                            $('#dosen_penguji_1').val('');
+                            $('#dosen_penguji_2').val('');
+                            $('#dosenPenguji1Field').addClass('d-none');
+                            $('#dosenPenguji2Field').addClass('d-none');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error fetching penguji:', error);
+                        $('#dosen_penguji_1').val('');
+                        $('#dosen_penguji_2').val('');
+                        $('#dosenPenguji1Field').addClass('d-none');
+                        $('#dosenPenguji2Field').addClass('d-none');
+                    }
+                });
+            } else {
+                $('#dosen_penguji_1').val('');
+                $('#dosen_penguji_2').val('');
+                $('#dosenPenguji1Field').addClass('d-none');
+                $('#dosenPenguji2Field').addClass('d-none');
+            }
+        }
+
+        // Fungsi ini memanggil togglePengujiFields saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            togglePengujiFields();
+        });
+
+        // Memunculkan atau menyembunyikan field dosen penguji berdasarkan jenis plotting
+        function togglePengujiFields() {
+            var jenisPlotting = document.getElementById('jenis_plotting_id').value;
+            var dosenPenguji1Field = document.getElementById('dosenPenguji1Field');
+            var dosenPenguji2Field = document.getElementById('dosenPenguji2Field');
+            
+            // Ganti '2' dengan ID sebenarnya dari opsi 'Penguji'
+            if (jenisPlotting == '2') {
+            dosenPenguji1Field.style.display = 'block';
+            dosenPenguji2Field.style.display = 'block';
+            } else {
+            dosenPenguji1Field.style.display = 'none';
+            dosenPenguji2Field.style.display = 'none';
+            }
+        }
+    </script>
+
     <script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
     
 </body>
