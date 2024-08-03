@@ -121,6 +121,9 @@ class Dosen_model extends CI_Model {
 
         $dosen_id = $dosen->id;
 
+        // Ambil mahasiswa yang sudah dinilai
+        $mahasiswa_sudah_dinilai = $this->get_mahasiswa_sudah_dinilai($dosen_id);
+
         // Query untuk mengambil data mahasiswa dan informasi dosen penguji
         $this->db->select('
             mahasiswa.id AS mahasiswa_id, 
@@ -137,6 +140,7 @@ class Dosen_model extends CI_Model {
         $this->db->join('dosen AS dosen_penguji_1', 'plotting.dosen_penguji_1_id = dosen_penguji_1.id', 'left');
         $this->db->join('dosen AS dosen_penguji_2', 'plotting.dosen_penguji_2_id = dosen_penguji_2.id', 'left');
         $this->db->where('plotting.dosen_penguji_2_id', $dosen_id);
+        $this->db->where_not_in('mahasiswa.id', $mahasiswa_sudah_dinilai); // Mengecualikan mahasiswa yang sudah dinilai
 
         $query = $this->db->get();
         return $query->result_array();
@@ -161,6 +165,7 @@ class Dosen_model extends CI_Model {
                 penilaian.id as id,
                 mahasiswa.nama as mahasiswa_nama,
                 mahasiswa.npm as mahasiswa_npm,
+                penilaian.nilai_pembimbing,
                 penilaian.nilai_penguji_1,
                 penilaian.nilai_penguji_2,
                 penilaian.grade,
@@ -180,6 +185,7 @@ class Dosen_model extends CI_Model {
     {
         $this->db->select('
                 penilaian.id,
+                penilaian.nilai_pembimbing,
                 penilaian.nilai_penguji_1,
                 penilaian.nilai_penguji_2,
                 penilaian.grade,
@@ -189,7 +195,20 @@ class Dosen_model extends CI_Model {
             ->where('penilaian.id', $id);
 
         return $this->db->get()->row_array();
-    }    
+    }   
+    
+    // Method untuk mendapatkan mahasiswa yang sudah memiliki penilaian
+    public function get_mahasiswa_sudah_dinilai($dosen_id) {
+        // Ambil ID mahasiswa dari tabel penilaian melalui tabel plotting
+        $this->db->select('plotting.mahasiswa_id');
+        $this->db->from('penilaian');
+        $this->db->join('plotting', 'penilaian.plotting_id = plotting.id');
+        $this->db->where('plotting.dosen_penguji_2_id', $dosen_id); // Memastikan dosen adalah dosen penguji 2
+        $this->db->or_where('plotting.dosen_penguji_1_id', $dosen_id); // Tambahkan juga untuk dosen penguji 1 jika perlu
+        $this->db->distinct(); // Untuk menghindari duplikasi hasil
+        $query = $this->db->get();
+        return array_column($query->result_array(), 'mahasiswa_id');
+    }
 
     // insert penilaian
     public function insert_penilaian($data) {

@@ -1,6 +1,30 @@
 <?php
 class Staff_model extends CI_Model {
 
+    // Count data from tables
+    // Menghitung jumlah data pada tabel mahasiswa
+    public function count_all_mahasiswa() {
+        return $this->db->count_all('mahasiswa');
+    }
+
+    // Menghitung jumlah data pada tabel dosen
+    public function count_all_dosen() {
+        return $this->db->count_all('dosen');
+    }
+
+    // Menghitung jumlah total pengguna
+    public function count_all_pengguna() {
+        return $this->db->count_all('user');
+    }
+
+    // Menghitung jumlah pengguna aktif
+    public function count_pengguna_aktif() {
+        $this->db->where('is_active', 1);
+        return $this->db->count_all_results('user');
+    }
+
+    // Akhir count data from tables
+
     // Role
      // ambil semua data yang ada di tabel role
      public function get_all_role()

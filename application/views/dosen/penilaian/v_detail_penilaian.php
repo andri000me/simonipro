@@ -11,10 +11,17 @@
                     <div class="col-6">
                         <ul>
                             <li class="mb-2 text-capitalize">
+                                <span class="fw-bold d-block">Nilai Pembimbing :</span> <?= $penilaian['nilai_pembimbing']; ?>
+                            </li>
+                            <li class="mb-2 text-capitalize">
                                 <span class="fw-bold d-block">Nilai Penguji 1 :</span> <?= $penilaian['nilai_penguji_1']; ?>
                             </li>
                             <li class="mb-2 text-capitalize">
                                 <span class="fw-bold d-block">Nilai Penguji 2 :</span> <?= $penilaian['nilai_penguji_2']; ?>
+                            </li>
+                            <li class="mb-2 text-capitalize">
+                                <span class="fw-bold d-block">Rata-rata :</span> 
+                                <?= number_format(($penilaian['nilai_pembimbing'] + $penilaian['nilai_penguji_1'] + $penilaian['nilai_penguji_2']) / 3, 2); ?>
                             </li>
                         </ul>
                     </div>

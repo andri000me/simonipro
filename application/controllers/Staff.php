@@ -29,6 +29,11 @@ class Staff extends CI_Controller {
 
 	public function index()
 	{
+        $data['count_mhs'] = $this->staff_model->count_all_mahasiswa();
+        $data['count_dsn'] = $this->staff_model->count_all_dosen();
+        $data['count_pengguna'] = $this->staff_model->count_all_pengguna();
+        $data['count_pengguna_aktif'] = $this->staff_model->count_pengguna_aktif();
+        
         $data['title'] = 'Dashboard | Staff';
         $data['active'] = 'dashboard';
         $this->load->view('templates/header', $data);

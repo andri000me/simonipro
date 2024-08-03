@@ -174,7 +174,7 @@ class Dosen extends CI_Controller {
 
         // Set data untuk halaman
         $data['title'] = 'Kelola Penilaian | Dosen';
-        $data['active'] = 'kelola_peniaian';
+        $data['active'] = 'kelola_penilaian';
 
         // Ambil data penilaian yang relevan untuk dosen
         $data['penilaian'] = $this->dosen_model->get_all_penilaian_by_dosen($username);
@@ -195,6 +195,10 @@ class Dosen extends CI_Controller {
         $this->form_validation->set_rules('plotting_id', 'Plotting', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
+        $this->form_validation->set_rules('nilai_pembimbing', 'Nilai Pembimbing', 'required|numeric|trim', [
+            'required' => 'Field {field} harus diisi.',
+            'numeric' => 'Field {field} harus berupa angka.',
+        ]);
         $this->form_validation->set_rules('nilai_penguji_1', 'Nilai Penguji 1', 'required|numeric|trim', [
             'required' => 'Field {field} harus diisi.',
             'numeric' => 'Field {field} harus berupa angka.',
@@ -213,21 +217,23 @@ class Dosen extends CI_Controller {
         } else {
             // Ambil data dari form
             $plotting_id = htmlspecialchars($this->input->post('plotting_id'));
+            $nilai_pembimbing = (float) htmlspecialchars($this->input->post('nilai_pembimbing'));
             $nilai_penguji_1 = (float) htmlspecialchars($this->input->post('nilai_penguji_1'));
             $nilai_penguji_2 = (float) htmlspecialchars($this->input->post('nilai_penguji_2'));
-
-            // Hitung rata-rata nilai
-            $rata_rata_nilai = ($nilai_penguji_1 + $nilai_penguji_2) / 2;
-
+    
+            // Hitung rata-rata nilai dengan bobot masing-masing
+            $rata_rata_nilai = ($nilai_pembimbing * 0.4) + ($nilai_penguji_1 * 0.3) + ($nilai_penguji_2 * 0.3);
+    
             // Tentukan grade berdasarkan rata-rata nilai
             $grade = $this->get_grade($rata_rata_nilai);
-
+    
             // Tentukan status kelulusan berdasarkan nilai
-            $status_kelulusan = $this->get_status_kelulusan($nilai_penguji_1, $nilai_penguji_2);
-            
+            $status_kelulusan = $this->get_status_kelulusan($nilai_pembimbing, $nilai_penguji_1, $nilai_penguji_2);
+    
             // Siapkan data untuk disimpan
             $data = [
                 'plotting_id' => $plotting_id,
+                'nilai_pembimbing' => $nilai_pembimbing,
                 'nilai_penguji_1' => $nilai_penguji_1,
                 'nilai_penguji_2' => $nilai_penguji_2,
                 'grade' => $grade,
@@ -238,7 +244,7 @@ class Dosen extends CI_Controller {
     
             // Panggil model untuk menyimpan data
             $this->dosen_model->insert_penilaian($data);
-            
+    
             // Set pesan sukses dan arahkan ke halaman kelola penilaian
             $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Penilaian berhasil ditambahkan!</div>');
             redirect('dosen/kelola_penilaian'); // Sesuaikan dengan method yang menampilkan data penilaian
@@ -276,6 +282,10 @@ class Dosen extends CI_Controller {
         $id = $this->input->post('id');
 
         // Set validation rules
+        $this->form_validation->set_rules('nilai_pembimbing', 'Nilai Pembimbing', 'required|numeric', [
+            'required' => 'Field {field} harus diisi.',
+            'numeric' => 'Field {field} harus berupa angka.',
+        ]);
         $this->form_validation->set_rules('nilai_penguji_1', 'Nilai Penguji 1', 'required|numeric', [
             'required' => 'Field {field} harus diisi.',
             'numeric' => 'Field {field} harus berupa angka.',
@@ -289,29 +299,32 @@ class Dosen extends CI_Controller {
             $this->ubah_penilaian($id); // Kembali ke halaman ubah penilaian jika validasi gagal
         } else {
             // Ambil nilai input
-            $nilai_penguji_1 = $this->input->post('nilai_penguji_1');
-            $nilai_penguji_2 = $this->input->post('nilai_penguji_2');
-            
+            $nilai_pembimbing = (float) htmlspecialchars($this->input->post('nilai_pembimbing'));
+            $nilai_penguji_1 = (float) htmlspecialchars($this->input->post('nilai_penguji_1'));
+            $nilai_penguji_2 = (float) htmlspecialchars($this->input->post('nilai_penguji_2'));
+
             // Hitung rata-rata nilai dan tentukan grade serta status kelulusan
-            $rata_rata_nilai = ($nilai_penguji_1 + $nilai_penguji_2) / 2;
+            $rata_rata_nilai = ($nilai_pembimbing * 0.4) + ($nilai_penguji_1 * 0.3) + ($nilai_penguji_2 * 0.3);
             $grade = $this->get_grade($rata_rata_nilai);
-            $status_kelulusan = $this->get_status_kelulusan($nilai_penguji_1, $nilai_penguji_2);
+            $status_kelulusan = $this->get_status_kelulusan($nilai_pembimbing, $nilai_penguji_1, $nilai_penguji_2);
 
             $data = [
-                'nilai_penguji_1' => htmlspecialchars($nilai_penguji_1),
-                'nilai_penguji_2' => htmlspecialchars($nilai_penguji_2),
-                'grade' => htmlspecialchars($grade), // Tetap diupdate otomatis
-                'status_kelulusan' => htmlspecialchars($status_kelulusan), // Tetap diupdate otomatis
+                'nilai_pembimbing' => $nilai_pembimbing,
+                'nilai_penguji_1' => $nilai_penguji_1,
+                'nilai_penguji_2' => $nilai_penguji_2,
+                'grade' => $grade,
+                'status_kelulusan' => $status_kelulusan,
+                'updated_at' => time(),
             ];
 
             $update = $this->dosen_model->update_penilaian($id, $data);
 
             if ($update) {
-                // If update is successful
+                // Jika update berhasil
                 $this->session->set_flashdata('pesan', '<div class="alert alert-success" role="alert">Data penilaian berhasil diubah!</div>');
-                redirect('dosen/kelola_penilaian'); // Adjust the redirect path as needed
+                redirect('dosen/kelola_penilaian'); // Sesuaikan dengan path redirect
             } else {
-                // If update fails
+                // Jika update gagal
                 $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Gagal melakukan update penilaian!</div>');
                 redirect('dosen/ubah_penilaian/' . $id);
             }
@@ -338,16 +351,33 @@ class Dosen extends CI_Controller {
     }
 
     // Method untuk menentukan status kelulusan
-    private function get_status_kelulusan($nilai_penguji_1, $nilai_penguji_2) {
-        if ($nilai_penguji_1 >= 60 && $nilai_penguji_2 >= 60) {
-            return 'Lulus Tanpa Revisi';
-        } elseif ($nilai_penguji_1 >= 60 || $nilai_penguji_2 >= 60) {
-            return 'Lulus Dengan Revisi';
-        } elseif ($nilai_penguji_1 < 40 || $nilai_penguji_2 < 40) {
-            return 'Sidang Ulang';
-        } else {
-            return 'Tidak Lulus';
+    private function get_status_kelulusan($nilai_pembimbing, $nilai_penguji_1, $nilai_penguji_2) {
+        $minimal_kelulusan = 60;
+        $nilai_ideal = 80;
+
+        // Hitung jumlah nilai yang kurang dari minimal kelulusan
+        $jumlah_nilai_bawah = 0;
+        $jumlah_nilai_ideal = 0;
+
+        // Cek setiap nilai dan hitung kategori
+        foreach ([$nilai_pembimbing, $nilai_penguji_1, $nilai_penguji_2] as $nilai) {
+            if ($nilai < $minimal_kelulusan) {
+                $jumlah_nilai_bawah++;
+            } elseif ($nilai >= $nilai_ideal) {
+                $jumlah_nilai_ideal++;
+            }
         }
-    }  
+
+        // Tentukan status kelulusan berdasarkan kriteria
+        if ($jumlah_nilai_bawah >= 2) {
+            return 'Tidak Lulus';
+        } elseif ($jumlah_nilai_bawah == 1) {
+            return 'Sidang Ulang';
+        } elseif ($jumlah_nilai_ideal == 3) {
+            return 'Lulus Tanpa Perbaikan';
+        } else {
+            return 'Lulus Dengan Perbaikan';
+        }
+    }
     // Akhir kelola penilaian
 }

@@ -9,13 +9,18 @@
                         <form action="<?= base_url('dosen/update_penilaian'); ?>" method="post">
                             <input type="hidden" name="id" value="<?= $penilaian['id']; ?>">
                             <div class="mb-3">
+                                <label for="nilai_pembimbing" class="form-label">Nilai Pembimbing</label>
+                                <input type="text" inputmode="numeric" class="form-control" id="nilai_pembimbing" name="nilai_pembimbing" value="<?= set_value('nilai_pembimbing', $penilaian['nilai_pembimbing']); ?>">
+                                <?= form_error('nilai_pembimbing', '<small class="text-danger fst-italic">', '</small>'); ?>
+                            </div>
+                            <div class="mb-3">
                                 <label for="nilai_penguji_1" class="form-label">Nilai Penguji 1</label>
-                                <input type="number" class="form-control" id="nilai_penguji_1" name="nilai_penguji_1" value="<?= set_value('nilai_penguji_1', $penilaian['nilai_penguji_1']); ?>">
+                                <input type="text" inputmode="numeric" class="form-control" id="nilai_penguji_1" name="nilai_penguji_1" value="<?= set_value('nilai_penguji_1', $penilaian['nilai_penguji_1']); ?>">
                                 <?= form_error('nilai_penguji_1', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
                             <div class="mb-3">
                                 <label for="nilai_penguji_2" class="form-label">Nilai Penguji 2</label>
-                                <input type="number" class="form-control" id="nilai_penguji_2" name="nilai_penguji_2" value="<?= set_value('nilai_penguji_2', $penilaian['nilai_penguji_2']); ?>">
+                                <input type="text" inputmode="numeric" class="form-control" id="nilai_penguji_2" name="nilai_penguji_2" value="<?= set_value('nilai_penguji_2', $penilaian['nilai_penguji_2']); ?>">
                                 <?= form_error('nilai_penguji_2', '<small class="text-danger fst-italic">', '</small>'); ?>
                             </div>
                             <div class="mb-3">
