@@ -30,6 +30,13 @@ class Dosen extends CI_Controller {
 
 	public function index()
 	{
+        $username = $this->session->userdata('username');
+        // count data from tables
+        $data['count_mhs'] = $this->dosen_model->count_mahasiswa_by_dosen($username);
+        $data['count_absensi_bimbingan'] = $this->dosen_model->count_absensi_bimbingan_by_dosen($username);
+        // $data['count_siap_sidang'] = $this->dosen_model->count_siap_sidang_by_dosen($username);
+        $data['count_rekomendasi'] = $this->dosen_model->count_mahasiswa_rekomendasi_by_dosen($username);
+
 		$data['title'] = 'Dashboard | Dosen';
         $data['active'] = 'dashboard';
         // Memuat model dan mengambil data jadwal
@@ -181,6 +188,8 @@ class Dosen extends CI_Controller {
 
         // Ambil data mahasiswa yang terkait plotting tertentu
         $data['mahasiswa'] = $this->dosen_model->get_all_mahasiswa_by_plotting($username);
+
+        $data['dosen'] = $this->dosen_model->get_dosen_id_by_username($username);
 
         // Render halaman
         $this->load->view('templates/header', $data);

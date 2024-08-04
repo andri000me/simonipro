@@ -1,5 +1,71 @@
 <?php 
 class Dosen_model extends CI_Model { 
+
+    // Count data from tables
+    // Hitung mahasiswa berdasarkan dosen pembimbing
+    public function count_mahasiswa_by_dosen($username) {
+        // Dapatkan ID dosen berdasarkan username
+        $dosen_id = $this->get_dosen_id_by_username($username);
+
+        // Lakukan query untuk menghitung mahasiswa
+        $this->db->select('COUNT(DISTINCT plotting.mahasiswa_id) as total_mahasiswa');
+        $this->db->from('plotting');
+        $this->db->join('kelompok', 'plotting.kelompok_id = kelompok.id');
+        $this->db->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id');
+        $this->db->where('kelompok.dosen_pembimbing_id', $dosen_id);
+        $result = $this->db->get()->row();
+
+        // Kembalikan hasilnya
+        return $result ? $result->total_mahasiswa : 0;
+    }
+
+    // Hitung absensi bimbingan berdasarkan dosen
+    public function count_absensi_bimbingan_by_dosen($username) {
+        $this->db->select('user.id as user_id, dosen.id as dosen_pembimbing_id');
+        $this->db->from('user');
+        $this->db->join('dosen', 'dosen.user_id = user.id');
+        $this->db->where('user.username', $username);
+        $user = $this->db->get()->row();
+
+        if ($user) {
+            $this->db->select('COUNT(absensi_bimbingan.id) as total_confirmed_absensi');
+            $this->db->from('absensi_bimbingan');
+            $this->db->join('kelompok', 'kelompok.id = absensi_bimbingan.kelompok_id');
+            $this->db->join('dosen', 'dosen.id = kelompok.dosen_pembimbing_id');
+            $this->db->where('kelompok.dosen_pembimbing_id', $user->dosen_pembimbing_id);
+            $this->db->where('absensi_bimbingan.is_confirmed', 'confirmed');
+            $result = $this->db->get()->row();
+
+            return $result ? $result->total_confirmed_absensi : 0;
+        } else {
+            return 0;
+        }
+    }
+
+    // Hitung mahasiswa yang telah direkomendasikan oleh dosen
+    public function count_mahasiswa_rekomendasi_by_dosen($username) {
+        $this->db->select('user.id as user_id, dosen.id as dosen_pembimbing_id');
+        $this->db->from('user');
+        $this->db->join('dosen', 'dosen.user_id = user.id');
+        $this->db->where('user.username', $username);
+        $user = $this->db->get()->row();
+
+        if ($user) {
+            $this->db->select('COUNT(DISTINCT absensi_bimbingan.mahasiswa_id) as total_rekomendasi_mahasiswa');
+            $this->db->from('absensi_bimbingan');
+            $this->db->join('kelompok', 'kelompok.id = absensi_bimbingan.kelompok_id');
+            $this->db->join('dosen', 'dosen.id = kelompok.dosen_pembimbing_id');
+            $this->db->where('kelompok.dosen_pembimbing_id', $user->dosen_pembimbing_id);
+            $this->db->where('absensi_bimbingan.is_confirmed', 'confirmed');
+            $this->db->where('absensi_bimbingan.status', 'rekomendasi');
+            $result = $this->db->get()->row();
+
+            return $result ? $result->total_rekomendasi_mahasiswa : 0;
+        } else {
+            return 0;
+        }
+    }
+
     public function get_all_absensi_bimbingan_by_dosen($username)
     {
         // Ambil data user berdasarkan dosen
@@ -140,7 +206,10 @@ class Dosen_model extends CI_Model {
         $this->db->join('dosen AS dosen_penguji_1', 'plotting.dosen_penguji_1_id = dosen_penguji_1.id', 'left');
         $this->db->join('dosen AS dosen_penguji_2', 'plotting.dosen_penguji_2_id = dosen_penguji_2.id', 'left');
         $this->db->where('plotting.dosen_penguji_2_id', $dosen_id);
-        $this->db->where_not_in('mahasiswa.id', $mahasiswa_sudah_dinilai); // Mengecualikan mahasiswa yang sudah dinilai
+
+        if (!empty($mahasiswa_sudah_dinilai)) {
+            $this->db->where_not_in('mahasiswa.id', $mahasiswa_sudah_dinilai); // Mengecualikan mahasiswa yang sudah dinilai
+        }
 
         $query = $this->db->get();
         return $query->result_array();
@@ -209,6 +278,17 @@ class Dosen_model extends CI_Model {
         $query = $this->db->get();
         return array_column($query->result_array(), 'mahasiswa_id');
     }
+
+    public function get_dosen_id_by_username($username) {
+        $this->db->select('dosen.id');
+        $this->db->from('user');
+        $this->db->join('dosen', 'dosen.user_id = user.id');
+        $this->db->where('user.username', $username);
+        $result = $this->db->get()->row();
+
+        return $result ? $result->id : NULL;
+    }
+    
 
     // insert penilaian
     public function insert_penilaian($data) {

@@ -56,6 +56,7 @@
                                                         Detail
                                                     </a>
                                                 </small>
+                                                <?php if ( $dosen !== NULL ) : ?>
                                                 <small>
                                                     <a href="ubah_penilaian/<?= $row['id']; ?>" class="btn btn-outline-warning mb-2">
                                                         <span>
@@ -64,6 +65,7 @@
                                                         Ubah
                                                     </a>
                                                 </small>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                         <?php $i++; ?>

@@ -423,4 +423,66 @@ class Koordinator_model extends CI_Model {
         return $this->db->update('jadwal_sidang', $data);
     }
     // Akhir kelola jadwal sidang
+
+    // Kelola penilaian
+    public function get_all_penilaian() {
+        // Query untuk mengambil data penilaian
+        $this->db->select('
+            penilaian.id as id,
+            mahasiswa.nama as mahasiswa_nama,
+            mahasiswa.npm as mahasiswa_npm,
+            penilaian.nilai_pembimbing,
+            penilaian.nilai_penguji_1,
+            penilaian.nilai_penguji_2,
+            penilaian.grade,
+            penilaian.status_kelulusan
+        ')
+        ->from('penilaian')
+        ->join('plotting', 'penilaian.plotting_id = plotting.id')
+        ->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id');
+
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    // Method untuk mengambil data penilaian berdasarkan ID
+    public function get_penilaian_by_id($id) {
+        $this->db->select('
+                penilaian.id as penilaian_id,
+                penilaian.nilai_pembimbing,
+                penilaian.nilai_penguji_1,
+                penilaian.nilai_penguji_2,
+                penilaian.grade,
+                penilaian.status_kelulusan,
+                mahasiswa.nama as mahasiswa_nama,
+                mahasiswa.npm as mahasiswa_npm,
+                mahasiswa.kelas_id as mahasiswa_kelas_id,
+                dosen_pembimbing.nama as dosen_pembimbing_nama,
+                dosen_penguji_1.nama as dosen_penguji_1_nama,
+                dosen_penguji_1.nidn as dosen_penguji_1_nidn,
+                dosen_penguji_2.nama as dosen_penguji_2_nama,
+                dosen_penguji_2.nidn as dosen_penguji_2_nidn,
+                jadwal_sidang.tgl_sidang,
+                jadwal_sidang.waktu_sidang,
+                jadwal_sidang.created_at,
+                jadwal_sidang.updated_at,
+                kelas.nama_kelas as nama_kelas,
+                draft_sidang.judul as judul_proyek
+            ')
+            ->from('penilaian')
+            ->join('plotting', 'penilaian.plotting_id = plotting.id')
+            ->join('mahasiswa', 'plotting.mahasiswa_id = mahasiswa.id')
+            ->join('kelompok', 'plotting.kelompok_id = kelompok.id')
+            ->join('dosen as dosen_pembimbing', 'kelompok.dosen_pembimbing_id = dosen_pembimbing.id')
+            ->join('dosen as dosen_penguji_1', 'plotting.dosen_penguji_1_id = dosen_penguji_1.id')
+            ->join('dosen as dosen_penguji_2', 'plotting.dosen_penguji_2_id = dosen_penguji_2.id')
+            ->join('jadwal_sidang', 'plotting.id = jadwal_sidang.plotting_id')
+            ->join('kelas', 'mahasiswa.kelas_id = kelas.id')
+            ->join('draft_sidang', 'mahasiswa.id = draft_sidang.mahasiswa_id') // Join ke tabel draft_sidang
+            ->where('penilaian.id', $id);
+
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    // Akhir kelola penilaian
 }

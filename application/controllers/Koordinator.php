@@ -963,6 +963,69 @@ class Koordinator extends CI_Controller {
     
     // Akhir kelola jadwal sidang
 
+    // Kelola Penilaian
+    public function kelola_penilaian()
+    {
+        // Set data untuk halaman
+        $data['title'] = 'Kelola Penilaian | Koordinator';
+        $data['active'] = 'kelola_penilaian';
+
+        // Ambil data penilaian
+        $data['penilaian'] = $this->koordinator_model->get_all_penilaian();
+
+        // Render halaman
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/penilaian/v_kelola_penilaian', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function detail_penilaian($id)
+    {
+        // Set data untuk halaman
+        $data['title'] = 'Kelola Penilaian | Koordinator';
+        $data['active'] = 'kelola_penilaian';
+
+        // Ambil data penilaian
+        $data['penilaian'] = $this->koordinator_model->get_penilaian_by_id($id);
+
+        // Render halaman
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar');
+        $this->load->view('koordinator/penilaian/v_detail_penilaian', $data);
+        $this->load->view('templates/footer');
+    }
+    // Akhir kelola penilaian
+
+    // Print berita acara proyek 2
+    public function print_berita_acara($penilaian_id)
+    {
+        // Ambil data penilaian
+        $data['penilaian'] = $this->koordinator_model->get_penilaian_by_id($penilaian_id);
+
+        // Load view untuk berita acara
+        $html = $this->load->view('pdfGenerator/v_print_berita_acara', $data, true);
+
+        // Load library PDF
+        $this->load->library('pdf');
+
+        // Render HTML ke PDF
+        $this->pdf->load_html($html);
+        $this->pdf->render();
+
+        $penilaian_id = uniqid();
+
+        // Simpan file PDF ke lokasi sementara
+        $output = $this->pdf->output();
+        file_put_contents('./assets/docs/pdf/berita_acara_' . $penilaian_id . '.pdf', $output);
+
+        // Download PDF
+        $this->pdf->stream("berita_acara_" . $penilaian_id . ".pdf");
+    }
+    // Akhir print berita acara proyek 2
+
     // print kalender proyek 2
     public function print_kalender()
     {

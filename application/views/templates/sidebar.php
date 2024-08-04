@@ -145,9 +145,17 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link <?= ($active == 'kelola_jadwal_sidang') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_jadwal_sidang'); ?>" aria-expanded="false">
                                 <span>
-                                    <i class="ti ti-scale"></i>
+                                    <i class="ti ti-calendar-event"></i>
                                 </span>
                                 <span class="hide-menu">Kelola Jadwal Sidang</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link <?= ($active == 'kelola_penilaian') ? 'active' : '' ?>" href="<?= base_url('koordinator/kelola_penilaian'); ?>" aria-expanded="false">
+                                <span>
+                                    <i class="ti ti-scale"></i>
+                                </span>
+                                <span class="hide-menu">Kelola Penilaian</span>
                             </a>
                         </li>
 

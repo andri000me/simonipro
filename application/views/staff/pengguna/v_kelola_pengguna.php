@@ -44,9 +44,9 @@
                           </td>
                           <td><?= $user['nama_role']; ?></td>
                           <td>
-                          <span class="badge <?= $user['is_active'] == 1 ? 'text-bg-success' : 'badge-muted' ?>">
-                            <?= $user['is_active'] == 1 ? 'aktif' : 'tidak aktif' ?>
-                          </span>
+                            <span class="badge <?= $user['is_active'] == 1 ? 'text-bg-success' : 'text-bg-muted' ?>">
+                                <?= $user['is_active'] == 1 ? 'aktif' : 'tidak aktif' ?>
+                            </span>
                           </td>
                           <td>
                             <small>

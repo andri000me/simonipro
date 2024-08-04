@@ -5,70 +5,53 @@
     ];
 ?>
 <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3 col-md-4 col-12">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 col-12">
                 <div class="card w-100">
                     <div class="card-body border-start border-4 border-danger rounded start">
                         <div class="row">
                             <div class="col-3 d-flex justify-content-center align-items-center">
                                 <span>
-                                    <iconify-icon icon="lucide:clipboard" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                    <iconify-icon icon="ph:student" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
                                 </span>
                             </div>
                             <div class="col-9 text-start">
                                 <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Mahasiswa</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">65</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_mhs; ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-12">
-                <div class="card w-100">
-                    <div class="card-body border-start border-4 border-primary rounded start">
-                        <div class="row">
-                            <div class="col-3 d-flex justify-content-center align-items-center">
-                                <span>
-                                    <iconify-icon icon="lucide:users" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
-                                </span>
-                            </div>
-                            <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">9</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-12">
-                <div class="card w-100">
-                    <div class="card-body border-start border-4 border-warning rounded start">
-                        <div class="row">
-                            <div class="col-3 d-flex justify-content-center align-items-center">
-                                <span>
-                                    <iconify-icon icon="lucide:github" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
-                                </span>
-                            </div>
-                            <div class="col-9 text-start">
-                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Pengajuan</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">22</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-12">
+            <div class="col-lg-4 col-md-6 col-12">
                 <div class="card w-100">
                     <div class="card-body border-start border-4 border-success rounded start">
                         <div class="row">
                             <div class="col-3 d-flex justify-content-center align-items-center">
                                 <span>
-                                    <iconify-icon icon="lucide:plane" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                    <iconify-icon icon="fluent:document-folder-16-regular" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
+                                </span>
+                            </div>
+                            <div class="col-9 text-start">
+                                <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Bimbingan</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_absensi_bimbingan; ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card w-100">
+                    <div class="card-body border-start border-4 border-primary rounded start">
+                        <div class="row">
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <span>
+                                    <iconify-icon icon="octicon:verified-16" width="2.65rem" style="color: #d9d9d9;"></iconify-icon>
                                 </span>
                             </div>
                             <div class="col-9 text-start">
                                 <span class="fw-bolder text-uppercase" style="font-size: 0.595rem;">Total Rekomendasi</span>
-                                <span class="d-block fw-bolder" style="font-size: 1.25rem;">12</span>
+                                <span class="d-block fw-bolder" style="font-size: 1.25rem;"><?= $count_rekomendasi; ?></span>
                             </div>
                         </div>
                     </div>
