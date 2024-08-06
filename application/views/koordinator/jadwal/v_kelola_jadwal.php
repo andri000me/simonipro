@@ -27,6 +27,7 @@
                         <tr>
                           <th class="text-start">#</th>
                           <th class="text-start">Nama jadwal</th>
+                          <th class="text-start">Tahun Akademik</th>
                           <th class="text-start">Dibuat pada</th>
                           <th class="text-start">Status</th>
                           <th class="text-start">Aksi</th>
@@ -38,6 +39,7 @@
                         <tr>
                           <th scope="row"><?= $i; ?></th>
                           <td><?= $j['nama_jadwal']; ?></td>
+                          <td>Semester Genap <?= $j['tahun_akademik']; ?></td>
                           <td><?= date('d-M-Y', $j['created_at']); ?></td>
                           <td>
                             <?php ( $j['status'] == 'draft' ) ? $color = 'warning' : $color = 'success' ?>
@@ -63,6 +65,7 @@
                         <tr>
                           <th class="text-start">#</th>
                           <th class="text-start">Nama jadwal</th>
+                          <th class="text-start">Tahun Akademik</th>
                           <th class="text-start">Dibuat pada</th>
                           <th class="text-start">Status</th>
                           <th class="text-start">Aksi</th>
@@ -89,6 +92,22 @@
       </div>
       <div class="modal-body">
         <form action="<?= base_url('koordinator/tambah_jadwal'); ?>" method="post">
+        <?php
+          $currentYear = date('Y');
+          $previousYear = $currentYear - 1;
+          $nextYear = $currentYear + 1;
+          $twoYearsAhead = $currentYear + 2;
+          ?>
+          <div class="mb-3">
+              <label for="tahun_akademik" class="form-label">Tahun Akademik</label>
+              <select name="tahun_akademik" id="tahun_akademik" class="form-select">
+                  <option value="">-- Pilih Tahun Akademik --</option>
+                  <option value="<?= "{$previousYear}-{$currentYear}" ?>">Semester Genap <?= "{$previousYear}-{$currentYear}" ?></option>
+                  <option value="<?= "{$currentYear}-{$nextYear}" ?>">Semester Genap <?= "{$currentYear}-{$nextYear}" ?></option>
+                  <option value="<?= "{$nextYear}-{$twoYearsAhead}" ?>">Semester Genap <?= "{$nextYear}-{$twoYearsAhead}" ?></option>
+              </select>
+              <?= form_error('tahun_akademik', '<small class="text-danger fst-italic">', '</small>'); ?>
+          </div>
             <div class="mb-3">
                 <label for="nama_jadwal" class="form-label">Nama jadwal</label>
                 <input type="text" name="nama_jadwal" id="nama_jadwal" class="form-control" autofocus autocomplete="off" value="<?= set_value('nama_jadwal'); ?>">

@@ -97,7 +97,7 @@
                     <select class="form-select" id="jadwal_id" name="jadwal_id">
                         <option value="" selected>-- Pilih Jadwal --</option>
                         <?php foreach ($jadwal as $j) : ?>
-                            <option value="<?= $j['id']; ?>"><?= $j['nama_jadwal']; ?></option>
+                            <option value="<?= $j['id']; ?>"><?= $j['nama_jadwal'] . ' Semester Genap ' . $j['tahun_akademik']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 <?= form_error('jadwal_id', '<small class="text-danger fst-italic">', '</small>'); ?>

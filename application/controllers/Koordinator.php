@@ -199,14 +199,19 @@ class Koordinator extends CI_Controller {
     }
 
     public function tambah_jadwal() {
-        $this->form_validation->set_rules('nama_jadwal', 'Nama_Jadwal', 'required|trim', [
+        $this->form_validation->set_rules('tahun_akademik', 'Tahun Akademik', 'required|trim', [
+            'required' => 'Field {field} harus diisi.',
+        ]);
+        $this->form_validation->set_rules('nama_jadwal', 'Nama Jadwal', 'required|trim', [
             'required' => 'Field {field} harus diisi.',
         ]);
 
         if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('pesan', '<div class="alert alert-danger" role="alert">Jadwal baru gagal ditambahkan!</div>');
             $this->kelola_jadwal();
         } else {
             $data = [
+                'tahun_akademik' => htmlspecialchars($this->input->post('tahun_akademik')),
                 'nama_jadwal' => htmlspecialchars($this->input->post('nama_jadwal')),
                 'status' => 'draft',
                 'created_at' => time(),

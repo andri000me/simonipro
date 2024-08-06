@@ -13,6 +13,10 @@
                             <td><?= $jadwal['nama_jadwal']; ?></td>
                         </tr>
                         <tr>
+                            <th>Tahun Akademik</th>
+                            <td>Semester Genap <?= $jadwal['tahun_akademik']; ?></td>
+                        </tr>
+                        <tr>
                             <th>Dibuat pada</th>
                             <td><?= date('d-M-Y', $jadwal['created_at']); ?></td>
                         </tr>
